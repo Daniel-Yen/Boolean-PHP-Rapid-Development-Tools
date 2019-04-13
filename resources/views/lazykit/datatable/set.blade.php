@@ -155,7 +155,11 @@
 					<tbody>
 						@foreach ($field_row_arr as $vo)
 						<tr class="{{$vo['field_from']}}">
-							<td><input type="text" name="datatable_set[{{$vo['Field']}}][sorting]" value="{{isset($vo['sorting'])?$vo['sorting']:''}}" autocomplete="off" class="layui-input"></td>
+							<td>
+								<input type="hidden" name="datatable_set[{{$vo['Field']}}][field_type]" value="{{isset($vo['field_type'])?$vo['field_type']:''}}" autocomplete="off" class="layui-input">
+								<input type="hidden" name="datatable_set[{{$vo['Field']}}][field_length]" value="{{isset($vo['field_length'])?$vo['field_length']:''}}" autocomplete="off" class="layui-input">
+								<input type="text" name="datatable_set[{{$vo['Field']}}][sorting]" value="{{isset($vo['sorting'])?$vo['sorting']:''}}" autocomplete="off" class="layui-input">
+							</td>
 							<td>
 								<select name="datatable_set[{{$vo['Field']}}][fixed]">
 									<option value=""></option>
@@ -374,7 +378,7 @@
 						+'<td><input type="text" name="new_head_menu[type][]" value="" autocomplete="off" class="layui-input"></td>'
 						+'<td><select name="new_head_menu[open_tepe][]"> @foreach ($button_open_type_arr as $k=>$ko) <option value="{{$k}}">{{$ko}}</option> @endforeach </select></td>'
 						+'<td class="switch_area"><input name="new_head_menu[must][]" checked="checked" type="checkbox" lay-skin="switch" lay-text="是|否"></td>'
-						+'<td class="switch_area"><input name="new_head_menu_list[{{$key}}][checked]" @if (isset($vo['checked'])) @if ($vo['checked'] == 'on') checked="checked" @endif @endif type="checkbox" lay-skin="switch" lay-text="是|否"></td>'
+						+'<td class="switch_area"><input name="new_head_menu[checked][]" type="checkbox" lay-skin="switch" lay-text="是|否"></td>'
 						+'<td><input type="text" name="new_head_menu[width][]" value="" autocomplete="off" class="layui-input"></td>'
 						+'<td><input type="text" name="new_head_menu[height][]" value="" autocomplete="off" class="layui-input"></td>'
 						+'<td><input type="text" name="new_head_menu[method][]" value="" autocomplete="off" class="layui-input"></td>'
@@ -388,7 +392,7 @@
 		$(document).on('click','#addButton',function(){
 			var html = '<tr>'
 						+'<td><input type="text" name="line_button[text][]" value="" autocomplete="off" class="layui-input"></td>'
-						+'<td><select name="line_button_list[{{$key}}][style]"> @foreach ($button_style_type_arr as $k=>$ko) <option @if (isset($vo['style'])) @if ($vo['style'] == $k) selected="selected" @endif  @endif value="{{$k}}">{{$ko}}</option> @endforeach </select></td>'
+						+'<td><select name="line_button[style][]"> @foreach ($button_style_type_arr as $k=>$ko) <option @if (isset($vo['style'])) @if ($vo['style'] == $k) selected="selected" @endif  @endif value="{{$k}}">{{$ko}}</option> @endforeach </select></td>'
 						+'<td><input type="text" name="line_button[type][]" value="" autocomplete="off" class="layui-input"></td>'
 						+'<td><select name="line_button[open_tepe][]"> @foreach ($button_open_type_arr as $k=>$ko) <option value="{{$k}}">{{$ko}}</option> @endforeach </select></td>'
 						+'<td class="switch_area"><input name="line_button[must][]" checked="checked" type="checkbox" lay-skin="switch" lay-text="是|否"></td>'
@@ -412,7 +416,7 @@
 			},
 			//title:表字段名称, field:字段, field_from:字段类型
 			openDialog: function(title, field, field_from) {
-				var url = '{{url("datatable/attribute_set")}}?datatable_id={{$datatable_id}}&field=' + field + '&field_from=' + field_from;
+				var url = '{{url("lazykit/datatable/attribute_set")}}?datatable_id={{$datatable_id}}&field=' + field + '&field_from=' + field_from;
 				//执行重载
 				layer.open({
 					id: 'layerDemo',

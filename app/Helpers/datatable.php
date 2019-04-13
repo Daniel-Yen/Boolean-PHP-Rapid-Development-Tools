@@ -2,6 +2,8 @@
 // +----------------------------------------------------------------------
 // | 数据表格生成器(App\Http\datatableController)助手函数
 // +----------------------------------------------------------------------
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('create_datatable')) {
     /**
@@ -93,7 +95,7 @@ if (!function_exists('get_datatable_config')) {
 		if(file_exists($path)){
 			$datatable_config = include($path);
 		}else{
-			$datatable_config = array();
+			$datatable_config = [];
 		}
 		//dd($datatable_config);
 		return $datatable_config;
@@ -142,46 +144,6 @@ if (!function_exists('error')) {
 	}
 }
 
-if (!function_exists('error')) {
-	/**
-	 * 操作成功跳转页面
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
-	 * @param  		string 		$message 			提示信息
-	 * @return 		
-	 */
-	function error($message = '', $supplement = '') {
-		//dd(request()->fullUrl());
-		return view('datatable.error')->with([
-			//跳转信息
-			'message' => $message ? $message : "操作失败",
-			//跳转信息
-			'supplement' => $supplement ? $supplement : "当前操作出现意外，稍后为您跳转返回重新操作",
-		    //跳转等待时间（s）
-		    'jumpTime' => 2,
-		]); 
-	}
-}
-
-if (!function_exists('error')) {
-	/**
-	 * 操作成功跳转页面
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
-	 * @param  		string 		$message 			提示信息
-	 * @return 		
-	 */
-	function error($message = '', $supplement = '') {
-		//dd(request()->fullUrl());
-		return view('datatable.error')->with([
-			//跳转信息
-			'message' => $message ? $message : "操作失败",
-			//跳转信息
-			'supplement' => $supplement ? $supplement : "当前操作出现意外，稍后为您跳转返回重新操作",
-		    //跳转等待时间（s）
-		    'jumpTime' => 2,
-		]); 
-	}
-}
-
 if (!function_exists('exception_thrown')) {
 	/**
 	 * Datatable自定义异常提示 
@@ -197,24 +159,6 @@ if (!function_exists('exception_thrown')) {
 	}
 }
 
-if (!function_exists('as_title')) {
-	/**
-	 * Datatable新增修改下拉select控件title字段生成 
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
-	 * @param 		array		$data 		要处理的二维数组数组
-	 * @param 		string		$title 		要作为title的字段
-	 * @return 		array
-	 */
-	function as_title($data, $title) {  
-		foreach($data as $k=>$v){
-			$v['title'] = $v[$title];
-			$data[$k] = $v;
-		}
-		
-		return $data;
-	}
-}
-
 if (!function_exists('create_controller')) {
 	/**
 	 * 根据菜单的生成控制器及方法
@@ -225,16 +169,37 @@ if (!function_exists('create_controller')) {
 	 */
 	function create_controller($route_message) {
 		if(!$route_message['controller_exists']){
-			$path = app_path('Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.$route_message['module'].DIRECTORY_SEPARATOR.$route_message['controller'].'.php');
-			//dd($route_message);
+			$path = app_path('Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.$route_message['module'].DIRECTORY_SEPARATOR);
+			//生成目录
+			create_dir($path);
+			$path = $path.$route_message['controller'].'.php';
 			$file = file_get_contents(app_path('Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.'NewController.php'));
 			$file = str_replace('{menu_title}', $route_message['menu_title'], $file);
 			$file = str_replace('{module}', $route_message['module'], $file);
 			$file = str_replace('{NewController}', $route_message['controller'], $file);
 			$file = str_replace('{method}', $route_message['method'], $file);
 			$file = str_replace('{id}', $route_message['id'], $file);
-			//dd($file);
 			file_put_contents($path, $file);
+		}
+	}
+}
+
+if (!function_exists('create_dir')) {
+	/**
+	 * 判断目录存在否，存在给出提示，不存在则创建目录
+	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @param 		string		$path 		文件目录
+	 * @return 		boolean
+	 */
+	function create_dir($path) {
+		if (!is_dir($path)){
+		    //第三个参数是“true”表示能创建多级目录，iconv防止中文目录乱码
+		    $res = mkdir(iconv("UTF-8", "GBK", $path),0777,true); 
+		    if ($res){
+		        return true;
+		    }else{
+		        return false;
+		    }
 		}
 	}
 }

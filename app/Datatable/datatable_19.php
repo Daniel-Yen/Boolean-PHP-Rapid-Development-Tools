@@ -14,6 +14,8 @@
   array (
     'id' => 
     array (
+      'field_type' => 'int',
+      'field_length' => '11',
       'sorting' => '1',
       'fixed' => NULL,
       'title' => NULL,
@@ -23,6 +25,8 @@
     ),
     'system_name' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '2',
       'fixed' => 'left',
       'title' => '模块名称',
@@ -35,6 +39,8 @@
     ),
     'module' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '4',
       'fixed' => NULL,
       'title' => '模块目录',
@@ -47,6 +53,8 @@
     ),
     'remark' => 
     array (
+      'field_type' => 'text',
+      'field_length' => 'no_limit',
       'sorting' => '6',
       'fixed' => NULL,
       'title' => '备注',
@@ -59,6 +67,8 @@
     ),
     'created_at' => 
     array (
+      'field_type' => 'datetime',
+      'field_length' => 'no_limit',
       'sorting' => '999',
       'fixed' => NULL,
       'title' => '创建时间',
@@ -69,6 +79,8 @@
     ),
     'updated_at' => 
     array (
+      'field_type' => 'datetime',
+      'field_length' => 'no_limit',
       'sorting' => '999',
       'fixed' => NULL,
       'title' => '修改时间',
@@ -79,6 +91,8 @@
     ),
     'deleted_at' => 
     array (
+      'field_type' => 'datetime',
+      'field_length' => 'no_limit',
       'sorting' => '999',
       'fixed' => NULL,
       'title' => '删除时间',
@@ -148,6 +162,7 @@
   array (
     'limit' => '20',
     'cell_min_width' => '160',
+    'line_button_area_width' => '160',
   ),
   'route' => 
   array (

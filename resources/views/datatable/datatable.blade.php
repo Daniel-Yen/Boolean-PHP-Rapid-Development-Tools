@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', $datatable_config['title'])
+@section('title', isset($datatable_config['title'])?$datatable_config['title']:'数据表格')
 
 @push('css')
 <style type="text/css">
@@ -42,7 +42,7 @@
 		@endforeach
 		@endif
 		
-		@if ($key != "recovery")
+		@if ($do != "recycle")
 		@if (isset($datatable_config['new_head_menu']))
 		@foreach ($datatable_config['new_head_menu'] as $key=>$vo)
 		<button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="{{$key}}"><i class="layui-icon {{$vo['icon']}}"></i> {{$vo['text']}}</button>
@@ -122,10 +122,11 @@ layui.config({
 		,$ = layui.jquery
 		,layer = layui.layer;
 	
+	var rand = Math.floor(Math.random()*10000+1);
 	@if ($do == "recycle")
-	var ac = '&ac=recycle';
+	var ac = '&rand='+rand+'&ac=recycle';
 	@else
-	var ac = '';
+	var ac = '&rand='+rand;
 	@endif
 	
 	//获取查询条件
@@ -152,7 +153,7 @@ layui.config({
 	});
     var tableIns = table.render({
         elem: '#buer-table'
-        ,url: '{{$url}}?do=data'+ac
+        ,url: '{{$datatable_config['route_name']}}?do=data'+ac
         ,toolbar: '#buer-table-toolbar'
 		,defaultToolbar:['filter','exports','print']
         ,title: '用户数据表'
@@ -203,7 +204,7 @@ layui.config({
 							@if ( !empty( $datatable_config['delete_page'] ) )
 							url: "{{ $datatable_config['delete_page'] }}",
 							@else
-							url: "{{ $url }}?do={{ $key }}"+ac,
+							url: "{{ $datatable_config['route_name'] }}?do={{ $key }}"+ac,
 							@endif
 							data: {
 								'ids': JSON.stringify(ids)
@@ -270,7 +271,7 @@ layui.config({
 					,shade: 0.3
 					,maxmin: false
 					,offset: 'auto' 
-					,content: '{{$url}}?do={{$key}}'
+					,content: '{{$datatable_config['route_name']}}?do={{$key}}'
 				});
 			@elseif (in_array($key, ['update']))
 				var data = checkStatus.data;
@@ -284,7 +285,7 @@ layui.config({
 						,shade: 0.3
 						,maxmin: false
 						,offset: 'auto' 
-						,content: '{{$url}}?do={{$key}}&id='+data['0']['id']
+						,content: '{{$datatable_config['route_name']}}?do={{$key}}&id='+data['0']['id']
 					});
 				}else if(data.length > 1){
 					layer.msg('请最多选中一条记录');
@@ -299,7 +300,7 @@ layui.config({
 					,shade: 0.3
 					,maxmin: false
 					,offset: 'auto' 
-					,content: '{{$url}}?do={{$key}}'
+					,content: '{{$datatable_config['route_name']}}?do={{$key}}'
 				});
 			@endif
 			break;
@@ -307,7 +308,7 @@ layui.config({
 			@endif
 			
 			//附加头部工具菜单
-			@if ($datatable_config['new_head_menu'])
+			@if (isset($datatable_config['new_head_menu']))
 			@foreach ($datatable_config['new_head_menu'] as $key=>$vo)
 			case '{{$key}}':
 			@if ($vo['open_tepe'] == 'window')
@@ -318,12 +319,12 @@ layui.config({
 					,shade: 0.3
 					,maxmin: false
 					,offset: 'auto' 
-					,content: '{{$url}}?do={{$key}}'
+					,content: '{{$datatable_config['route_name']}}?do={{$key}}'
 				});
 			@elseif ($vo['open_tepe'] == 'ajax')
 				layer.confirm("请确认当前操作?", {icon:3, title:'温馨提示'}, function() {
 					$.ajax({
-						url: "{{ $url }}?do={{ $key }}",
+						url: "{{ $datatable_config['route_name'] }}?do={{ $key }}",
 						type: "post",
 						dataType: 'json',
 						success: function(res) {
@@ -360,12 +361,12 @@ layui.config({
       				,shade: 0.3
       				,maxmin: false
       				,offset: 'auto' 
-      				,content: "{{$url}}?do={{$key}}&from=line&id="+data['id'],
+      				,content: "{{$datatable_config['route_name']}}?do={{$key}}&from=line&id="+data['id'],
       			});
       		@elseif ($vo['open_tepe'] == 'ajax')
       			layer.confirm("请确认当前操作?", {icon:3, title:'温馨提示'}, function() {
       				$.ajax({
-      					url: "{{ $url }}?do={{ $key }}&from=line&id="+data['id'],
+      					url: "{{$datatable_config['route_name']}}?do={{$key}}&from=line&id="+data['id'],
       					type: "post",
       					dataType: 'json',
       					success: function(res) {
@@ -399,9 +400,12 @@ layui.config({
 				tools.reload();
 			}
 		}
-		,nodes: {!! $left_tree !!}
+		,nodes: @if ( isset($datatable_config['left_tree']['code'])?$datatable_config['left_tree']['code'] == 0:false ) {!! $datatable_config['left_tree']['data'] !!} @else [] @endif
 	});
 	
+	@if ( isset($datatable_config['left_tree']['code'])?$datatable_config['left_tree']['code'] == 1:false )
+	<div class="layui-form-mid layui-word-aux"><span class="layui-badge">{{$datatable_config['left_tree']['msg']}}</span></div>
+	@endif
 	$("#buer-all").html('<i class="layui-icon layui-icon-template-1"></i> 全部');
 	
 	$(document).on('click','#buer-all',function(){

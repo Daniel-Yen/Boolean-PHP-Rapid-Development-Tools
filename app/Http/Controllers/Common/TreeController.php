@@ -63,7 +63,7 @@ class TreeController extends Controller
 		$data_arr = [];
 		//转换成树用于排序
 		$data = $this->listToTree();
-		if(is_array($data)) {
+		if(is_array($data)?!empty($data):false) {
 			$data_arr = $this->TreeToList($data, 'id', 'pid', 'children', 0);
 		}
 		
@@ -169,7 +169,39 @@ class TreeController extends Controller
 		// 创建Tree
 		$tree = array();
 		$list = $this->object_array($this->arr);
-		if(is_array($list)) {
+		if(is_array($list)?!empty($list):false) {
+			// 创建基于主键的数组引用
+			$refer = array();
+			foreach ($list as $key => $data) {
+				$refer[$data[$pk]] =& $list[$key];
+			}
+			foreach ($list as $key => $data) {
+				// 判断是否存在parent
+				$parentId = $data[$pid];
+				if ($root == $parentId) {
+					$tree[] =& $list[$key];
+				}else{
+					if (isset($refer[$parentId])) {
+						$parent =& $refer[$parentId];
+						$parent[$child][] =& $list[$key];
+					}
+				}
+			}
+		}
+		return $tree;
+	}
+	
+	/**
+	 * 把返回的数据集转换成前端Select下拉需要的树
+	 * @access    	public
+	 * @author    	杨鸿<yh15229262120@qq.com>
+	 * @return array
+	 */
+	function listToSelectTree($pk = 'value',$pid = 'pid',$child = 'children',$root = 0) {
+		// 创建Tree
+		$tree = array();
+		$list = $this->object_array($this->arr);
+		if(is_array($list)?!empty($list):false) {
 			// 创建基于主键的数组引用
 			$refer = array();
 			foreach ($list as $key => $data) {

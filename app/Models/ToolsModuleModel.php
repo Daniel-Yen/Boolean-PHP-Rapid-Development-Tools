@@ -19,5 +19,5 @@ class ToolsModuleModel extends Model
 	//主键
 	protected $primaryKey = 'id';
 	
-    protected $datas = ['created_at', 'updated_at', 'deleted_at'];
+    protected $datas = ['deleted_at'];
 }

@@ -29,9 +29,13 @@ class DatatableController extends Controller
 	public function index(Request $request)
     {
     	//新增的时候根据控制器及方法名生成路由
-    	if($request->isMethod('post') && $request->do == 'create'){
+    	if($request->isMethod('post') && ( $request->do == 'create' || $request->do == 'update' ) ){
 			$route_message = $this->getRouteMessage($request->post());
-			$request->offsetSet('url', $route_message['route_path'].$route_message['method']);
+			//dd($route_message);
+			//自定义请求参数
+			if($request->method){
+				$request->offsetSet('url', $route_message['route_path'].$route_message['method']);
+			}
 		}
 		
 		create_datatable('datatable_1', [], $request);
@@ -159,9 +163,7 @@ class DatatableController extends Controller
 					}
 				}
 			}
-			//dd($datatable_arr['line_button']);
-			//dd($datatable_arr);
-			//print_r($_POST);  die();
+			
 			//保存datatable 配置文件
 			$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';
 			file_put_contents($this->datatablePath.$datatable_config_name.'.php',$datatable_config);
@@ -178,11 +180,9 @@ class DatatableController extends Controller
 			return success("操作成功");
 		}else{
 			//根据datatable名称获得模型配置
-			//dd($datatable_config_name);
 			$datatable_config = get_datatable_config($datatable_config_name);
 			//dd($datatable_config);
 			$route_message = $this->getRouteMessage($datatable_arr);
-			
 			if(!empty($route_message)){
 				//生成控制器及方法
 				if(!$route_message['controller_exists']){
@@ -191,14 +191,13 @@ class DatatableController extends Controller
 					
 					return success('控制器及方法生成成功', '控制器：'.$route_message['controller'].'已生成，控制器方法：'.$route_message['method'].'已生成', url()->full() );
 				}
-				//dd($route_message);
 			}else{
 				return view('datatable.msg', [
 					'msg' => "没有指定的控制器及方法"
 				]);
 			}
 			
-			view()->share([
+			return view('lazykit.datatable.set', [
 				'field_row_arr' 		=> $this->getFieldRow($datatable_arr),						//根据表配置获得字段属
 				'fixed_column_dic_arr' 	=> $this->fixedColumnDic(),									//字典：固定列的类型
 				'button_style_type_arr' => $this->buttonStyleTypeDic(),								//字典：行按钮样式
@@ -211,11 +210,10 @@ class DatatableController extends Controller
 				'tables' 				=> $this->getTables(),
 				'route_message' 		=> $route_message, 											//获得路由信息
 			]);
-			return view('lazykit.datatable.set');
 		}
 	}
 	
-	//
+	//设置菜单模型
 	public function addModel(Request $request){
 		//dd($request->id);
 		$param = $request->post();
@@ -237,11 +235,13 @@ class DatatableController extends Controller
 	private function createModelRequest($tablename){
 		//根据数据库表名称获得要生成的模型的类名称跟文件名
 		$hump_name = Str::title( Str::studly($tablename) );
+		//dd($hump_name);
 		//保存datatable配置的时候判断是否有数据库表,如果有表,生成数据表模型跟验证器
 		$path = ['..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Models'.DIRECTORY_SEPARATOR, '..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Requests'.DIRECTORY_SEPARATOR];
 		foreach(['Model','Request'] as $k=>$v){
 			//读取空模型的模板
 			$file_path = $path[$k];
+			create_dir($file_path);
 			$file_name = $file_path.$hump_name.$v.'.php';
 			if(!file_exists($file_name)){
 				$file = file_get_contents($file_path.'New'.$v.'.php');
@@ -362,14 +362,27 @@ class DatatableController extends Controller
 	public function mergeAttribute($datatable_set_arr, $result, $field_from)
 	{
 		//dd($result);
-		$datatable_set = $datatable_set_arr['datatable_set'];
-		if($datatable_set){
-			foreach($result as $k=>$v){
-				$v = object_array($v);
-				//dd($v->Field);
-				//如果数据库中已有改字段的配置记录，则将当前记录$v与配置数组合并
-				$v['field_from'] = $field_from;		//字段来自主表
-				if(isset($v['Field'])?isset($datatable_set[$v['Field']]):''){
+		foreach($result as $k=>$v){
+			$v = object_array($v);
+			
+			if(isset($v['Type'])){
+				$type = explode('(',str_replace(')', '', $v['Type']));
+				if($type[0]){
+					$v['field_type'] = $type[0];		//字段类型
+				}
+				if(isset($type[1])){
+					$v['field_length'] = $type[1];		//字段类型
+				}else{
+					$v['field_length'] = 'no_limit';		//字段类型
+				}
+			}
+			//dd($type);
+			
+			//如果数据库中已有改字段的配置记录，则将当前记录$v与配置数组合并
+			$v['field_from'] = $field_from;		//字段来自主表
+			if( isset($datatable_set_arr['datatable_set']) ){
+				$datatable_set = $datatable_set_arr['datatable_set'];
+				if(isset($v['Field'])?isset($datatable_set[$v['Field']]):false){
 					//将created_at、updated_at、deleted_at三个功能性字段放到队尾
 					if(in_array($v['Field'],["created_at", "updated_at", "deleted_at"])){
 						$datatable_set[$v['Field']]['sorting'] = 999;
@@ -383,6 +396,8 @@ class DatatableController extends Controller
 				}else{
 					$result[$k] = $v;
 				}
+			}else{
+				$result[$k] = $v;
 			}
 		}
 		//dd($result);
@@ -722,11 +737,10 @@ class DatatableController extends Controller
 				'textarea' 				=> ['文本区域', '100%']
 			],
 			'下拉选择' => [
-				'select' 				=> ['下拉选择', '180px'],
-//				'tree_select'			=> ['树型下拉选择', '180px'],
-//				'table_select' 			=> ['表格选择', '180px'],
-// 				'multiple_select' 		=> ['下拉多选', '100%'],
-// 				'cascade_select' 		=> ['级联选择', '160px']
+				'select' 				=> ['下拉单项选择', '180px'],
+				'multiple_select'		=> ['下拉多项选择', '180px'],
+				'tree_select'			=> ['树状下拉选择', '180px'],
+				'cascade_select'		=> ['级联选择', '180px'],
 			],
 			'编辑器' => [
 				'layui_editer' 			=> ['layui 编辑器', '100%'],
@@ -779,9 +793,9 @@ class DatatableController extends Controller
 	 */
 	private function dataSourceDic(){
 		return [
+			'method' 		=> '控制器方法',
 			'sql' 			=> 'SQL语句',
 			'json' 			=> 'JSON数据',
-			'function' 		=> '控制器方法',
 		];
 	}
 	
@@ -814,12 +828,12 @@ class DatatableController extends Controller
 	
 	//pid字段的下拉选择
 	public function attribute_pid(){
-		$data = ToolsDatatableModel::get();
+		$data = ToolsDatatableModel::select('id as value', 'title as name', 'pid')->get();
 		if($data->count()){
 			$data = $data->toArray();
 			//转换为树结构
 			$tree = new \App\Http\Controllers\Common\TreeController($data);
-			$data = $tree->listToDatatableTree();
+			$data = $tree->listToSelectTree();
 		}else{
 			$data = [];
 		}
@@ -829,10 +843,9 @@ class DatatableController extends Controller
 	
 	//module字段的下拉选择
 	public function attribute_module(){
-		$data = ToolsModuleModel::get();
+		$data = ToolsModuleModel::select('id as value', 'system_name as name')->get();
 		if($data->count()){
 			$data = $data->toArray();
-			$data = as_title($data, 'system_name');
 		}else{
 			$data = [];
 		}
@@ -843,8 +856,9 @@ class DatatableController extends Controller
 	//model字段的下拉选择
 	public function attribute_model(){
 		$data = [
-			['id' => 'datatable', 'title' => '数据表格'],
-			['id' => 'charts', 'title' => '统计图表'],
+			['value' => 'diy', 			'name' => '自定义代码'],
+			['value' => 'datatable', 	'name' => '数据表格'],
+			['value' => 'charts', 		'name' => '统计图表'],
 		];
 		
 		return $data;
@@ -885,7 +899,13 @@ class DatatableController extends Controller
 			$data = $data->toArray();
 			//dd($data);
 			foreach($data as $k=>$v){
-				$module = ToolsModuleModel::where('id',$v['module_id'])->first()->toArray();
+				$module = ToolsModuleModel::where('id',$v['module_id'])->get();
+				//dd($module);
+				if($module->first()){
+					$module = $module->toArray()[0];
+				}else{
+					$module = [];
+				}
 				//dd($module);
 				if(!empty($module)){
 					if($v['url'] && $v['method']){

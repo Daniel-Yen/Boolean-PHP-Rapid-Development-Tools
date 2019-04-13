@@ -14,6 +14,8 @@
   array (
     'id' => 
     array (
+      'field_type' => 'int',
+      'field_length' => '11',
       'sorting' => '0',
       'fixed' => 'left',
       'title' => '编号',
@@ -24,6 +26,8 @@
     ),
     'title' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '40',
       'sorting' => '1',
       'fixed' => 'left',
       'title' => '菜单名称',
@@ -37,6 +41,8 @@
     ),
     'pid' => 
     array (
+      'field_type' => 'int',
+      'field_length' => '11',
       'sorting' => '2',
       'fixed' => NULL,
       'title' => '上级菜单',
@@ -49,6 +55,8 @@
     ),
     'url' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '3',
       'fixed' => NULL,
       'title' => '命名路由',
@@ -61,6 +69,8 @@
     ),
     'method' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '200',
       'sorting' => '4',
       'fixed' => NULL,
       'title' => '处理方法',
@@ -73,6 +83,8 @@
     ),
     'model' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '20',
       'sorting' => '5',
       'fixed' => NULL,
       'title' => '菜单模型',
@@ -86,6 +98,8 @@
     ),
     'module_id' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '20',
       'sorting' => '6',
       'fixed' => NULL,
       'title' => '所属模块',
@@ -98,6 +112,8 @@
     ),
     'main_table' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '30',
       'sorting' => '15',
       'fixed' => NULL,
       'title' => '主表',
@@ -107,6 +123,8 @@
     ),
     'associated_type' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '15',
       'sorting' => '16',
       'fixed' => NULL,
       'title' => '关联类型',
@@ -116,6 +134,8 @@
     ),
     'associated_table' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '30',
       'sorting' => '17',
       'fixed' => NULL,
       'title' => '关联表',
@@ -125,6 +145,8 @@
     ),
     'external_field' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '250',
       'sorting' => '18',
       'fixed' => NULL,
       'title' => '自定义字段',
@@ -134,6 +156,8 @@
     ),
     'created_at' => 
     array (
+      'field_type' => 'datetime',
+      'field_length' => 'no_limit',
       'sorting' => '999',
       'fixed' => NULL,
       'title' => '创建时间',
@@ -144,6 +168,8 @@
     ),
     'updated_at' => 
     array (
+      'field_type' => 'datetime',
+      'field_length' => 'no_limit',
       'sorting' => '999',
       'fixed' => NULL,
       'title' => '修改时间',
@@ -154,6 +180,8 @@
     ),
     'deleted_at' => 
     array (
+      'field_type' => 'datetime',
+      'field_length' => 'no_limit',
       'sorting' => '999',
       'fixed' => NULL,
       'title' => '删除时间',
@@ -258,7 +286,6 @@
       'text' => '弹窗测试',
       'icon' => NULL,
       'open_tepe' => 'window',
-      'must' => 'on',
       'width' => '90%',
       'height' => '90%',
       'method' => 'window',
@@ -269,7 +296,7 @@
     'set' => 
     array (
       'text' => '生成配置',
-      'style' => 'layui-btn-normal',
+      'style' => 'layui-btn-danger',
       'open_tepe' => 'window',
       'must' => 'on',
       'width' => '100%',

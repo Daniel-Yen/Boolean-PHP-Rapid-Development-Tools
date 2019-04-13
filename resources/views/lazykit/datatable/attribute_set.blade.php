@@ -18,7 +18,7 @@
 		padding:2px;
 	}
 	@if (isset($attribute_arr['data_input_form']))
-	@if (in_array($attribute_arr['data_input_form'], ['select', 'tree_select']))
+	@if (in_array($attribute_arr['data_input_form'], ['select', 'multiple_select', 'cascade_select', 'tree_select']))
 	.data_source{display:block;}
 	@else
 	.data_source{display:none;}
@@ -64,7 +64,6 @@
 					<label class="layui-form-label data_source">数据源类型</label>
 					<div class="layui-input-inline data_source">
 						<select name="data_source_type" lay-filter="" lay-verify="required">
-							<option value="sql">SQL语句</option>
 							@foreach ($data_source_dic_arr as $k=>$vo)
 							<option @if (isset($attribute_arr['data_source_type'])) @if ($attribute_arr['data_source_type'] == $k) selected="selected" @endif  @endif value="{{$k}}">{{$vo}}</option>
 							@endforeach
@@ -74,7 +73,7 @@
 				<div class="layui-form-item layui-form-text data_source">
 					<label class="layui-form-label"></label>
 					<div class="layui-input-block">
-						<textarea name="data_source" placeholder="请输入数据源" class="layui-textarea">{{isset($attribute_arr['data_source'])?$attribute_arr['data_source']:''}}</textarea>
+						<textarea id="data_source" name="data_source" placeholder="请输入数据源" class="layui-textarea">{{isset($attribute_arr['data_source'])?$attribute_arr['data_source']:''}}</textarea>
 					</div>
 				</div>
 				<div class="layui-form-item layui-form-text">
@@ -83,16 +82,6 @@
 						@foreach ($verify_dic_arr as $k=>$ko)
 						
 						@endforeach
-					</div>
-				</div>
-				<div class="layui-form-item layui-form-text">
-					<label class="layui-form-label">数据字典</label>
-					<div class="layui-input-inline">
-						<select name="dic_type" lay-filter="dic_type">
-							@foreach ($dic_type_dic_arr as $k=>$ko)
-							<option @if (isset($attribute_arr['dic_type'])) @if ($attribute_arr['dic_type'] == $k) selected="selected" @endif  @endif value="{{$k}}">{{$ko}}</option>
-							@endforeach
-						</select>
 					</div>
 				</div>
 				<div class="layui-form-item layui-form-text" style="display: none;" id="static_dic_area">
@@ -190,31 +179,31 @@
 			$("[name='dom_width']").val(width);
 		});
 		
-		form.on('select(dic_type)', function(data){
-			//alert(data.value);
-			if(data.value == 'no_dic'){
-				$("#static_dic_area").hide();
-				$("#table_dic_area").hide();
-				$("#dic_static").val('');
-				$("#dic_table").val('');
-				$("#dic_key").val('');
-				$("#dic_value").val('');
-			}else if(data.value == 'static_dic'){
-				$("#static_dic_area").show();
-				$("#table_dic_area").hide();
-				$("#dic_table").val('');
-				$("#dic_key").val('');
-				$("#dic_value").val('');
-			}else if(data.value == 'table_dic'){
-				$("#static_dic_area").hide();
-				$("#table_dic_area").show();
-				$("#dic_static").val('');
-			}
-		});
+// 		form.on('select(dic_type)', function(data){
+// 			//alert(data.value);
+// 			if(data.value == 'no_dic'){
+// 				$("#static_dic_area").hide();
+// 				$("#table_dic_area").hide();
+// 				$("#dic_static").val('');
+// 				$("#dic_table").val('');
+// 				$("#dic_key").val('');
+// 				$("#dic_value").val('');
+// 			}else if(data.value == 'static_dic'){
+// 				$("#static_dic_area").show();
+// 				$("#table_dic_area").hide();
+// 				$("#dic_table").val('');
+// 				$("#dic_key").val('');
+// 				$("#dic_value").val('');
+// 			}else if(data.value == 'table_dic'){
+// 				$("#static_dic_area").hide();
+// 				$("#table_dic_area").show();
+// 				$("#dic_static").val('');
+// 			}
+// 		});
 		
 		form.on('select(data_input_form)', function(data){
 			//alert(data.value);
-			if(data.value == 'select'||data.value == 'tree_select'){
+			if(data.value == 'select'||data.value == 'tree_select'||data.value == 'cascade_select'||data.value == 'multiple_select'){
 				$(".data_source").show();
 			}else{
 				$(".data_source").hide();
@@ -297,5 +286,6 @@
 	};
 	//textarea高度自适应
 	autoTextarea(document.getElementById("cell_style_template"));
+	autoTextarea(document.getElementById("data_source"));
 </script>
 @endpush

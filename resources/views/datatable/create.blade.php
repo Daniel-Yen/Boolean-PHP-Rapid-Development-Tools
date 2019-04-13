@@ -2,6 +2,7 @@
 
 @push('css')
 <link rel="stylesheet" href="{{file_path('/include/editormd/css/editormd.css')}}" media="all">
+<link rel="stylesheet" href="{{file_path('/include/formSelects-v4.css')}}" media="all">
 <style type="text/css">
 	.layui-table-tool {background-color: #FFFFFF;}
 	.layui-table-view {margin: 0;}
@@ -37,40 +38,58 @@
 				@case('select')
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline" style="width:400px;">
-						<select name="{{$vo['field']}}">
-							<option value="0">请选择{{$vo['title']}}</option>
-							@if (isset($vo['data_arr']))
-							@foreach ($vo['data_arr'] as $v)
-							<option @if (isset($data_arr[$vo['field']])) @if ($data_arr[$vo['field']] == $v['id']) selected="selected" @endif @endif value="{{$v['id']}}">{!! $v['title'] !!}</option>
-							@endforeach
-							@endif
+					<div class="layui-input-block">
+						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
+						<select name="{{$vo['field']}}" xm-select-skin="normal" xm-select="{{$vo['field']}}" xm-select-radio>
+							<option value="">请选择</option>
 						</select>
+						@else
+						<div class="layui-form-mid layui-word-aux"><span class="layui-badge">{{$vo['dic_data']['msg']}}</span></div>
+						@endif
 					</div>
-				</div>
+				</div>	
 				@break
 				@case('tree_select')
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-block" style="width:300px;">
-						<input type="text" name="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" readonly="readonly" placeholder="请选择{{$vo['title']}}" autocomplete="off" class="layui-input">
-						<div class="eleTree ele{{$vo['field']}}" lay-filter="data{{$vo['field']}}"></div>
+					<div class="layui-input-block">
+						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
+						<select name="{{$vo['field']}}" xm-select-skin="normal" xm-select="{{$vo['field']}}" xm-select-radio>
+							<option value="">请选择</option>
+						</select>
+						@else
+						<div class="layui-form-mid layui-word-aux"><span class="layui-badge">{{$vo['dic_data']['msg']}}</span></div>
+						@endif
 					</div>
-				</div>
+				</div>	
 				@break
-				@case('table_select')
-				
+				@case('multiple_select')
+				<div class="layui-form-item">
+					<label class="layui-form-label">{{$vo['title']}}</label>
+					<div class="layui-input-block">
+						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
+						<select name="{{$vo['field']}}" xm-select-skin="normal" xm-select="{{$vo['field']}}">
+							<option value="">请选择</option>
+						</select>
+						@else
+						<div class="layui-form-mid layui-word-aux"><span class="layui-badge">{{$vo['dic_data']['msg']}}</span></div>
+						@endif
+					</div>
+				</div>	
 				@break
 				@case('cascade_select')
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
-						<input type="text" name="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" class="layui-input" readonly="readonly">
+						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
+						<select name="{{$vo['field']}}" xm-select-skin="normal" xm-select="{{$vo['field']}}" xm-select-radio>
+							<option value="">请选择</option>
+						</select>
+						@else
+						<div class="layui-form-mid layui-word-aux"><span class="layui-badge">{{$vo['dic_data']['msg']}}</span></div>
+						@endif
 					</div>
-				</div>
-				@break
-				@case('multiple_select')
-				
+				</div>	
 				@break
 				@case('layui_editer')
 				<div class="layui-form-item">
@@ -334,8 +353,9 @@
 	layui.config({
 		base: '{{file_path('/include/')}}',
 	}).extend({
-		index: 'lib/index' //主入口模块
-	}).use(['jquery', 'form', 'layer', 'eleTree', 'layedit', 'laydate', 'element', 'slider', 'table','colorpicker', 'upload'], function() {
+		index: 'lib/index', //主入口模块
+		formSelects: 'formSelects-v4'
+	}).use(['jquery', 'form', 'layer', 'eleTree', 'layedit', 'laydate', 'element', 'slider', 'table','colorpicker', 'upload', 'formSelects'], function() {
 			var $ = layui.$,
 				form = layui.form,
 				layer = layui.layer,
@@ -346,6 +366,7 @@
 				slider = layui.slider,
 				table = layui.table,
 				upload = layui.upload,
+				formSelects = layui.formSelects,
 				colorpicker = layui.colorpicker;
 				
 			@include ('datatable.create_js')

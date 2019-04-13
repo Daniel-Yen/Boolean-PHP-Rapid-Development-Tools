@@ -14,6 +14,8 @@
   array (
     'id' => 
     array (
+      'field_type' => 'int',
+      'field_length' => '11',
       'sorting' => '0',
       'fixed' => NULL,
       'title' => '编号',
@@ -24,6 +26,8 @@
     ),
     'the_title' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '1',
       'fixed' => 'left',
       'title' => '标题',
@@ -39,6 +43,8 @@
     ),
     'text' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '250',
       'sorting' => '2',
       'fixed' => NULL,
       'title' => '文本',
@@ -54,6 +60,8 @@
     ),
     'textarea' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '250',
       'sorting' => '3',
       'fixed' => NULL,
       'title' => '文本区域',
@@ -67,6 +75,8 @@
     ),
     'select' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '20',
       'sorting' => '8',
       'fixed' => NULL,
       'title' => '下拉选择',
@@ -81,9 +91,11 @@
     ),
     'tree_select' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '20',
       'sorting' => '9',
       'fixed' => NULL,
-      'title' => '树型下拉选择',
+      'title' => '树状下拉选择',
       'field' => 'tree_select',
       'field_from' => 'main_table',
       'width' => NULL,
@@ -93,21 +105,10 @@
       'search' => 'on',
       'import' => 'on',
     ),
-    'table_select' => 
-    array (
-      'sorting' => '10',
-      'fixed' => NULL,
-      'title' => '表格选择',
-      'field' => 'table_select',
-      'field_from' => 'main_table',
-      'width' => NULL,
-      'create' => 'on',
-      'update' => 'on',
-      'read' => 'on',
-      'search' => 'on',
-    ),
     'multiple_select' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '20',
       'sorting' => '11',
       'fixed' => NULL,
       'title' => '下拉多选',
@@ -121,6 +122,8 @@
     ),
     'cascade_select' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '20',
       'sorting' => '12',
       'fixed' => NULL,
       'title' => '级联选择',
@@ -134,6 +137,8 @@
     ),
     'single_photo_upload' => 
     array (
+      'field_type' => 'text',
+      'field_length' => 'no_limit',
       'sorting' => '40',
       'fixed' => NULL,
       'title' => '单图上传',
@@ -146,6 +151,8 @@
     ),
     'photos_upload' => 
     array (
+      'field_type' => 'text',
+      'field_length' => 'no_limit',
       'sorting' => '41',
       'fixed' => NULL,
       'title' => '多图上传',
@@ -158,6 +165,8 @@
     ),
     'single_file_upload' => 
     array (
+      'field_type' => 'text',
+      'field_length' => 'no_limit',
       'sorting' => '42',
       'fixed' => NULL,
       'title' => '单文件上传',
@@ -170,6 +179,8 @@
     ),
     'files_upload' => 
     array (
+      'field_type' => 'text',
+      'field_length' => 'no_limit',
       'sorting' => '43',
       'fixed' => NULL,
       'title' => '多文件上传',
@@ -182,6 +193,8 @@
     ),
     'year' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '60',
       'fixed' => NULL,
       'title' => '年选择器',
@@ -194,6 +207,8 @@
     ),
     'year_mouth' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '61',
       'fixed' => NULL,
       'title' => '年月选择器',
@@ -206,6 +221,8 @@
     ),
     'date' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '62',
       'fixed' => NULL,
       'title' => '日期选择器',
@@ -218,6 +235,8 @@
     ),
     'time' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '63',
       'fixed' => NULL,
       'title' => '时间选择器',
@@ -230,6 +249,8 @@
     ),
     'datetime' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '64',
       'fixed' => NULL,
       'title' => '日期时间选择器',
@@ -243,6 +264,8 @@
     ),
     'year_scope' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '65',
       'fixed' => NULL,
       'title' => '年范围',
@@ -256,6 +279,8 @@
     ),
     'year_mouth_scope' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '66',
       'fixed' => NULL,
       'title' => '年月范围',
@@ -269,6 +294,8 @@
     ),
     'date_scope' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '67',
       'fixed' => NULL,
       'title' => '日期范围',
@@ -282,6 +309,8 @@
     ),
     'time_scope' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '68',
       'fixed' => NULL,
       'title' => '时间范围',
@@ -295,6 +324,8 @@
     ),
     'datetime_scope' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '69',
       'fixed' => NULL,
       'title' => '日期时间范围',
@@ -308,6 +339,8 @@
     ),
     'color_choices' => 
     array (
+      'field_type' => 'varchar',
+      'field_length' => '50',
       'sorting' => '80',
       'fixed' => NULL,
       'title' => '颜色选择',
@@ -321,6 +354,8 @@
     ),
     'editormd' => 
     array (
+      'field_type' => 'text',
+      'field_length' => 'no_limit',
       'sorting' => '130',
       'fixed' => NULL,
       'title' => 'Markdown 编辑器',
@@ -333,6 +368,8 @@
     ),
     'layui_editer' => 
     array (
+      'field_type' => 'text',
+      'field_length' => 'no_limit',
       'sorting' => '131',
       'fixed' => NULL,
       'title' => 'layui 编辑器',
@@ -345,6 +382,8 @@
     ),
     'layui_editer_simple' => 
     array (
+      'field_type' => 'text',
+      'field_length' => 'no_limit',
       'sorting' => '132',
       'fixed' => NULL,
       'title' => 'layui 编辑器精简版',
@@ -357,6 +396,8 @@
     ),
     'created_at' => 
     array (
+      'field_type' => 'datetime',
+      'field_length' => 'no_limit',
       'sorting' => '999',
       'fixed' => NULL,
       'title' => '创建时间',
@@ -366,6 +407,8 @@
     ),
     'updated_at' => 
     array (
+      'field_type' => 'datetime',
+      'field_length' => 'no_limit',
       'sorting' => '999',
       'fixed' => NULL,
       'title' => '修改时间',
@@ -376,6 +419,8 @@
     ),
     'deleted_at' => 
     array (
+      'field_type' => 'datetime',
+      'field_length' => 'no_limit',
       'sorting' => '999',
       'fixed' => NULL,
       'title' => '删除时间',

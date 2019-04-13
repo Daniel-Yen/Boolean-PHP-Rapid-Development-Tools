@@ -7,16 +7,33 @@
 
 		@break
 		@case ('select')
-
+			@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
+			formSelects.data('{{$vo['field']}}', 'local', {
+				arr: @json($vo['dic_data']['data'])
+			});
+			@endif
 		@break
 		@case ('tree_select')
-			
-		@break
-		@case ('table_select')
-
+			@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
+			formSelects.data('{{$vo['field']}}', 'local', {
+				arr: @json($vo['dic_data']['data'])
+			});
+			@endif
 		@break
 		@case ('multiple_select')
-
+			@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
+			formSelects.data('{{$vo['field']}}', 'local', {
+				arr: @json($vo['dic_data']['data'])
+			});
+			@endif
+		@break
+		@case ('cascade_select')
+			@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
+			formSelects.data('{{$vo['field']}}', 'local', {
+				arr: @json($vo['dic_data']['data']),
+				linkage: true	//开启联动模式
+			});
+			@endif
 		@break
 		@case ('layui_editer')
 			{{-- layui编辑器 --}}

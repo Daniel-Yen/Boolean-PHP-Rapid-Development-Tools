@@ -14,6 +14,8 @@
   array (
     'field_1' => 
     array (
+      'field_type' => NULL,
+      'field_length' => NULL,
       'sorting' => '1',
       'fixed' => 'left',
       'title' => '自定义字段1',
@@ -24,6 +26,8 @@
     ),
     'field_2' => 
     array (
+      'field_type' => NULL,
+      'field_length' => NULL,
       'sorting' => '2',
       'fixed' => NULL,
       'title' => '自定义字段2',
@@ -34,6 +38,8 @@
     ),
     'field_3' => 
     array (
+      'field_type' => NULL,
+      'field_length' => NULL,
       'sorting' => '3',
       'fixed' => NULL,
       'title' => '自定义字段3',
@@ -44,6 +50,8 @@
     ),
     'field_4' => 
     array (
+      'field_type' => NULL,
+      'field_length' => NULL,
       'sorting' => '4',
       'fixed' => NULL,
       'title' => '自定义字段4',
@@ -54,6 +62,8 @@
     ),
     'field_5' => 
     array (
+      'field_type' => NULL,
+      'field_length' => NULL,
       'sorting' => '5',
       'fixed' => NULL,
       'title' => '自定义字段5',
