@@ -34,7 +34,7 @@ class DatatableController extends Controller
 			//dd($route_message);
 			//自定义请求参数
 			if($request->method){
-				$request->offsetSet('url', $route_message['route_path'].$route_message['method']);
+				$request->offsetSet('url', $route_message['route_path'].$route_message['route_name']);
 			}
 		}
 		
@@ -50,12 +50,14 @@ class DatatableController extends Controller
 	public function getRouteMessage($datatable_arr){
 		//获得控制器路径
 		$module_path = ToolsModuleModel::where('id', $datatable_arr['module_id'])->first(['module']);
+		//dd($datatable_arr);
 		//dd($module_path);
 		//只有当控制器方法存在且不为空才能进行以下路由信息的计算并判断控制器是否存在,方法是否存在
 		if($datatable_arr['method']){
 			$method_arr = explode('@', $datatable_arr['method']);
 		
 			$route_path = '/'.strtolower($module_path['module']).'/'.strtolower(str_replace('Controller','',$method_arr[0])).'/';
+			//dd($route_path);
 			$route_arr = [
 				'id' 			=> isset($datatable_arr['id'])?$datatable_arr['id']:'',
 				'route_path' 	=> $route_path,
@@ -234,11 +236,12 @@ class DatatableController extends Controller
 	 */
 	private function createModelRequest($tablename){
 		//根据数据库表名称获得要生成的模型的类名称跟文件名
-		$hump_name = Str::title( Str::studly($tablename) );
+		$hump_name = Str::studly($tablename);
 		//dd($hump_name);
 		//保存datatable配置的时候判断是否有数据库表,如果有表,生成数据表模型跟验证器
 		$path = ['..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Models'.DIRECTORY_SEPARATOR, '..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Requests'.DIRECTORY_SEPARATOR];
-		foreach(['Model','Request'] as $k=>$v){
+		//foreach(['Model','Request'] as $k=>$v){
+		foreach(['Model'] as $k=>$v){
 			//读取空模型的模板
 			$file_path = $path[$k];
 			create_dir($file_path);
@@ -455,8 +458,6 @@ class DatatableController extends Controller
 				'field' => $request->field,
 			];
 			$param = [
-// 				'datatable_id' => $request->datatable_id,
-// 				'field' => $request->field,
 				'field_from' => $request->field_from,
 				'attribute' => json_encode($data),
 			];
@@ -813,19 +814,6 @@ class DatatableController extends Controller
 		];
 	}
 	
-	/**
-	 * 数据字典:是否
-	 * @access 		private
-	 * @author    	杨鸿<yh15229262120@qq.com> 
-	 * @return 		array                       
-	 */
-	private function yesOrNoDic(){
-		return [
-			'yes' 	=> '是',
-			'no' 	=> '否',
-		];
-	}
-	
 	//pid字段的下拉选择
 	public function attribute_pid(){
 		$data = ToolsDatatableModel::select('id as value', 'title as name', 'pid')->get();
@@ -879,7 +867,7 @@ class DatatableController extends Controller
 		}
 		//dd($data);
 		
-		return json_encode($data);
+		return $data;
 	}
 	
 	//生成路由
@@ -892,7 +880,8 @@ class DatatableController extends Controller
 | Datatable Routes
 |--------------------------------------------------------------------------
 | 此路由文件由布尔懒人工具包自动生成，包含DataTable生成器相关路由
-| 注意：请不要在此文件手写路由
+| 生成日期：'.date('Y-m-d H:i:s', time()).'
+| 注    意：请不要在此文件手写路由
 */'.PHP_EOL;
 		
 		if($data->count()){
@@ -907,6 +896,7 @@ class DatatableController extends Controller
 					$module = [];
 				}
 				//dd($module);
+				//如果菜单没有对应模块则软删除该菜单
 				if(!empty($module)){
 					if($v['url'] && $v['method']){
 						$route_name = "'".$v['url']."',";
@@ -928,17 +918,17 @@ class DatatableController extends Controller
 						$route .= $route_record."  //".$v['title'].PHP_EOL;
 					}
 				}else{
-					//如果菜单没有对应模块则软删除该菜单
 					$result = ToolsDatatableModel::where('id',$v['id'])->delete();
 					//$result = ['code' => 1, 'msg' => "路由生成失败，菜单“".$v['title']."”没有对应的模块"];
 				}
 			}
 			$path = base_path('routes'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR.'datatable.php');
+			//dd($route);
 			file_put_contents($path, $route);
 			$result = ['code' => 0, 'msg' => "路由文件更新成功"];
 		}else{
 			$result = ['code' => 1, 'msg' => "没有要生成的路由"];
 		}
-		echo json_encode($result);
+		return json_encode($result);
 	}
 }

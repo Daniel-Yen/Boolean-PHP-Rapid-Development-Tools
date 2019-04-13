@@ -330,7 +330,6 @@ layui.config({
 						success: function(res) {
 							if (res.code == 0) {
 								layer.msg(res.msg);
-								//table.reload('testReload');
 								tools.reload();
 							} else {
 								layer.msg(res.msg);
@@ -400,7 +399,7 @@ layui.config({
 				tools.reload();
 			}
 		}
-		,nodes: @if ( isset($datatable_config['left_tree']['code'])?$datatable_config['left_tree']['code'] == 0:false ) {!! $datatable_config['left_tree']['data'] !!} @else [] @endif
+		,nodes: @if ( isset($datatable_config['left_tree']['code'])?$datatable_config['left_tree']['code'] == 0:false ) @json($datatable_config['left_tree']['data']) @else [] @endif
 	});
 	
 	@if ( isset($datatable_config['left_tree']['code'])?$datatable_config['left_tree']['code'] == 1:false )

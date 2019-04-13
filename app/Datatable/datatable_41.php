@@ -1,19 +1,21 @@
 <?php return array (
-  'id' => 23,
+  'id' => 41,
   'title' => '系统信息',
-  'pid' => 32,
+  'pid' => 40,
   'model' => 'datatable',
-  'url' => '/lazykit/environment/server',
+  'url' => '/system/environment/server',
   'method' => 'EnvironmentController@server',
-  'module_id' => '1',
-  'main_table' => '',
-  'associated_type' => '',
-  'associated_table' => '',
+  'module_id' => '2',
+  'main_table' => NULL,
+  'associated_type' => NULL,
+  'associated_table' => NULL,
   'external_field' => 'set,key',
   'datatable_set' => 
   array (
     'set' => 
     array (
+      'field_type' => NULL,
+      'field_length' => NULL,
       'sorting' => '1',
       'fixed' => NULL,
       'title' => '运行环境属性',
@@ -24,6 +26,8 @@
     ),
     'key' => 
     array (
+      'field_type' => NULL,
+      'field_length' => NULL,
       'sorting' => '2',
       'fixed' => NULL,
       'title' => '当前值',
@@ -46,15 +50,13 @@
   ),
   'other_set' => 
   array (
-    'limit' => '20',
-    'cell_min_width' => '160',
     'line_button_area_width' => '160',
   ),
   'route' => 
   array (
-    'route_path' => '/lazykit/environment/',
+    'route_path' => '/system/environment/',
     'route_name' => 'server',
-    'controller' => 'App\\Http\\Controllers\\Lazykit\\EnvironmentController',
+    'controller' => 'App\\Http\\Controllers\\System\\EnvironmentController',
     'method' => 'server',
   ),
   'new_head_menu' => NULL,

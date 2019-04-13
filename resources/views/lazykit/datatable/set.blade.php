@@ -67,7 +67,7 @@
 						</select>
 						</td>
 						<td class="external_field">
-						<input type="text" name="external_field" value="{{$datatable_arr['external_field']}}" autocomplete="off" class="layui-input">
+						<input type="text" name="external_field" value="{{$datatable_arr['external_field']}}" placeholder="请输入用逗号隔开的字段" autocomplete="off" class="layui-input">
 						</td>
 					</tr>
 				</tbody>

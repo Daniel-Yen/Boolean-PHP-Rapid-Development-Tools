@@ -3,7 +3,7 @@
  * 运行环境信息
  * @auther 		杨鸿<yh15229262120@qq.com>
  */
-namespace App\Http\Controllers\Lazykit;
+namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;

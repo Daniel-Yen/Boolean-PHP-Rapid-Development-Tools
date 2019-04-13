@@ -79,9 +79,7 @@
 				<div class="layui-form-item layui-form-text">
 					<label class="layui-form-label">验证规则</label>
 					<div class="layui-input-block">
-						@foreach ($verify_dic_arr as $k=>$ko)
-						
-						@endforeach
+						<input type="text" name="validate" value="{{isset($attribute_arr['validate'])?$attribute_arr['validate']:''}}" placeholder="请输入验证规则" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-form-item layui-form-text" style="display: none;" id="static_dic_area">

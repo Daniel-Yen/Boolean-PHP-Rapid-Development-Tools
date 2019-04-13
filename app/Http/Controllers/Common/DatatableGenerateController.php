@@ -34,6 +34,8 @@ class DatatableGenerateController extends Controller
 			$dom = $this->getDataFieldSet($datatable_config, 'create');
 			//dd($dom);
 			if($request->isMethod('post')){
+				$request->validate([]);
+				
 				//dd($request->post());
 				$param = $this->getAllowField($dom, $request->post());
 				//dump($param); die();
@@ -77,6 +79,8 @@ class DatatableGenerateController extends Controller
 		}elseif( $request->do == "update") {
 			$dom = $this->getDataFieldSet($datatable_config, 'update');
 			if($request->isMethod('post')){
+				$request->validate([]);
+				
 				//dd($request->post());
 				$param = $this->getAllowField($dom, $request->post());
 				//dump($param); die();
@@ -161,52 +165,58 @@ class DatatableGenerateController extends Controller
 			//如果有外部数据源,则读取
 			if($datatable_config['data_source_method']){
 				$result = $this->getDataByMethod($datatable_config['data_source_method'], $datatable_config);
-				return datatable_callback_json(0, '数据读取成功', count($result), $result);
-			}
-			$conditions = [];
-			//dd($request->post());
-			
-			//4、查询条件
-			if(isset($additional_config['conditions'])){
-				$conditions = array_merge($conditions, $additional_config['conditions']);
-			}
-			
-			//DB::connection()->enableQueryLog();
-			if(isset($datatable_config['other_set']['is_tree'])){
-				if($request->ac == "recycle"){
-					$rows_arr = $datatable_config['modelClass']::where($conditions)->onlyTrashed()->get();
+				if($result['code'] == 0){
+					return datatable_callback_json(0, '数据读取成功', count($result['data']), $result['data']);
 				}else{
-					$rows_arr = $datatable_config['modelClass']::where($conditions)->get();
+					echo json_encode($result);
 				}
-				if($rows_arr->first()){
-					$rows_arr = $rows_arr->toArray();
-					$rows_arr = $this->dicToChar($rows_arr, $datatable_config);
-				}else{
-					$rows_arr = [];
-				}
-				//dd($rows_arr);
-				//如果是回收站则不输出树结构
-				if($request->ac != "recycle"){
-					$tree = new TreeController($rows_arr);
-					$rows_arr = $tree->listToDatatableTree();
-				}
-				//dd($rows_arr);
-				return datatable_callback_json(0, '数据读取成功', count($rows_arr), $rows_arr);
 			}else{
-				if($request->ac == "recycle"){
-					$rows_arr = $datatable_config['modelClass']::where($conditions)->onlyTrashed()->paginate(30);
-				}else{
-					$rows_arr = $datatable_config['modelClass']::where($conditions)->paginate(30);
+				$conditions = [];
+				//dd($request->post());
+				
+				//4、查询条件
+				if(isset($additional_config['conditions'])){
+					$conditions = array_merge($conditions, $additional_config['conditions']);
 				}
-				if($rows_arr->first()){
-					$rows_arr = $rows_arr->toArray();
-					$data_arr = $this->dicToChar($rows_arr['data'], $datatable_config);
+				
+				//DB::connection()->enableQueryLog();
+				if(isset($datatable_config['other_set']['is_tree'])){
+					if($request->ac == "recycle"){
+						$rows_arr = $datatable_config['modelClass']::where($conditions)->onlyTrashed()->get();
+					}else{
+						$rows_arr = $datatable_config['modelClass']::where($conditions)->get();
+					}
+					if($rows_arr->first()){
+						$rows_arr = $rows_arr->toArray();
+						//如果是回收站则不输出树结构
+						if($request->ac != "recycle"){
+							$tree = new TreeController($rows_arr);
+							$rows_arr = $tree->listToDatatableTree();
+						}
+						$rows_arr = $this->dicToChar($rows_arr, $datatable_config);
+					}else{
+						$rows_arr = [];
+					}
+					//dd($rows_arr);
+					
+					//dd($rows_arr);
+					return datatable_callback_json(0, '数据读取成功', count($rows_arr), $rows_arr);
 				}else{
-					$rows_arr = [];
+					if($request->ac == "recycle"){
+						$rows_arr = $datatable_config['modelClass']::where($conditions)->onlyTrashed()->paginate(30);
+					}else{
+						$rows_arr = $datatable_config['modelClass']::where($conditions)->paginate(30);
+					}
+					if($rows_arr->first()){
+						$rows_arr = $rows_arr->toArray();
+						$data_arr = $this->dicToChar($rows_arr['data'], $datatable_config);
+					}else{
+						$rows_arr = [];
+					}
+					//dd($rows_arr);
+					//dd(DB::getQueryLog());
+					return datatable_callback_json(0, '数据读取成功', $rows_arr['total'], $data_arr);
 				}
-				//dd($rows_arr);
-				//dd(DB::getQueryLog());
-				return datatable_callback_json(0, '数据读取成功', $rows_arr['total'], $data_arr);
 			}
 		}elseif( $request->do == "" || $request->do == "recycle" ) {
 			//回收站删除行内按钮
@@ -253,6 +263,7 @@ class DatatableGenerateController extends Controller
 				$button_menu_config = $datatable_config['new_head_menu'][$request->do]['method'];
 			}
 			
+			//执行按钮绑定的方法
 			$result = $this->getDataByMethod($button_menu_config, $datatable_config);
 			//dd($result);
 			if($result['code'] == 0){
@@ -550,8 +561,9 @@ class DatatableGenerateController extends Controller
 			$method = $arr['1'];
 		}else{
 			$controller = $datatable_config['route']['controller'];
+			//dd($controller);
 		}
-		
+		//dd($controller);
 		$class = new $controller;
 		//dd($class);
 		if(method_exists($class, $method)){
@@ -561,11 +573,7 @@ class DatatableGenerateController extends Controller
 			$data = ['code' => 1, 'msg' => $msg];
 		}
 		//dd($data);
-		if (request()->ajax()) {
-			return json_encode($data);
-		} else {
-			return $data;
-		}
+		return $data;
 	}
 	
 	/**
