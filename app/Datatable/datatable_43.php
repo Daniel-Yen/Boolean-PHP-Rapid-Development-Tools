@@ -46,7 +46,7 @@
       'title' => '备注',
       'field' => 'note',
       'field_from' => 'main_table',
-      'width' => '600',
+      'width' => '400',
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',

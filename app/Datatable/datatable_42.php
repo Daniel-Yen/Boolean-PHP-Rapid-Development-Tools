@@ -90,9 +90,6 @@
       'field' => 'email_verified_at',
       'field_from' => 'main_table',
       'width' => NULL,
-      'create' => 'on',
-      'update' => 'on',
-      'read' => 'on',
     ),
     'password' => 
     array (
@@ -105,6 +102,60 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'create' => 'on',
+    ),
+    'user_group' => 
+    array (
+      'field_type' => 'varchar',
+      'field_length' => '250',
+      'sorting' => '7',
+      'fixed' => NULL,
+      'title' => '用户组',
+      'field' => 'user_group',
+      'field_from' => 'main_table',
+      'width' => NULL,
+      'create' => 'on',
+      'update' => 'on',
+      'read' => 'on',
+      'search' => 'on',
+    ),
+    'status' => 
+    array (
+      'field_type' => 'char',
+      'field_length' => '5',
+      'sorting' => '8',
+      'fixed' => NULL,
+      'title' => '账号状态',
+      'field' => 'status',
+      'field_from' => 'main_table',
+      'width' => NULL,
+      'read' => 'on',
+      'search' => 'on',
+    ),
+    'login_time' => 
+    array (
+      'field_type' => 'int',
+      'field_length' => '11',
+      'sorting' => '9',
+      'fixed' => NULL,
+      'title' => '登录时间',
+      'field' => 'login_time',
+      'field_from' => 'main_table',
+      'width' => NULL,
+      'read' => 'on',
+    ),
+    'remark' => 
+    array (
+      'field_type' => 'varchar',
+      'field_length' => '100',
+      'sorting' => '10',
+      'fixed' => NULL,
+      'title' => '用户备注',
+      'field' => 'remark',
+      'field_from' => 'main_table',
+      'width' => NULL,
+      'create' => 'on',
+      'update' => 'on',
+      'read' => 'on',
     ),
     'created_at' => 
     array (

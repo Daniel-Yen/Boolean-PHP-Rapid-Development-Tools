@@ -350,7 +350,13 @@ class DatatableController extends Controller
 			$result = array_merge($result_3, $result);
 		}
 		
-		$field_row_arr = array_sort($result,'sorting');
+		//如果没有配置文件则不排序
+		if(empty($datatable_set_arr)){
+			$field_row_arr = $result;
+		}else{
+			$field_row_arr = array_sort($result,'sorting');
+		}
+		
 		//dd($field_row_arr);
 		return $field_row_arr;
 	}
