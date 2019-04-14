@@ -9,9 +9,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use App\Models\ToolsDatatableModel;
-use App\Models\ToolsModuleModel;
-use App\Models\ToolsAttributeModel;
+use App\Models\BlkDatatableModel;
+use App\Models\BlkModuleModel;
+use App\Models\BlkAttributeModel;
 
 class DatatableController extends Controller
 {
@@ -42,14 +42,14 @@ class DatatableController extends Controller
     }
 	
 	/**
-	 * 获得"buer_tools_datatable"表中的路由信息，并判断类跟方法是否存在
+	 * 获得"buer_Blk_datatable"表中的路由信息，并判断类跟方法是否存在
 	 * @access 		public
 	 * @param 		integer 	$datatable_arr 			菜单信息
 	 * @author    	杨鸿<yh15229262120@qq.com> 
 	 */
 	public function getRouteMessage($datatable_arr){
 		//获得控制器路径
-		$module_path = ToolsModuleModel::where('id', $datatable_arr['module_id'])->first(['module']);
+		$module_path = BlkModuleModel::where('id', $datatable_arr['module_id'])->first(['module']);
 		//dd($datatable_arr);
 		//dd($module_path);
 		//只有当控制器方法存在且不为空才能进行以下路由信息的计算并判断控制器是否存在,方法是否存在
@@ -98,7 +98,7 @@ class DatatableController extends Controller
 	{
 		$request = request();
 		//dd($request->id);
-		$datatable_arr = ToolsDatatableModel::where('id', $request->id)->first();
+		$datatable_arr = BlkDatatableModel::where('id', $request->id)->first();
 		if($datatable_arr){
 			$datatable_arr = $datatable_arr->toArray();
 		}
@@ -198,7 +198,6 @@ class DatatableController extends Controller
 					'msg' => "没有指定的控制器及方法"
 				]);
 			}
-			
 			return view('lazykit.datatable.set', [
 				'field_row_arr' 		=> $this->getFieldRow($datatable_arr),						//根据表配置获得字段属
 				'fixed_column_dic_arr' 	=> $this->fixedColumnDic(),									//字典：固定列的类型
@@ -221,7 +220,7 @@ class DatatableController extends Controller
 		$param = $request->post();
 		unset($param['_token']);
 		//DB::connection()->enableQueryLog();
-		\App\Models\ToolsDatatableModel::where('id', '=', $request->id)->update($param);
+		BlkDatatableModel::where('id', '=', $request->id)->update($param);
 		//dd(DB::getQueryLog());
 		return success("菜单模型设置成功");
 	}
@@ -463,7 +462,7 @@ class DatatableController extends Controller
 			];
 			//新增字段属性设置记录，如果已存在，则修改
 			//DB::connection()->enableQueryLog();
-			$result = ToolsAttributeModel::updateOrInsert($conditions, $param);
+			$result = BlkAttributeModel::updateOrInsert($conditions, $param);
 			//dd(DB::getQueryLog());
 			if($result){
 				return success("保存成功");
@@ -477,7 +476,7 @@ class DatatableController extends Controller
 			['datatable_id', '=', $request->datatable_id],
 			['field', '=', $request->field],
 		];
-		$attribute_arr = ToolsAttributeModel::where($conditions)->get();
+		$attribute_arr = BlkAttributeModel::where($conditions)->get();
 		if($attribute_arr->first()){
 			$attribute_arr = $attribute_arr->toArray();
 			$attribute = json_decode($attribute_arr[0]['attribute'], true);
@@ -490,6 +489,7 @@ class DatatableController extends Controller
 		
 		view()->share([
 			'attribute_arr' 			=> $attribute,						//字段属性
+			'validate_dic_arr' 			=> $this->validateDic(),			//字典：验证规则
 			'data_input_form_dic_arr' 	=> $this->dataInputFormDic(),		//字典：数据输入方式选择
 			'url_type_dic_arr' 			=> $this->urlTypeDic(),				//字典：行内链接类型
 			'dic_type_dic_arr' 			=> $this->dicTypeDic(),				//字典：数据字典类型
@@ -534,6 +534,43 @@ class DatatableController extends Controller
 	}
 	
 	/**
+	 * 数据字典：验证规则
+	 * @access 		private
+	 * @author    	杨鸿<yh15229262120@qq.com> 
+	 * @return 		array                       
+	 */
+	private function validateDic(){
+		$data = [
+			'bail' 			=> '第一次验证失败后停止运行验证规则（bail）',
+			'required' 		=> '必填（required）',
+			'alpha' 		=> '字段必须完全由字母构成（alpha）',
+			'string' 		=> '字段必须是一个字符串（string）',
+			'alpha_dash' 		=> '字段可能包含字母、数字，以及破折号 (-) 和下划线 ( _ )（alpha_dash）',
+			'alpha_num' 		=> '字段必须是完全是字母、数字（alpha_num）',
+			'date' 		=> '字段必须是有效的日期（date）',
+			'email' 		=> '字段必须为正确格式的电子邮件地址（email）',
+			'image' 		=> '文件必须是图片 (jpeg, png, bmp, gif, 或 svg)（image）',
+			'integer' 		=> '验证的字段必须是整数（integer）',
+			'numeric' 		=> '字段必须是数字（numeric）',
+			'ip' 		=> '字段必须是 IP 地址（ip）',
+			'ipv4' 		=> '字段必须是 IPv4 地址（ipv4）',
+			'ipv6' 		=> '字段必须是 IPv6 地址（ipv6）',
+			'json' 		=> '字段必须是有效的 JSON 字符串（json）',
+			'url' 		=> '字段必须是有效的 URL（url）',
+		];
+		
+		$data_arr = [];
+		foreach($data as $k=>$v){
+			$data_arr[] = [
+				'value' => $k,
+				'name'  => $v,
+			];
+		}
+		
+		return $data_arr;
+	}
+	
+	/**
 	 * 数据字典：按钮打开方式
 	 * @access 		private
 	 * @author    	杨鸿<yh15229262120@qq.com> 
@@ -542,7 +579,7 @@ class DatatableController extends Controller
 	private function buttonOpenTypeDic(){
 		return [
 			'window' 	=> '弹出窗口',
-			'ajax' 	=> '异步请求',
+			'ajax' 		=> '异步请求',
 		];
 	}
 	
@@ -816,7 +853,7 @@ class DatatableController extends Controller
 	
 	//pid字段的下拉选择
 	public function attribute_pid(){
-		$data = ToolsDatatableModel::select('id as value', 'title as name', 'pid')->get();
+		$data = BlkDatatableModel::select('id as value', 'title as name', 'pid')->get();
 		if($data->count()){
 			$data = $data->toArray();
 			//转换为树结构
@@ -831,7 +868,7 @@ class DatatableController extends Controller
 	
 	//module字段的下拉选择
 	public function attribute_module(){
-		$data = ToolsModuleModel::select('id as value', 'system_name as name')->get();
+		$data = BlkModuleModel::select('id as value', 'system_name as name')->get();
 		if($data->count()){
 			$data = $data->toArray();
 		}else{
@@ -844,9 +881,9 @@ class DatatableController extends Controller
 	//model字段的下拉选择
 	public function attribute_model(){
 		$data = [
-			['value' => 'diy', 			'name' => '自定义代码'],
-			['value' => 'datatable', 	'name' => '数据表格'],
-			['value' => 'charts', 		'name' => '统计图表'],
+			['value' => '1', 	'name' => '自定义代码'],
+			['value' => '2', 	'name' => '数据表格'],
+			['value' => '3', 	'name' => '统计图表'],
 		];
 		
 		return $data;
@@ -854,7 +891,7 @@ class DatatableController extends Controller
 	
 	//左侧目录
 	public function leftDirectory(){
-		$data = ToolsModuleModel::get();
+		$data = BlkModuleModel::get();
 		if($data->count()){
 			$data = $data->toArray();
 			//dd($data);
@@ -872,7 +909,7 @@ class DatatableController extends Controller
 	
 	//生成路由
 	public function createRoute(){
-		$data = ToolsDatatableModel::orderBy('module_id', 'asc')->get();
+		$data = BlkDatatableModel::orderBy('module_id', 'asc')->get();
 		//dd($data);
 		$route = '<?php
 /*
@@ -888,7 +925,7 @@ class DatatableController extends Controller
 			$data = $data->toArray();
 			//dd($data);
 			foreach($data as $k=>$v){
-				$module = ToolsModuleModel::where('id',$v['module_id'])->get();
+				$module = BlkModuleModel::where('id',$v['module_id'])->get();
 				//dd($module);
 				if($module->first()){
 					$module = $module->toArray()[0];
@@ -918,7 +955,7 @@ class DatatableController extends Controller
 						$route .= $route_record."  //".$v['title'].PHP_EOL;
 					}
 				}else{
-					$result = ToolsDatatableModel::where('id',$v['id'])->delete();
+					$result = BlkDatatableModel::where('id',$v['id'])->delete();
 					//$result = ['code' => 1, 'msg' => "路由生成失败，菜单“".$v['title']."”没有对应的模块"];
 				}
 			}

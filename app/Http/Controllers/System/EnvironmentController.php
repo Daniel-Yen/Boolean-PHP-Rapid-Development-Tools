@@ -21,7 +21,7 @@ class EnvironmentController extends Controller
 			'data_source_method' => 'data_source',		//控制器类的方法:获得表格数据
 		];
 		
-		create_datatable('datatable_23', $additional_config, $request);
+		create_datatable('datatable_41', $additional_config, $request);
 	}
 	
 	/**

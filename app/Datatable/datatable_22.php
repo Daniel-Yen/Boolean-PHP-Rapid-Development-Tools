@@ -2,13 +2,13 @@
   'id' => 22,
   'title' => 'Datatable自定义字段',
   'pid' => 31,
-  'model' => 'datatable',
+  'model' => '2',
   'url' => '/lazykit/demo/external',
   'method' => 'DemoController@external',
   'module_id' => '1',
-  'main_table' => '',
-  'associated_type' => '',
-  'associated_table' => '',
+  'main_table' => NULL,
+  'associated_type' => NULL,
+  'associated_table' => NULL,
   'external_field' => 'field_1,field_2,field_3,field_4,field_5',
   'datatable_set' => 
   array (

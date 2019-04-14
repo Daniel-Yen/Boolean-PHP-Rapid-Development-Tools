@@ -1,7 +1,7 @@
 <?php
 /**
  * 数据表：tools_module
- * 该模型由Datatable生成器自动生成
+ * 该模型类由Datatable生成器自动生成
  * @auther 		杨鸿<yh15229262120@qq.com>
  */
 
@@ -19,5 +19,5 @@ class ToolsModuleModel extends Model
 	//主键
 	protected $primaryKey = 'id';
 	
-    protected $datas = ['deleted_at'];
+	protected $datas = ['deleted_at'];
 }

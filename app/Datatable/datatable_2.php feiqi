@@ -6,7 +6,7 @@
   'url' => '/lazykit/user/index',
   'method' => 'UserController@index',
   'module_id' => '1',
-  'main_table' => 'tools_user',
+  'main_table' => 'blk_user',
   'associated_type' => '',
   'associated_table' => '',
   'external_field' => '',

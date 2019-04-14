@@ -1,7 +1,7 @@
 <?php
 /**
  * 数据表：tools_demo
- * 该模型类由DataGrid生成器自动生成，默认载入了Trait代码复用类 Common
+ * 该模型类由Datatable生成器自动生成
  * @auther 		杨鸿<yh15229262120@qq.com>
  */
 

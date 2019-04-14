@@ -1,9 +1,9 @@
 <?php return array (
-  'id' => 39,
+  'id' => 43,
   'title' => '用户组管理',
-  'pid' => 32,
-  'model' => 'diy',
-  'url' => '/system/auth/userGroup',
+  'pid' => 40,
+  'model' => '2',
+  'url' => '/system/auth/user_group',
   'method' => 'AuthController@userGroup',
   'module_id' => '2',
   'main_table' => 'user_group',
@@ -55,7 +55,7 @@
     array (
       'field_type' => 'datetime',
       'field_length' => 'no_limit',
-      'sorting' => '3',
+      'sorting' => '999',
       'fixed' => NULL,
       'title' => '创建时间',
       'field' => 'created_at',
@@ -67,7 +67,7 @@
     array (
       'field_type' => 'datetime',
       'field_length' => 'no_limit',
-      'sorting' => '4',
+      'sorting' => '999',
       'fixed' => NULL,
       'title' => '修改时间',
       'field' => 'updated_at',
@@ -79,7 +79,7 @@
     array (
       'field_type' => 'datetime',
       'field_length' => 'no_limit',
-      'sorting' => '5',
+      'sorting' => '999',
       'fixed' => NULL,
       'title' => '删除时间',
       'field' => 'deleted_at',
@@ -121,6 +121,24 @@
     array (
       'text' => '删除',
       'icon' => 'layui-icon-delete',
+      'must' => 'on',
+      'width' => NULL,
+      'height' => NULL,
+      'method' => NULL,
+    ),
+    'recycle' => 
+    array (
+      'text' => '回收站',
+      'icon' => 'layui-icon-fonts-del',
+      'must' => 'on',
+      'width' => '100%',
+      'height' => '100%',
+      'method' => NULL,
+    ),
+    'recovery' => 
+    array (
+      'text' => '数据恢复',
+      'icon' => 'layui-icon-prev',
       'must' => 'on',
       'width' => NULL,
       'height' => NULL,

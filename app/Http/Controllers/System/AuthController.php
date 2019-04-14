@@ -19,6 +19,6 @@ class AuthController extends Controller
      */
     public function userGroup(Request $request)
     {
-    	create_datatable('datatable_39', [], $request);
+    	create_datatable('datatable_43', [], $request);
     }
 }

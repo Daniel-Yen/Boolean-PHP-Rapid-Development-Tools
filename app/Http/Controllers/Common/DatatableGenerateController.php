@@ -10,7 +10,8 @@ namespace App\Http\Controllers\Common;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use App\Models\ToolsAttributeModel;
+use Illuminate\Support\Str;
+use App\Models\BlkAttributeModel;
 
 class DatatableGenerateController extends Controller
 {
@@ -70,6 +71,7 @@ class DatatableGenerateController extends Controller
 			view()->share([
 				'dom' => $dom,
 				'data_arr' => $data_arr,
+				'datatable_config' => $datatable_config,								//数据表格配置
 			]);
 			
 			$content = view($datatable_config['create_page']);
@@ -114,10 +116,10 @@ class DatatableGenerateController extends Controller
 				}
 			}
 			//dd($dom);
-			
 			view()->share([
 				'dom' => $dom,
 				'data_arr' => $data_arr,
+				'datatable_config' => $datatable_config,								//数据表格配置
 			]);
 			
 			$content = view($datatable_config['update_page']);
@@ -211,11 +213,11 @@ class DatatableGenerateController extends Controller
 						$rows_arr = $rows_arr->toArray();
 						$data_arr = $this->dicToChar($rows_arr['data'], $datatable_config);
 					}else{
-						$rows_arr = [];
+						$data_arr = [];
 					}
 					//dd($rows_arr);
 					//dd(DB::getQueryLog());
-					return datatable_callback_json(0, '数据读取成功', $rows_arr['total'], $data_arr);
+					return datatable_callback_json(0, '数据读取成功', count($data_arr), $data_arr);
 				}
 			}
 		}elseif( $request->do == "" || $request->do == "recycle" ) {
@@ -352,12 +354,12 @@ class DatatableGenerateController extends Controller
 			//获取字段属性设置
 			foreach($datatable_config['datatable_set'] as $k=>$v){
 				//取设置的字段属性,用于表单生成
-				$ToolsAttributeModel = new ToolsAttributeModel();
+				$BlkAttributeModel = new BlkAttributeModel();
 				$conditions = [
 					['datatable_id', '=', $datatable_config['id']],
 					['field', '=', $v['field']],
 				];
-				$attribute_arr = $ToolsAttributeModel->where($conditions)->first();
+				$attribute_arr = $BlkAttributeModel->where($conditions)->first();
 				
 				if($attribute_arr){
 					$attribute_arr = $attribute_arr->toArray();
@@ -368,9 +370,9 @@ class DatatableGenerateController extends Controller
 							if($attribute['data_source_type'] == 'method'){
 								$attribute['dic_data'] = $this->getDataByMethod($attribute['data_source'], $datatable_config);
 							}else if($attribute['data_source_type'] == 'json'){
-								$attribute['dic_data'] = ['code' => 0, 'msg' => '数据获取成功', 'data' => $attribute['data_source']];
+								$attribute['dic_data'] = ['code' => 0, 'msg' => '数据获取成功', 'data' => json_decode($attribute['data_source'], true)];
 							}else{
-								$attribute['dic_data'] = ['code' => 1, 'msg' => '请重新设置字段属性'];
+								$attribute['dic_data'] = ['code' => 1, 'msg' => '请设置下拉选择数据源'];
 							}
 						}else{
 							$attribute['dic_data'] = ['code' => 1, 'msg' => '请设置字段属性'];
@@ -491,9 +493,57 @@ class DatatableGenerateController extends Controller
 	 * @return 		array
 	 */
 	private function dicToChar($rows_arr, $datatable_config){
-		//dd($datatable_config);
-		//$dom = $this->getDataFieldSet($datatable_config, 'update');
+		$dic_arr = $this->getDicList($datatable_config);
+		//dd($dic_arr);
+		//循环替换数组元素键值
+		foreach($rows_arr as $k=>$v){
+			foreach($v as $key=>$value){
+				//判断字段是否在字典数组中,如果有则替换字段为在字典中的值
+				if(isset($dic_arr[$key])?!empty($dic_arr[$key]):false){
+					//字典在数据库中存储格式 1、 1,2、 1/2/3 
+					if(is_numeric($value)){
+						$dic_value = isset($dic_arr[$key][$value])?$dic_arr[$key][$value]:'';
+					}else if(Str::contains($value, ',')){
+						$arr = explode(',',$value);
+						$dic= [];
+						foreach($arr as $v1){
+							$dic_v = isset($dic_arr[$key][$v1])?$dic_arr[$key][$v1]:'';
+							if(!empty($dic_v)){
+								$dic[] = $dic_v;
+							}
+						}
+						$dic_value = join('，', $dic);
+					}else if(Str::contains($value, '/')){
+						$arr = explode('/',$value);
+						$dic = [];
+						foreach($arr as $v1){
+							$dic_v = isset($dic_arr[$key][$v1])?$dic_arr[$key][$v1]:'';
+							if(!empty($dic_v)){
+								$dic[] = $dic_v;
+							}
+						}
+						$dic_value = join(' / ', $dic);
+					}else{
+						$dic_value = '';
+					}
+					$v[$key] = $dic_value;
+				}
+			}
+			$rows_arr[$k] = $v;
+		}
+		return $rows_arr;
+	}
+	
+	/**
+	 * 获得字典的一维数组
+	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @param 		array 		$datatable_config 		从配置中读取的字典数据集（一般是树结构）
+	 * @return 		array
+	 */
+	private function getDicList($datatable_config){
 		$dic_arr = [];
+		//从配置文件中读取字典数组
 		foreach($datatable_config['datatable_set'] as $k=>$v){
 			if(isset($v['dic_data']['code'])?$v['dic_data']['code'] == 0:false){
 				$result = $this->getDic($v['dic_data']['data']);
@@ -507,18 +557,7 @@ class DatatableGenerateController extends Controller
 				$dic_arr[$k] = $data;
 			}
 		}
-		//dd($rows_arr);
-		foreach($rows_arr as $k=>$v){
-			foreach($v as $key=>$value){
-				if(isset($dic_arr[$key])?!empty($dic_arr[$key]):false){
-					$v[$key] = isset($dic_arr[$key][$value])?$dic_arr[$key][$value]:'';
-				}
-			}
-			$rows_arr[$k] = $v;
-		}
-		//dd($rows_arr);
-		
-		return $rows_arr;
+		return $dic_arr;
 	}
 	
 	/**
@@ -530,18 +569,19 @@ class DatatableGenerateController extends Controller
 	 */
 	private function getDic($dic_data){
 		$result = array();
-		foreach($dic_data as $v){
-			$arr = array();
-			$arr['value'] = $v['value']; 
-			$arr['name'] = $v['name']; 
-			$result[] = $arr;
-			//$result[$v['value']] = $v['name'];
-			if(isset($v['children'])?!empty($v['children']):false){
-				$children_result = $this->getDic($v['children']);
-				$result = array_merge($result,$children_result);
+		if(is_array($dic_data)){
+			foreach($dic_data as $v){
+				$arr = array();
+				$arr['value'] = $v['value']; 
+				$arr['name'] = $v['name']; 
+				$result[] = $arr;
+				//$result[$v['value']] = $v['name'];
+				if(isset($v['children'])?!empty($v['children']):false){
+					$children_result = $this->getDic($v['children']);
+					$result = array_merge($result,$children_result);
+				}
 			}
 		}
-		//dd($result);
 		
 		return $result;
 	}
@@ -555,7 +595,7 @@ class DatatableGenerateController extends Controller
 	 * @return 		object                      			返回值为数据表模型实例化的对象
 	 */
 	private function getDataByMethod($method, $datatable_config){
-		if(str_contains($method, '->')){
+		if(Str::contains($method, '->')){
 			$arr = explode('->',$method);
 			$controller = $arr['0'];
 			$method = $arr['1'];

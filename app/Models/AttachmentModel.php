@@ -1,21 +1,20 @@
 <?php
 /**
- * 数据表：tools_datatable
- * 该模型类由Datatable生成器自动生成
+ * 数据表：attachment
+ * 该模型由Datatable生成器自动生成
  * @auther 		杨鸿<yh15229262120@qq.com>
  */
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ToolsDatatableModel extends Model 
+class AttachmentModel extends Model 
 {
 	//软删除Trait
 	use SoftDeletes;
 	//表名称
-	protected $table = 'tools_datatable';
+	protected $table = 'attachment';
 	//主键
 	protected $primaryKey = 'id';
 	

@@ -3,6 +3,7 @@
 @section('title', 'Databale配置生成')
 
 @push('css')
+<link rel="stylesheet" href="{{file_path('/include/formSelects-v4.css')}}" media="all">
 <style>
 	.create td{padding: 0;}
 	.create td input{border: 0;}
@@ -79,7 +80,9 @@
 				<div class="layui-form-item layui-form-text">
 					<label class="layui-form-label">验证规则</label>
 					<div class="layui-input-block">
-						<input type="text" name="validate" value="{{isset($attribute_arr['validate'])?$attribute_arr['validate']:''}}" placeholder="请输入验证规则" autocomplete="off" class="layui-input">
+						<select name="validate" lay-filter="" lay-verify="required" xm-select-skin="normal" xm-select="validate">
+							<option value="">请选择</option>
+						</select>
 					</div>
 				</div>
 				<div class="layui-form-item layui-form-text" style="display: none;" id="static_dic_area">
@@ -163,11 +166,17 @@
 
 @push('scripts')
 <script>
-	layui.use(['jquery', 'form', 'element'], function() {
+	layui.config({
+		base: '{{file_path('/include/')}}',
+	}).extend({
+		index: 'lib/index', //主入口模块
+		formSelects: 'formSelects-v4'
+	}).use(['jquery', 'form', 'element', 'formSelects'], function() {
 		var $ = layui.$,
 			form = layui.form,
 			layer = layui.layer,
 			layedit = layui.layedit,
+			formSelects = layui.formSelects,
 			laydate = layui.laydate;
 
 		form.on('select(data_input_form)', function(data){
@@ -177,27 +186,9 @@
 			$("[name='dom_width']").val(width);
 		});
 		
-// 		form.on('select(dic_type)', function(data){
-// 			//alert(data.value);
-// 			if(data.value == 'no_dic'){
-// 				$("#static_dic_area").hide();
-// 				$("#table_dic_area").hide();
-// 				$("#dic_static").val('');
-// 				$("#dic_table").val('');
-// 				$("#dic_key").val('');
-// 				$("#dic_value").val('');
-// 			}else if(data.value == 'static_dic'){
-// 				$("#static_dic_area").show();
-// 				$("#table_dic_area").hide();
-// 				$("#dic_table").val('');
-// 				$("#dic_key").val('');
-// 				$("#dic_value").val('');
-// 			}else if(data.value == 'table_dic'){
-// 				$("#static_dic_area").hide();
-// 				$("#table_dic_area").show();
-// 				$("#dic_static").val('');
-// 			}
-// 		});
+		formSelects.data('validate', 'local', {
+			arr: @json($validate_dic_arr)
+		});
 		
 		form.on('select(data_input_form)', function(data){
 			//alert(data.value);

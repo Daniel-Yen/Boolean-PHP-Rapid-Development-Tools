@@ -11,6 +11,7 @@
 			formSelects.data('{{$vo['field']}}', 'local', {
 				arr: @json($vo['dic_data']['data'])
 			});
+			formSelects.value('{{$vo['field']}}', [{{$data_arr[$vo['field']]}}]);
 			@endif
 		@break
 		@case ('tree_select')
@@ -18,6 +19,7 @@
 			formSelects.data('{{$vo['field']}}', 'local', {
 				arr: @json($vo['dic_data']['data'])
 			});
+			formSelects.value('{{$vo['field']}}', [{{$data_arr[$vo['field']]}}]);
 			@endif
 		@break
 		@case ('multiple_select')
@@ -25,6 +27,7 @@
 			formSelects.data('{{$vo['field']}}', 'local', {
 				arr: @json($vo['dic_data']['data'])
 			});
+			formSelects.value('{{$vo['field']}}', [{{$data_arr[$vo['field']]}}]);
 			@endif
 		@break
 		@case ('cascade_select')
@@ -33,6 +36,7 @@
 				arr: @json($vo['dic_data']['data']),
 				linkage: true	//开启联动模式
 			});
+			formSelects.value('{{$vo['field']}}', ['{{$data_arr[$vo['field']]}}']);
 			@endif
 		@break
 		@case ('layui_editer')
@@ -53,7 +57,7 @@
 			{{-- 单个文件上传 --}}
 			upload.render({
 				elem: '#single_file_upload_{{$vo['field']}}',
-				url: '{{$url}}?do=layui_upload&time={{time()}} ',
+				url: '{{$datatable_config['route_name']}}?do=layui_upload&time={{time()}} ',
 				accept: 'file',
 				done: function(res) {
 					console.log(res)
@@ -73,7 +77,7 @@
 			{{-- 多图片上传 --}}
 			upload.render({
 				elem: '#photos_upload_{{$vo['field']}}',
-				url: '{{$url}}?do=layui_upload&time={{time()}} ',
+				url: '{{$datatable_config['route_name']}}?do=layui_upload&time={{time()}} ',
 				multiple: true,
 				before: function(obj) {
 					{{-- 预读本地文件示例，不支持ie8 --}}
@@ -98,7 +102,7 @@
 			{{-- 单图上传 --}}
 			var uploadInst_{{$vo['field']}} = upload.render({
 				elem: '#single_photo_upload_{{$vo['field']}}',
-				url: '{{$url}}?do=layui_upload&time={{time()}} ',
+				url: '{{$datatable_config['route_name']}}?do=layui_upload&time={{time()}} ',
 				before: function(obj) {
 					{{-- 预读本地文件示例，不支持ie8 --}}
 					obj.preview(function(index, file, result) {
@@ -124,7 +128,7 @@
 			var {{$vo['field']}}View = $('#{{$vo['field']}}'),
 				uploadListIns{{$vo['field']}} = upload.render({
 					elem: '#files_upload_{{$vo['field']}}',
-					url: '{{$url}}?do=layui_upload&time={{time()}}',
+					url: '{{$datatable_config['route_name']}}?do=layui_upload&time={{time()}}',
 					accept: 'file',
 					multiple: true,
 					auto: false,

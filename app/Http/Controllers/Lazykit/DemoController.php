@@ -9,7 +9,7 @@ namespace App\Http\Controllers\Lazykit;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\ToolsDemoTreeModel;
+use App\Models\BlkDemoTreeModel;
 
 class DemoController extends Controller
 {
@@ -96,7 +96,7 @@ class DemoController extends Controller
 					],
 					['name' => '天水', 'value' => '12'],
 					['name' => '庆阳', 'value' => '13']
-				]		
+				]
 			]
 		];
 		
@@ -105,7 +105,7 @@ class DemoController extends Controller
 	
 	//pid字段的下拉选择
 	public function attribute_pid(){
-		$data = ToolsDemoTreeModel::select('id as value', 'title as name', 'pid')->get();
+		$data = BlkDemoTreeModel::select('id as value', 'title as name', 'pid')->get();
 		if($data->count()){
 			$data = $data->toArray();
 			//转换为树结构

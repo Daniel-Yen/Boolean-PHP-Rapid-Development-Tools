@@ -2,7 +2,7 @@
   'id' => 41,
   'title' => '系统信息',
   'pid' => 40,
-  'model' => 'datatable',
+  'model' => '2',
   'url' => '/system/environment/server',
   'method' => 'EnvironmentController@server',
   'module_id' => '2',

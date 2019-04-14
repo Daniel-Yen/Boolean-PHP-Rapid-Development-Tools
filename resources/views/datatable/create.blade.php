@@ -23,7 +23,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
-						<input type="text" name="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" autocomplete="off" placeholder="请输入{{$vo['title']}}" autocomplete="off" class="layui-input">
+						<input type="text" name="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="请输入{{$vo['title']}}" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				@break
