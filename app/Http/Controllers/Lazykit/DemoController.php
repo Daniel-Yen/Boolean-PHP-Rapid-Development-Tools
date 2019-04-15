@@ -2,7 +2,7 @@
 /**
  * 功能名称：Datatable自动生成演示
  * 该控制器类由Datatable生成器自动生成
- * @auther 		Buer Lazykit
+ * @auther 		boolean Lazykit
  */
 
 namespace App\Http\Controllers\Lazykit;

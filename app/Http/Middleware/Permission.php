@@ -23,9 +23,9 @@ class Permission
 		$rules = json_decode($user_group->rules, true);
 		if(isset($rules['/'.$request->path()])){
 			//将当前规则赋值到Request
-			$request->offsetSet('rules', $rules['/'.$request->path()]);
+			$request->offsetSet('lazykit_rules', $rules['/'.$request->path()]);
 		}else{
-			return redirect('no_permission');
+			//return redirect('no_permission');
 			
 		}
 		//dd($request->rules);

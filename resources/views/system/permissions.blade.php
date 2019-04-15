@@ -28,7 +28,7 @@
 					</thead>
 					<tbody>
 						@foreach ($data as $k=>$v)
-						<tr>
+						<tr @if(empty($v['url'])) style="background-color:#e2e2e2;" @endif>
 							<!-- <td>
 								@if ($v['url'])
 								<input type="checkbox" name="rules[{{$v['url']}}]" value="on" lay-skin="primary" checked="">
@@ -36,7 +36,7 @@
 							</td> -->
 							<td>{!!$v['title']!!}</td>
 							<td>{!!$v['url']!!}</td>
-							<td>
+							<td style="line-height:40px;">
 								@if (isset($v['button'])?!empty($v['button']):false)
 								@foreach ($v['button'] as $key=>$value)
 								<input type="checkbox" name="rules[{{$v['url']}}][{{$key}}]" @if (isset($rules[$v['url']]['button']['value'])?in_array($key, $rules[$v['url']]['button']['value']):false) checked="" @endif value="on" title="{{$value['text']}}">

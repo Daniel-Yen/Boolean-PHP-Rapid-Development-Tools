@@ -401,6 +401,37 @@ class DatatableGenerateController extends Controller
 			
 			//获得路由命名
 			$datatable_config['route_name'] = '/'.request()->path();
+			
+			//判断有权限的按钮
+			//dd(request()->rules,$datatable_config['head_menu']);
+			$lazykit_rules = request()->lazykit_rules['button']['value'];
+			//dd($lazykit_rules);
+			//头部菜单权限
+			if(isset($datatable_config['head_menu'])){
+				foreach($datatable_config['head_menu'] as $k=>$v){
+					if(!in_array($k, $lazykit_rules) && $k != 'search'){
+						unset($datatable_config['head_menu'][$k]);
+					}
+				}
+			}
+			
+			//头部附加菜单权限
+			if(isset($datatable_config['new_head_menu'])){
+				foreach($datatable_config['new_head_menu'] as $k=>$v){
+					if(!in_array($k, $lazykit_rules) && $k != 'search'){
+						unset($datatable_config['new_head_menu'][$k]);
+					}
+				}
+			}
+			
+			//行内菜单权限
+// 			if(isset($datatable_config['line_button'])){
+// 				foreach($datatable_config['line_button'] as $k=>$v){
+// 					if(!in_array($k, $lazykit_rules) && $k != 'search'){
+// 						unset($datatable_config['line_button'][$k]);
+// 					}
+// 				}
+// 			}
 		}
 		//dd($datatable_config);
 		return $datatable_config;
