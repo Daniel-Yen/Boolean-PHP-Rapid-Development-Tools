@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use App\Models\BlkDatatableModel;
+use App\Models\BlkMenuModel;
 use App\Models\BlkModuleModel;
 use App\Models\BlkAttributeModel;
 
@@ -98,7 +98,7 @@ class DatatableController extends Controller
 	{
 		$request = request();
 		//dd($request->id);
-		$datatable_arr = BlkDatatableModel::where('id', $request->id)->first();
+		$datatable_arr = BlkMenuModel::where('id', $request->id)->first();
 		if($datatable_arr){
 			$datatable_arr = $datatable_arr->toArray();
 		}
@@ -119,32 +119,38 @@ class DatatableController extends Controller
 			//datatable 路由信息
 			$route_message = $this->getRouteMessage($datatable_arr);
 			$datatable_arr['route'] = [
-				'route_path' => $route_message['route_path'],
-				'route_name' => $route_message['route_name'],
-				'controller' => $route_message['namespace'].'\\'.$route_message['controller'],
-				'method' => $route_message['method'],
+				'route_path' 	=> $route_message['route_path'],
+				'route_name' 	=> $route_message['route_name'],
+				'controller' 	=> $route_message['namespace'].'\\'.$route_message['controller'],
+				'method' 		=> $route_message['method'],
 			];
 			//datatable 左侧目录树
 			if(isset($request->directory['has'])){
 				$datatable_arr['directory'] = $request->directory;
 			}
+			
 			//datatable 附加工具菜单
 			$datatable_arr['new_head_menu'] = $request->new_head_menu_list;
 			if(isset($request->new_head_menu['type'])){
+				//dd($request->new_head_menu_list);
 				foreach($request->new_head_menu['type'] as $k=>$v){
 					if($v){
 						$datatable_arr['new_head_menu'][$v] = [
-							'text' => $request->new_head_menu['text'][$k],
-							'icon' => $request->new_head_menu['icon'][$k],
+							'text' 		=> $request->new_head_menu['text'][$k],
+							'icon' 		=> $request->new_head_menu['icon'][$k],
 							'open_tepe' => $request->new_head_menu['open_tepe'][$k],
-							'must' => isset($request->new_head_menu['must'][$k])?$request->new_head_menu['must'][$k]:'',
-							'width' => $request->new_head_menu['width'][$k],
-							'height' => $request->new_head_menu['height'][$k],
-							'method' => $request->new_head_menu['method'][$k],
-							'route' => \Illuminate\Support\Str::snake($request->new_head_menu['method'][$k]),
+							'must' 		=> isset($request->new_head_menu['must'][$k])?$request->new_head_menu['must'][$k]:'',
+							'width' 	=> $request->new_head_menu['width'][$k],
+							'height' 	=> $request->new_head_menu['height'][$k],
+							'method' 	=> $request->new_head_menu['method'][$k],
+							//'route' 	=> \Illuminate\Support\Str::snake($request->new_head_menu['method'][$k]),
 						];
 					}
 				}
+			}
+			//创建按钮的控制其方法
+			if(isset($datatable_arr['new_head_menu'])){
+				$this->createMethod($datatable_arr['new_head_menu']);
 			}
 			//dd($datatable_arr['new_head_menu']);
 			//datatable 附加工具菜单
@@ -153,18 +159,23 @@ class DatatableController extends Controller
 				foreach($request->line_button['type'] as $k=>$v){
 					if($v){
 						$datatable_arr['line_button'][$v] = [
-							'text' => $request->line_button['text'][$k],
-							'icon' => $request->line_button['icon'][$k],
+							'text' 		=> $request->line_button['text'][$k],
+							'style' 	=> $request->line_button['style'][$k],
 							'open_tepe' => $request->line_button['open_tepe'][$k],
-							'must' => isset($request->line_button['must'][$k])?$request->line_button['must'][$k]:'',
-							'width' => $request->line_button['width'][$k],
-							'height' => $request->line_button['height'][$k],
-							'method' => $request->line_button['method'][$k],
-							'route' => \Illuminate\Support\Str::snake($request->line_button['method'][$k]),
+							'must' 		=> isset($request->line_button['must'][$k])?$request->line_button['must'][$k]:'',
+							'width' 	=> $request->line_button['width'][$k],
+							'height' 	=> $request->line_button['height'][$k],
+							'method' 	=> $request->line_button['method'][$k],
+							//'route' 	=> \Illuminate\Support\Str::snake($request->line_button['method'][$k]),
 						];
 					}
 				}
 			}
+			//创建按钮的控制其方法
+			if(isset($datatable_arr['line_button'])){
+				$this->createMethod($datatable_arr['line_button']);
+			}
+			//dd($method_arr);
 			
 			//保存datatable 配置文件
 			$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';
@@ -214,13 +225,20 @@ class DatatableController extends Controller
 		}
 	}
 	
+	//生成控制器方法
+	public function createMethod($anniu_config){
+		foreach($anniu_config as $v){
+			//$v['method']
+		}
+	}
+	
 	//设置菜单模型
 	public function addModel(Request $request){
 		//dd($request->id);
 		$param = $request->post();
 		unset($param['_token']);
 		//DB::connection()->enableQueryLog();
-		BlkDatatableModel::where('id', '=', $request->id)->update($param);
+		BlkMenuModel::where('id', '=', $request->id)->update($param);
 		//dd(DB::getQueryLog());
 		return success("菜单模型设置成功");
 	}
@@ -551,18 +569,18 @@ class DatatableController extends Controller
 			'required' 		=> '必填（required）',
 			'alpha' 		=> '字段必须完全由字母构成（alpha）',
 			'string' 		=> '字段必须是一个字符串（string）',
-			'alpha_dash' 		=> '字段可能包含字母、数字，以及破折号 (-) 和下划线 ( _ )（alpha_dash）',
-			'alpha_num' 		=> '字段必须是完全是字母、数字（alpha_num）',
-			'date' 		=> '字段必须是有效的日期（date）',
+			'alpha_dash' 	=> '字段可能包含字母、数字，以及破折号 (-) 和下划线 ( _ )（alpha_dash）',
+			'alpha_num' 	=> '字段必须是完全是字母、数字（alpha_num）',
+			'date' 			=> '字段必须是有效的日期（date）',
 			'email' 		=> '字段必须为正确格式的电子邮件地址（email）',
 			'image' 		=> '文件必须是图片 (jpeg, png, bmp, gif, 或 svg)（image）',
 			'integer' 		=> '验证的字段必须是整数（integer）',
 			'numeric' 		=> '字段必须是数字（numeric）',
-			'ip' 		=> '字段必须是 IP 地址（ip）',
-			'ipv4' 		=> '字段必须是 IPv4 地址（ipv4）',
-			'ipv6' 		=> '字段必须是 IPv6 地址（ipv6）',
-			'json' 		=> '字段必须是有效的 JSON 字符串（json）',
-			'url' 		=> '字段必须是有效的 URL（url）',
+			'ip' 			=> '字段必须是 IP 地址（ip）',
+			'ipv4' 			=> '字段必须是 IPv4 地址（ipv4）',
+			'ipv6' 			=> '字段必须是 IPv6 地址（ipv6）',
+			'json' 			=> '字段必须是有效的 JSON 字符串（json）',
+			'url' 			=> '字段必须是有效的 URL（url）',
 		];
 		
 		$data_arr = [];
@@ -859,7 +877,7 @@ class DatatableController extends Controller
 	
 	//pid字段的下拉选择
 	public function attribute_pid(){
-		$data = BlkDatatableModel::select('id as value', 'title as name', 'pid')->get();
+		$data = BlkMenuModel::select('id as value', 'title as name', 'pid')->get();
 		if($data->count()){
 			$data = $data->toArray();
 			//转换为树结构
@@ -915,7 +933,7 @@ class DatatableController extends Controller
 	
 	//生成路由
 	public function createRoute(){
-		$data = BlkDatatableModel::orderBy('module_id', 'asc')->get();
+		$data = BlkMenuModel::orderBy('module_id', 'asc')->get();
 		//dd($data);
 		$route = '<?php
 /*
@@ -961,7 +979,7 @@ class DatatableController extends Controller
 						$route .= $route_record."  //".$v['title'].PHP_EOL;
 					}
 				}else{
-					$result = BlkDatatableModel::where('id',$v['id'])->delete();
+					$result = BlkMenuModel::where('id',$v['id'])->delete();
 					//$result = ['code' => 1, 'msg' => "路由生成失败，菜单“".$v['title']."”没有对应的模块"];
 				}
 			}

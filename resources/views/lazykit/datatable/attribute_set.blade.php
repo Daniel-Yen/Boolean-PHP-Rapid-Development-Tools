@@ -80,7 +80,7 @@
 				<div class="layui-form-item layui-form-text">
 					<label class="layui-form-label">验证规则</label>
 					<div class="layui-input-block">
-						<select name="validate" lay-filter="" lay-verify="required" xm-select-skin="normal" xm-select="validate">
+						<select name="validate" lay-filter="" xm-select-skin="normal" xm-select="validate">
 							<option value="">请选择</option>
 						</select>
 					</div>

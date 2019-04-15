@@ -33,11 +33,11 @@
 				</li>
 			</ul>
 			<ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
-				<li class="layui-nav-item" lay-unselect>
+				<!-- <li class="layui-nav-item" lay-unselect>
 					<a lay-href="app/message/index.html" layadmin-event="message" lay-text="系统切换">
 						<i class="layui-icon layui-icon-app"></i>
 					</a>
-				</li>
+				</li> -->
 				<li class="layui-nav-item" lay-unselect>
 					<a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
 						<i class="layui-icon layui-icon-notice"></i>
@@ -85,15 +85,15 @@
 		<!-- 侧边菜单 -->
 		<div class="layui-side layui-side-menu">
 			<div class="layui-side-scroll">
-				<div class="layui-logo" lay-href="home/console.html">
+				<div class="layui-logo" lay-href="{{url('/welcome')}}">
 					<span>
 						<h3>Boolean Lazy Kit</h3>
 					</span>
 				</div>
 
 				<ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
-					@foreach ($menu_arr as $v)
-					<li data-name="home" class="layui-nav-item">
+					@foreach ($menu as $v)
+					<li data-name="home" class="layui-nav-item @if($loop->first) layui-nav-itemed @endif ">
 						<a href="javascript:;" lay-tips="主页" lay-direction="2">
 							<i class="layui-icon layui-icon-home"></i>
 							<cite>{{$v['title']}}</cite>
@@ -129,7 +129,7 @@
 			</div>
 			<div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
 				<ul class="layui-tab-title" id="LAY_app_tabsheader">
-					<li lay-id="home/console.html" lay-attr="home/console.html" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+					<li lay-id="{{url('/welcome')}}" lay-attr="{{url('/welcome')}}" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
 				</ul>
 			</div>
 		</div>
@@ -137,7 +137,7 @@
 		<!-- 主体内容 -->
 		<div class="layui-body" id="LAY_app_body">
 			<div class="layadmin-tabsbody-item layui-show">
-				<iframe src="home/console.html" frameborder="0" class="layadmin-iframe"></iframe>
+				<iframe src="{{url('/welcome')}}" frameborder="0" class="layadmin-iframe"></iframe>
 			</div>
 		</div>
 

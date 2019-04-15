@@ -159,5 +159,27 @@
     'method' => 'userGroup',
   ),
   'new_head_menu' => NULL,
-  'line_button' => NULL,
+  'line_button' => 
+  array (
+    'permissions' => 
+    array (
+      'text' => '用户组授权',
+      'style' => 'layui-btn-normal',
+      'open_tepe' => 'window',
+      'must' => 'on',
+      'width' => '100%',
+      'height' => '100%',
+      'method' => 'permissions',
+    ),
+    'display' => 
+    array (
+      'text' => '查看',
+      'style' => 'layui-btn-warm',
+      'open_tepe' => 'window',
+      'must' => 'on',
+      'width' => '100%',
+      'height' => '100%',
+      'method' => 'display',
+    ),
+  ),
 );?>

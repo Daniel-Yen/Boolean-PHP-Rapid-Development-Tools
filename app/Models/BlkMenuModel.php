@@ -10,12 +10,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BlkDatatableModel extends Model 
+class BlkMenuModel extends Model 
 {
 	//软删除Trait
 	use SoftDeletes;
 	//表名称
-	protected $table = 'blk_datatable';
+	protected $table = 'blk_menu';
 	//主键
 	protected $primaryKey = 'id';
 	

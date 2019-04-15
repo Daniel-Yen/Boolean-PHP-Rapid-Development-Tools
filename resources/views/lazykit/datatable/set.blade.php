@@ -251,7 +251,7 @@
 						<tr>
 							<th style="width:90px;">头部菜单名称</th>
 							<th style="width:130px;">图标</th>
-							<th style="width:80px;">菜单类型</th>
+							<th style="width:80px;">按钮名称</th>
 							<th style="width:70px;">打开方式</th>
 							<th style="width:60px;">是否启用</th>
 							<th style="width:45px;">必选行</th>
@@ -307,7 +307,7 @@
 						<tr>
 							<th style="width:90px;">按钮名称</th>
 							<th style="width:130px;">按钮样式</th>
-							<th style="width:80px;">菜单类型</th>
+							<th style="width:80px;">按钮名称</th>
 							<th style="width:70px;">打开方式</th>
 							<th style="width:60px;">是否启用</th>
 							<th style="width:60px;">宽</th>

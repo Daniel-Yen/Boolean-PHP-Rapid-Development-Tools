@@ -371,6 +371,10 @@ class DatatableGenerateController extends Controller
 								$attribute['dic_data'] = $this->getDataByMethod($attribute['data_source'], $datatable_config);
 							}else if($attribute['data_source_type'] == 'json'){
 								$attribute['dic_data'] = ['code' => 0, 'msg' => '数据获取成功', 'data' => json_decode($attribute['data_source'], true)];
+							}else if($attribute['data_source_type'] == 'sql'){
+								$result = DB::select($attribute['data_source']);
+								//dd(object_array($result));
+								$attribute['dic_data'] = ['code' => 0, 'msg' => '数据获取成功', 'data' => object_array($result)];
 							}else{
 								$attribute['dic_data'] = ['code' => 1, 'msg' => '请设置下拉选择数据源'];
 							}

@@ -6,7 +6,7 @@
   'url' => '/lazykit/datatable/index',
   'method' => 'DatatableController@index',
   'module_id' => '1',
-  'main_table' => 'blk_datatable',
+  'main_table' => 'blk_menu',
   'associated_type' => NULL,
   'associated_table' => NULL,
   'external_field' => NULL,
@@ -95,7 +95,6 @@
       'width' => NULL,
       'create' => 'on',
       'update' => 'on',
-      'read' => 'on',
     ),
     'model' => 
     array (
