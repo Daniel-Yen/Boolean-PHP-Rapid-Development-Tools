@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', 'Databale配置生成')
+@section('title', '用户组权限设置')
 
 @push('css')
 <link rel="stylesheet" href="{{file_path('/include/formSelects-v4.css')}}" media="all">
@@ -19,7 +19,7 @@
 				@csrf
 				<table class="layui-table">
 					<thead>
-						<tr>
+						<tr style="background-color:#fff;">
 							<!-- <th width='20'></th> -->
 							<th width='200'>菜单名称</th>
 							<th width='200'>规则名称</th>
@@ -37,10 +37,12 @@
 							<td>{!!$v['title']!!}</td>
 							<td>{!!$v['url']!!}</td>
 							<td style="line-height:40px;">
+								@if ($v['url'])
 								@if (isset($v['button'])?!empty($v['button']):false)
 								@foreach ($v['button'] as $key=>$value)
 								<input type="checkbox" name="rules[{{$v['url']}}][{{$key}}]" @if (isset($rules[$v['url']]['button']['value'])?in_array($key, $rules[$v['url']]['button']['value']):false) checked="" @endif value="on" title="{{$value['text']}}">
 								@endforeach
+								@endif
 								@endif
 							</td>
 						</tr>

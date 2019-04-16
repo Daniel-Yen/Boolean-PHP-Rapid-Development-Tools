@@ -27,7 +27,7 @@
 				方法：{{$route_message['method']}} &nbsp; 
 				@if ($route_message['method_exists']) <span class="layui-badge layui-bg-blue">存在</span> @else <span class="layui-badge">不存在</span> @endif  &nbsp;
 			</div>
-			<form class="layui-form" action="{{url('/lazykit/datatable/add_model?id='.$datatable_arr['id'])}}" method="post">
+			<form class="layui-form" action="{{url('/lazykit/menu/add_model?id='.$datatable_arr['id'])}}" method="post">
 			@csrf
 			<table class="layui-table create">
 				<thead>
@@ -416,7 +416,7 @@
 			},
 			//title:表字段名称, field:字段, field_from:字段类型
 			openDialog: function(title, field, field_from) {
-				var url = '{{url("lazykit/datatable/attribute_set")}}?datatable_id={{$datatable_id}}&field=' + field + '&field_from=' + field_from;
+				var url = '{{url("lazykit/menu/attribute_set")}}?datatable_id={{$datatable_id}}&field=' + field + '&field_from=' + field_from;
 				//执行重载
 				layer.open({
 					id: 'layerDemo',

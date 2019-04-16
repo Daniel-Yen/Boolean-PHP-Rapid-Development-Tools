@@ -9,7 +9,7 @@ class FileProcessing
     /**
 	 * DataGrid处理layui文件上传,返回值为被上传文件在数据库中的记录的json结构
 	 * @access    public
-	 * @author    杨鸿<yh15229262120@qq.com> 
+	 * @author    倒车的螃蟹<yh15229262120@qq.com> 
 	 * @param     string                   		返回json字符串给layui上传组件
 	 */
 	public function layuiUpload(){
@@ -79,7 +79,7 @@ class FileProcessing
 	
 	/**
 	 * 用于给DataGrid新增、修改时文件上传接口发挥数据
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param 		integer		$code 			0代表提供给layui的数据正常
 	 * @param 		string		$msg 			提示信息

@@ -13,7 +13,7 @@ class ModuleController extends Controller
     /**
      * 模块管理
      * @access    	public
-     * @author    	杨鸿<yh15229262120@qq.com>
+     * @author    	倒车的螃蟹<yh15229262120@qq.com>
      */
     public function index(Request $request)
     {

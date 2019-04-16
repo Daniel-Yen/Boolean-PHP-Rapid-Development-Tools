@@ -5,11 +5,11 @@
  * @auther 		杨鸿<yh15229262120@qq.com>
  */
 
-namespace App\Models;
+namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AttachmentModel extends Model 
+class AttachmentRepository extends Model 
 {
 	//软删除Trait
 	use SoftDeletes;

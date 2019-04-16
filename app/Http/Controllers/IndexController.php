@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BlkMenuModel;
-use App\Models\UserGroupModel;
+use App\Repositories\BlkMenuRepository;
+use App\Repositories\UserGroupRepository;
 
 class IndexController extends Controller
 {
@@ -16,15 +16,22 @@ class IndexController extends Controller
 	{
 		$user = request()->user();
 		//dd($user);
-		$user_group = UserGroupModel::whereIn('id', explode(',', $user->user_group))->first();
-		$rules = json_decode($user_group->rules, true);
-		foreach($rules as $k=>$v){
-			$rules_arr[] = $k;
+		//获得当前登录用户的用户组
+		$user_group = UserGroupRepository::whereIn('id', explode(',', $user->user_group))->get();
+		//取的当前登录用户所属用户组的权限
+		if($user_group->count()){
+			$rules_arr = [];
+			foreach($user_group as $v){
+				$rules = json_decode($v->rules, true);
+				foreach($rules as $k=>$v){
+					$rules_arr[] = $k;
+				}
+			}
 		}
-		//dd($rules_arr);
+		
 		$menu = [];
 		if($rules_arr){
-			$menu_arr = BlkMenuModel::whereIn('url', $rules_arr)->get();
+			$menu_arr = BlkMenuRepository::whereIn('url', $rules_arr)->get();
 			if($menu_arr->first()){
 				$menu_arr = $menu_arr->toArray();
 				$ids = [];
@@ -34,7 +41,7 @@ class IndexController extends Controller
 					}
 				}
 				//获取上级菜单
-				$menu_arr_1 = BlkMenuModel::whereIn('id', $ids)->get();
+				$menu_arr_1 = BlkMenuRepository::whereIn('id', $ids)->get();
 				if($menu_arr_1->first()){
 					$menu_arr_1 = $menu_arr_1->toArray();
 					$menu = array_merge($menu_arr, $menu_arr_1);
@@ -45,7 +52,7 @@ class IndexController extends Controller
 						}
 					}
 					//获取上级菜单的上级菜单
-					$menu_arr_2 = BlkMenuModel::whereIn('id', $ids)->get();
+					$menu_arr_2 = BlkMenuRepository::whereIn('id', $ids)->get();
 					if($menu_arr_2->first()){
 						$menu_arr_2 = $menu_arr_2->toArray();
 						$menu = array_merge($menu, $menu_arr_2);
@@ -53,7 +60,7 @@ class IndexController extends Controller
 				}
 			}
 			//dd($menu);
-			//$menu = BlkMenuModel::get()->toArray();;
+			//$menu = BlkMenuRepository::get()->toArray();;
 			$tree = new \App\Http\Controllers\Common\TreeController($menu);
 			$menu = $tree->listToTree();
 			//dd($menu);

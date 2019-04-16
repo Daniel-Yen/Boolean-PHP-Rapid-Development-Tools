@@ -1,21 +1,21 @@
 <?php
 /**
- * 数据表：blk_datatable
- * 该模型类由DataGrid生成器自动生成，默认载入了Trait代码复用类 Common
+ * 数据表：user_group
+ * 该模型类由Datatable生成器自动生成
  * @auther 		杨鸿<yh15229262120@qq.com>
  */
 
-namespace App\Models;
+namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BlkMenuModel extends Model 
+class UserGroupRepository extends Model 
 {
 	//软删除Trait
 	use SoftDeletes;
 	//表名称
-	protected $table = 'blk_menu';
+	protected $table = 'user_group';
 	//主键
 	protected $primaryKey = 'id';
 	

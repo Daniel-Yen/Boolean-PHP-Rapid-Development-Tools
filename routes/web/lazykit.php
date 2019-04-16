@@ -6,8 +6,12 @@
 |--------------------------------------------------------------------------
 | 布尔懒人工具包DataTable数据表格生成器相关路由
 */
-Route::group(['middleware' => ['auth', 'permission']], function(){
-	Route::any('/lazykit/datatable/add_model','lazykit\DatatableController@addModel');			//数据表格模型设置
-	Route::any('/lazykit/datatable/set','lazykit\DatatableController@set');						//数据表格配置生成
-	Route::any('/lazykit/datatable/attribute_set','lazykit\DatatableController@attributeSet');
+//只需要用户登录认证的页面
+Route::group(['middleware' => ['auth']], function(){
+	Route::get('/', 							'IndexController@index');    					//首页
+	Route::any('/welcome',						'IndexController@welcome');						//欢迎页
+	Route::any('/no_permission',				'IndexController@noPermission');				//没有权限提示页
+	Route::any('/lazykit/menu/add_model',		'lazykit\MenuController@addModel');				//数据表格模型设置
+	Route::any('/lazykit/menu/set',				'lazykit\MenuController@set');					//数据表格配置生成
+	Route::any('/lazykit/menu/attribute_set',	'lazykit\MenuController@attributeSet');			//字段属性设置
 });

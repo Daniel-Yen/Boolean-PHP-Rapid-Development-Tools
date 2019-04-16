@@ -9,10 +9,10 @@ namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\BlkMenuModel;
-use App\Models\UserGroupModel;
+use App\Repositories\BlkMenuRepository;
+use App\Repositories\UserGroupRepository;
 
-class AuthController extends Controller
+class PermissionController extends Controller
 {
     /**
      * 用户组管理
@@ -37,7 +37,7 @@ class AuthController extends Controller
 			return success("用户组权限设置成功");
 		}
 		
-		$data = BlkMenuModel::get();
+		$data = BlkMenuRepository::get();
 		if($data->count()){
 			$data = $data->toArray();
 			//转换为树结构
@@ -48,25 +48,42 @@ class AuthController extends Controller
 		}
 		
 		foreach($data as $k=>$v){
+			//增加一个命名为open的授权
+			$permission['open'] = [
+				'text' => '查看'
+			];
+			
+			$button = [];
+			
 			if($v['model'] == 2){
 				$datatable_config = get_datatable_config('datatable_'.$v['id']);
 				if($datatable_config){
 					//dd($datatable_config);
-					$button = [];
+					//头部菜单按钮
 					if(isset($datatable_config['head_menu'])){
 						$button = $datatable_config['head_menu'];
 					}
-					unset($button['search']);
+					//unset($button['search']);
+					
+					//头部附加菜单按钮
 					if(isset($datatable_config['new_head_menu'])){
 						$button = array_merge($button, $datatable_config['new_head_menu']);
 					}
+					
+					//行内按钮
+					if(isset($datatable_config['line_button'])){
+						$button = array_merge($button, $datatable_config['line_button']);
+					}
 				}
-				$data[$k]['button'] = $button;
 			}
+			
+			$button = array_merge($permission, $button);
+			
+			$data[$k]['button'] = $button;	
 		}
 		//dd($data);
 		
-		$user_group = UserGroupModel::where('id', request()->id)->first();
+		$user_group = UserGroupRepository::where('id', request()->id)->first();
 		//dd(json_decode($user_group->rules, true));
 		
 		return view('system.permissions', [
@@ -86,8 +103,12 @@ class AuthController extends Controller
 		$rules_arr = [];
 		foreach($rules as $k=>$v){
 			$button = [];
+			//因为所有按钮操作权限的前提是要有打开页面的权限并读取页面数据，所以选择了其他按钮权限没有选定查看权限,默认添加查看权限及数据查看权限
+			$button[] = 'open';
+			$button[] = 'data';
 			foreach($v as $key=>$value){
 				$button[] = $key;
+				
 			}
 			$rules_arr[$k]['button'] = [
 				'key' 	=> 'do',
@@ -99,6 +120,6 @@ class AuthController extends Controller
 			'rules' => json_encode($rules_arr),
 		];
 		//dd($param);
-		UserGroupModel::where('id', request()->id)->update($param);
+		UserGroupRepository::where('id', request()->id)->update($param);
 	}
 }

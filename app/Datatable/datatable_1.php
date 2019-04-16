@@ -3,8 +3,8 @@
   'title' => '菜单管理',
   'pid' => 29,
   'model' => '2',
-  'url' => '/lazykit/datatable/index',
-  'method' => 'DatatableController@index',
+  'url' => 'lazykit/menu/index',
+  'method' => 'MenuController@index',
   'module_id' => '1',
   'main_table' => 'blk_menu',
   'associated_type' => NULL,
@@ -255,9 +255,9 @@
   ),
   'route' => 
   array (
-    'route_path' => '/lazykit/datatable/',
+    'route_path' => 'lazykit/menu/',
     'route_name' => 'index',
-    'controller' => 'App\\Http\\Controllers\\Lazykit\\DatatableController',
+    'controller' => 'App\\Http\\Controllers\\Lazykit\\MenuController',
     'method' => 'index',
   ),
   'directory' => 

@@ -9,14 +9,14 @@ namespace App\Http\Controllers\Lazykit;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\BlkDemoTreeModel;
+use App\Repositories\BlkDemoTreeModel;
 
 class DemoController extends Controller
 {
     /**
      * DataGrid完整示例
      * @access    	public
-     * @author    	杨鸿<yh15229262120@qq.com>
+     * @author    	倒车的螃蟹<yh15229262120@qq.com>
      */
     public function index(Request $request)
     {
@@ -26,7 +26,7 @@ class DemoController extends Controller
 	/**
 	 * DataGrid自定义字段
 	 * @access    	public
-	 * @author    	杨鸿<yh15229262120@qq.com>
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com>
 	 */
 	public function external(Request $request)
 	{
@@ -56,7 +56,7 @@ class DemoController extends Controller
 	/**
 	 * DataGrid树形表格
 	 * @access    	public
-	 * @author    	杨鸿<yh15229262120@qq.com>
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com>
 	 */
 	public function treeTable(Request $request)
 	{

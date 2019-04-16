@@ -1,21 +1,21 @@
 <?php
 /**
- * 数据表：table_name
- * 该模型类由Datatable生成器自动生成
+ * 数据表：blk_demo
+ * 该模型类由DataGrid生成器自动生成
  * @auther 		杨鸿<yh15229262120@qq.com>
  */
 
-namespace App\Models;
+namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class NewModel extends Model 
+class BlkDemoRepository extends Model 
 {
 	//软删除Trait
 	use SoftDeletes;
 	//表名称
-	protected $table = 'table_name';
+	protected $table = 'blk_demo';
 	//主键
 	protected $primaryKey = 'id';
 	

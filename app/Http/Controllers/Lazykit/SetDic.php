@@ -12,7 +12,7 @@ trait SetDic
     /**
      * 数据字典：数据表关联类型
      * @access 		private
-     * @author    	杨鸿<yh15229262120@qq.com> 
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @return 		array                       
      */
     private function joinTypeDic(){
@@ -26,7 +26,7 @@ trait SetDic
     /**
      * 数据字典：行内按钮样式
      * @access 		private
-     * @author    	杨鸿<yh15229262120@qq.com> 
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @return 		array                       
      */
     private function buttonStyleTypeDic(){
@@ -43,7 +43,7 @@ trait SetDic
     /**
      * 数据字典：验证规则
      * @access 		private
-     * @author    	杨鸿<yh15229262120@qq.com> 
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @return 		array                       
      */
     private function validateDic(){
@@ -80,7 +80,7 @@ trait SetDic
     /**
      * 数据字典：按钮打开方式
      * @access 		private
-     * @author    	杨鸿<yh15229262120@qq.com> 
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @return 		array                       
      */
     private function buttonOpenTypeDic(){
@@ -93,7 +93,7 @@ trait SetDic
     /**
      * 数据字典：固定列数组
      * @access 		private
-     * @author    	杨鸿<yh15229262120@qq.com> 
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @return 		array
      */
     private function fixedColumnDic(){
@@ -106,7 +106,7 @@ trait SetDic
     /**
      * 数据字典：表单验证规则
      * @access 		private
-     * @author    	杨鸿<yh15229262120@qq.com> 
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @return 		array
      */
     private function verifyDic(){
@@ -124,7 +124,7 @@ trait SetDic
     /**
      * 数据字典：链接类型
      * @access 		private
-     * @author    	杨鸿<yh15229262120@qq.com> 
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @return 		array                       
      */
     private function urlTypeDic(){
@@ -138,7 +138,7 @@ trait SetDic
     /**
      * datatable 头部工具菜单
      * @access 		private
-     * @author    	杨鸿<yh15229262120@qq.com> 
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @return 		array                       
      */
     private function headMenu($datatable_set_arr, $datatable_arr){
@@ -272,7 +272,7 @@ trait SetDic
     /**
      * 数据字典:数据输入方式
      * @access 		private
-     * @author    	杨鸿<yh15229262120@qq.com> 
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @return 		array                       
      */
     private function dataInputFormDic(){
@@ -319,7 +319,7 @@ trait SetDic
     /**
      * 数据字典类型
      * @access 		private
-     * @author    	杨鸿<yh15229262120@qq.com> 
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @return 		array                       
      */
     private function dicTypeDic(){
@@ -333,7 +333,7 @@ trait SetDic
     /**
      * select/tree_select数据源类型
      * @access 		private
-     * @author    	杨鸿<yh15229262120@qq.com> 
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @return 		array                       
      */
     private function dataSourceDic(){
@@ -347,7 +347,7 @@ trait SetDic
     /**
      * 单元格排列方式
      * @access 		private
-     * @author    	杨鸿<yh15229262120@qq.com> 
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @return 		array                       
      */
     private function alignDic(){

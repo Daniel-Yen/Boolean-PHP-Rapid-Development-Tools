@@ -14,7 +14,7 @@ use App\Repositories\BlkModuleRepository;
 use App\Repositories\BlkAttributeRepository;
 use App\Http\Controllers\Lazykit\SetDic;
 
-class DatatableController extends Controller
+class MenuController extends Controller
 {
     use SetDic;
 	
@@ -186,11 +186,11 @@ class DatatableController extends Controller
 			
 			//生成主表对应的模型类及验证器类
 			if($datatable_arr['main_table']){
-				$this->createModelRequest($datatable_arr['main_table']);
+				$this->createRepositoryRequest($datatable_arr['main_table']);
 			}
 			//生成关联表对应的模型类及验证器类
 			if($datatable_arr['associated_table']){
-				$this->createModelRequest($datatable_arr['associated_table']);
+				$this->createRepositoryRequest($datatable_arr['associated_table']);
 			}
 			
 			return success("操作成功");
@@ -254,7 +254,7 @@ class DatatableController extends Controller
 	 * @param 		string 		$tablename 				表名称
 	 * @return 		
 	 */
-	private function createModelRequest($tablename){
+	private function createRepositoryRequest($tablename){
 		//根据数据库表名称获得要生成的模型的类名称跟文件名
 		$hump_name = Str::studly($tablename);
 		//dd($hump_name);

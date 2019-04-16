@@ -1,7 +1,7 @@
 <?php
 /**
  * DataTable数据表格生成器
- * @auther 		杨鸿<yh15229262120@qq.com>
+ * @auther 		倒车的螃蟹<yh15229262120@qq.com>
  * @param 		$additional_config = [				代码中定义的数据表格附加配置
  */
 
@@ -11,13 +11,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
-use App\Models\BlkAttributeModel;
+use App\Repositories\BlkAttributeRepository;
 
 class DatatableGenerateController extends Controller
 {
 	/**
 	 * datatable模型, 调用它用助手函数：datatable
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param 		string     	$datatable_config_name 		配置名称
 	 * @param 		array   	$additional_config 			调用数据表格生成器自定义的附加配置参数
@@ -220,7 +220,7 @@ class DatatableGenerateController extends Controller
 					return datatable_callback_json(0, '数据读取成功', count($data_arr), $data_arr);
 				}
 			}
-		}elseif( $request->do == "" || $request->do == "recycle" ) {
+		}elseif( $request->do == "open" || $request->do == "recycle" ) {     //open参数是才Permission中间件中赋的值
 			//回收站删除行内按钮
 			if($request->do == "recycle" && isset($datatable_config['line_button'])){
 				unset($datatable_config['line_button']);
@@ -259,7 +259,7 @@ class DatatableGenerateController extends Controller
 			}
 		}else{
 			//行内按钮与头部按钮处理
-			if(isset($request->from)){
+			if(isset($request->from)?$request->from == 'line':false){
 				$button_menu_config = $datatable_config['line_button'][$request->do]['method'];
 			}else{
 				$button_menu_config = $datatable_config['new_head_menu'][$request->do]['method'];
@@ -278,7 +278,7 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 将数据表格配置与数据表格附加配置合并并取得字典数据字典
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param  		string 		$datatable_config_name 			数据表格配置名称
 	 * @param 		$additional_config = [						代码中定义的数据表格附加配置
@@ -354,12 +354,12 @@ class DatatableGenerateController extends Controller
 			//获取字段属性设置
 			foreach($datatable_config['datatable_set'] as $k=>$v){
 				//取设置的字段属性,用于表单生成
-				$BlkAttributeModel = new BlkAttributeModel();
+				$BlkAttributeRepository = new BlkAttributeRepository();
 				$conditions = [
 					['datatable_id', '=', $datatable_config['id']],
 					['field', '=', $v['field']],
 				];
-				$attribute_arr = $BlkAttributeModel->where($conditions)->first();
+				$attribute_arr = $BlkAttributeRepository->where($conditions)->first();
 				
 				if($attribute_arr){
 					$attribute_arr = $attribute_arr->toArray();
@@ -395,8 +395,8 @@ class DatatableGenerateController extends Controller
 			//获得数据模型
 			if(isset($datatable_config['main_table'])){
 				//根据模型配置取的表名称并实例化表对应的模型 new $datatable_config['modelClass']
-				$class_name = studly_case($datatable_config['main_table']).'Model';
-				$datatable_config['modelClass'] = 'App\Models\\'.$class_name;
+				$class_name = studly_case($datatable_config['main_table']).'Repository';
+				$datatable_config['modelClass'] = 'App\Repositories\\'.$class_name;
 			}
 			
 			//获得路由命名
@@ -409,7 +409,7 @@ class DatatableGenerateController extends Controller
 			//头部菜单权限
 			if(isset($datatable_config['head_menu'])){
 				foreach($datatable_config['head_menu'] as $k=>$v){
-					if(!in_array($k, $lazykit_rules) && $k != 'search'){
+					if(!in_array($k, $lazykit_rules)){
 						unset($datatable_config['head_menu'][$k]);
 					}
 				}
@@ -425,13 +425,13 @@ class DatatableGenerateController extends Controller
 			}
 			
 			//行内菜单权限
-// 			if(isset($datatable_config['line_button'])){
-// 				foreach($datatable_config['line_button'] as $k=>$v){
-// 					if(!in_array($k, $lazykit_rules) && $k != 'search'){
-// 						unset($datatable_config['line_button'][$k]);
-// 					}
-// 				}
-// 			}
+			if(isset($datatable_config['line_button'])){
+				foreach($datatable_config['line_button'] as $k=>$v){
+					if(!in_array($k, $lazykit_rules) && $k != 'search'){
+						unset($datatable_config['line_button'][$k]);
+					}
+				}
+			}
 		}
 		//dd($datatable_config);
 		return $datatable_config;
@@ -439,7 +439,7 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 在新增、修改之前剔除数据库中未定义的字段
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param 		array 		$post 			待新增或者修改的数据
 	 * @return 		array 						返回剔除数据库中未定义字段的数据
@@ -476,7 +476,7 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 获得增、删、改、查、导入、导出需要的字段及字段属性
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param  		array 		$datatable_config 			datatable配置
 	 * @param  		string 		$type 						$type参数的值为：create，update，read，search，import，export
@@ -522,7 +522,7 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 字典转换
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param 		array 		$rows_arr 		待处理的数据集
 	 * @return 		array
@@ -571,7 +571,7 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 获得字典的一维数组
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param 		array 		$datatable_config 		从配置中读取的字典数据集（一般是树结构）
 	 * @return 		array
@@ -597,7 +597,7 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 获得字典的一维数组
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param 		array 		$dic_data 		从配置中读取的字典数据集（一般是树结构）
 	 * @return 		array
@@ -624,7 +624,7 @@ class DatatableGenerateController extends Controller
 	/**
 	 * 获得控制器方法返回的数据
 	 * 如果没有控制器，则方法默认控制器为生成数据表格控制器
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param  		string 		$method 					控制器及控制器方法 App\Http\Controllers\Lazykit\DatatableController->leftDirectory
 	 * @return 		object                      			返回值为数据表模型实例化的对象
@@ -653,7 +653,7 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 根据模型配置取的表名称并动态实例化表对应的模型
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param  		array 		$datatable_config 			datatable配置
 	 * @return 		object                      			返回值为数据表模型实例化的对象
@@ -661,15 +661,15 @@ class DatatableGenerateController extends Controller
 // 	private function newClass($datatable_config){
 // 		
 // 		$hump_name = studly_case($datatable_config['main_table']);
-// 		$class_name = $hump_name.'Model';
-// 		$class = 'App\Models\\'.$class_name;
+// 		$class_name = $hump_name.'Repository';
+// 		$class = 'App\Repositories\\'.$class_name;
 // 		
 // 		return $class;
 // 	}
 	
 	/**
 	 * 处理Datatable表头
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param  		array 		$cols_arr 			根据datatable配置文件及字段属性表中的的字段属性生成的layui数据表格表头属性的数组
 	 * @return 		string                      	返回类似json的layui数据表格表头
@@ -727,7 +727,7 @@ class DatatableGenerateController extends Controller
 		}
 		
 		//没有行操作按钮不显示
-		if(isset($datatable_config['line_button'])){
+		if(isset($datatable_config['line_button'])?!empty($datatable_config['line_button']):false){
 			$cols_arr[] = array('fixed' => 'right', 'title' => '操作', 'toolbar' => '#buer-table-bar', 'width' => $datatable_config['other_set']['line_button_area_width']);
 		}
 		$cols = json_encode($cols_arr);
