@@ -23,7 +23,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
-						<input type="text" name="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="请输入{{$vo['title']}}" autocomplete="off" class="layui-input">
+						<input type="text" name="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" placeholder="请输入{{$vo['title']}}" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				@break
@@ -31,7 +31,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
-						<textarea name="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="请输入{{$vo['title']}}" autocomplete="off" class="layui-textarea">{{$data_arr[$vo['field']]}}</textarea>
+						<textarea name="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" placeholder="请输入{{$vo['title']}}" autocomplete="off" class="layui-textarea">{{$data_arr[$vo['field']]}}</textarea>
 					</div>
 				</div>
 				@break
@@ -40,7 +40,7 @@
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
 						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
-						<select name="{{$vo['field']}}" xm-select-skin="normal" xm-select="{{$vo['field']}}" xm-select-radio>
+						<select name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" xm-select-skin="normal" xm-select="{{$vo['field']}}" xm-select-radio>
 							<option value="">请选择</option>
 						</select>
 						@else
@@ -54,7 +54,7 @@
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
 						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
-						<select name="{{$vo['field']}}" xm-select-skin="normal" xm-select="{{$vo['field']}}" xm-select-radio>
+						<select name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" xm-select-skin="normal" xm-select="{{$vo['field']}}" xm-select-radio>
 							<option value="">请选择</option>
 						</select>
 						@else
@@ -68,7 +68,7 @@
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
 						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
-						<select name="{{$vo['field']}}" xm-select-skin="normal" xm-select="{{$vo['field']}}">
+						<select name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" xm-select-skin="normal" xm-select="{{$vo['field']}}">
 							<option value="">请选择</option>
 						</select>
 						@else
@@ -82,7 +82,7 @@
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
 						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
-						<select name="{{$vo['field']}}" xm-select-skin="normal" xm-select="{{$vo['field']}}" xm-select-radio>
+						<select name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" xm-select-skin="normal" xm-select="{{$vo['field']}}" xm-select-radio>
 							<option value="">请选择</option>
 						</select>
 						@else
@@ -95,7 +95,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
-						<textarea class="layui-textarea" name="{{$vo['field']}}" id="{{$vo['field']}}" style="display: none">
+						<textarea class="layui-textarea" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" style="display: none">
 							{{$data_arr[$vo['field']]}}
 						</textarea>
 					</div>
@@ -105,7 +105,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
-						<textarea class="layui-textarea" name="{{$vo['field']}}" id="{{$vo['field']}}" style="display: none">
+						<textarea class="layui-textarea" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" style="display: none">
 							{{$data_arr[$vo['field']]}}
 						</textarea>
 					</div>
@@ -117,7 +117,7 @@
 					<div class="layui-input-block">
 						<div id="layout">
 							<div id="editormd">
-								<textarea name="{{$vo['field']}}" id="{{$vo['field']}}" style="display:none;">
+								<textarea name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" style="display:none;">
 									{{$data_arr[$vo['field']]}}
 								</textarea>
 							</div>
@@ -219,7 +219,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy">
 					</div>
 				</div>
 				@break
@@ -227,7 +227,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy-MM">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy-MM">
 					</div>
 				</div>
 				@break
@@ -235,7 +235,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy-MM-dd">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy-MM-dd">
 					</div>
 				</div>
 				@break
@@ -243,7 +243,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="HH:mm:ss">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="HH:mm:ss">
 					</div>
 				</div>
 				@break
@@ -251,7 +251,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy-MM-dd HH:mm:ss">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy-MM-dd HH:mm:ss">
 					</div>
 				</div>
 				@break
@@ -259,7 +259,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
 					</div>
 				</div>
 				@break
@@ -267,7 +267,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
 					</div>
 				</div>
 				@break
@@ -275,7 +275,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
 					</div>
 				</div>
 				@break
@@ -283,7 +283,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
 					</div>
 				</div>
 				@break
@@ -291,7 +291,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - " style="width:380px;">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - " style="width:380px;">
 					</div>
 				</div>
 				@break
@@ -299,7 +299,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-inline" style="width: 120px;">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" id="{{$vo['field']}}-input" value="{{$data_arr[$vo['field']]}}" placeholder="请选择颜色">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}-input" value="{{$data_arr[$vo['field']]}}" placeholder="请选择颜色">
 					</div>
 					<div class="layui-inline" style="left: -11px;">
 						<div id="{{$vo['field']}}"></div>
@@ -370,6 +370,8 @@
 				colorpicker = layui.colorpicker;
 				
 			@include ('datatable.create_js')
+			
+			@include ('datatable.create_verify')
 		});
 </script>
 @endpush

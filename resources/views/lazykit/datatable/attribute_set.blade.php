@@ -189,6 +189,7 @@
 		formSelects.data('validate', 'local', {
 			arr: @json($validate_dic_arr)
 		});
+		formSelects.value('validate', {!!$attribute_arr['validate']!!});
 		
 		form.on('select(data_input_form)', function(data){
 			//alert(data.value);

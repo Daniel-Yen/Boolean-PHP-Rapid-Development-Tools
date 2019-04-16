@@ -71,7 +71,8 @@ class DatatableGenerateController extends Controller
 			view()->share([
 				'dom' => $dom,
 				'data_arr' => $data_arr,
-				'datatable_config' => $datatable_config,								//数据表格配置
+				'datatable_config' => $datatable_config,		//数据表格配置
+				'validate_rules_dic_arr' => $this->validateRulesDic(),
 			]);
 			
 			$content = view($datatable_config['create_page']);
@@ -119,7 +120,8 @@ class DatatableGenerateController extends Controller
 			view()->share([
 				'dom' => $dom,
 				'data_arr' => $data_arr,
-				'datatable_config' => $datatable_config,								//数据表格配置
+				'datatable_config' => $datatable_config,		//数据表格配置
+				'validate_rules_dic_arr' => $this->validateRulesDic(),
 			]);
 			
 			$content = view($datatable_config['update_page']);
@@ -652,22 +654,6 @@ class DatatableGenerateController extends Controller
 	}
 	
 	/**
-	 * 根据模型配置取的表名称并动态实例化表对应的模型
-	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
-	 * @access 		private
-	 * @param  		array 		$datatable_config 			datatable配置
-	 * @return 		object                      			返回值为数据表模型实例化的对象
-	 */
-// 	private function newClass($datatable_config){
-// 		
-// 		$hump_name = studly_case($datatable_config['main_table']);
-// 		$class_name = $hump_name.'Repository';
-// 		$class = 'App\Repositories\\'.$class_name;
-// 		
-// 		return $class;
-// 	}
-	
-	/**
 	 * 处理Datatable表头
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
@@ -678,7 +664,6 @@ class DatatableGenerateController extends Controller
 	{
 		$cols_arr = [];
 		//显示复选的条件,1、非外部数据源;2、有修改、新增按钮
-		//dd($datatable_config['head_menu']['update']);
 		$isupdate = isset($datatable_config['head_menu']['update']['must'])?$datatable_config['head_menu']['update']['must'] == 'on':false;
 		$isdelete = isset($datatable_config['head_menu']['delete']['must'])?$datatable_config['head_menu']['delete']['must'] == 'on':false;
 		if($datatable_config['data_source_method'] == '' && ( $isupdate || $isdelete ) ){
@@ -734,5 +719,27 @@ class DatatableGenerateController extends Controller
 		//dd($cols);
 		
 		return $cols;
+	}
+	
+	//验证规则
+	private function validateRulesDic(){
+		return $data = [
+			'bail' 			=> '第一次验证失败后停止运行验证规则',
+			'required' 		=> '不能为空',
+			'alpha' 		=> '必须完全由字母构成',
+			'string' 		=> '必须以字符串开始',
+			//'alpha_dash' 	=> '字段可能包含字母、数字，以及破折号 (-) 和下划线 ( _ )',
+			'alpha_num' 	=> '必须是完全是字母、数字',
+			'date' 			=> '必须是有效的日期',
+			'email' 		=> '必须为正确格式的电子邮件地址',
+			'image' 		=> '必须是图片 (jpeg, png, bmp, gif, 或 svg)',
+			'integer' 		=> '必须是整数',
+			'numeric' 		=> '必须是数字',
+			'ip' 			=> '必须是 IP 地址',
+			'ipv4' 			=> '必须是 IPv4 地址',
+			'ipv6' 			=> '必须是 IPv6 地址',
+			'json' 			=> '必须是有效的 JSON 字符串',
+			'url' 			=> '必须是有效的 URL',
+		];
 	}
 }

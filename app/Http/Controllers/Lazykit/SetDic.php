@@ -39,6 +39,27 @@ trait SetDic
     		'layui-btn-disabled' 	=> '禁用',
     	];
     }
+	
+	private function validateRulesDic(){
+		return $data = [
+			'bail' 			=> '第一次验证失败后停止运行验证规则',
+			'required' 		=> '不能为空',
+			'alpha' 		=> '必须完全由字母构成',
+			'string' 		=> '必须以字符串开始',
+			//'alpha_dash' 	=> '字段可能包含字母、数字，以及破折号 (-) 和下划线 ( _ )',
+			'alpha_num' 	=> '必须是完全是字母、数字',
+			'date' 			=> '必须是有效的日期',
+			'email' 		=> '必须为正确格式的电子邮件地址',
+			'image' 		=> '必须是图片 (jpeg, png, bmp, gif, 或 svg)',
+			'integer' 		=> '必须是整数',
+			'numeric' 		=> '必须是数字',
+			'ip' 			=> '必须是 IP 地址',
+			'ipv4' 			=> '必须是 IPv4 地址',
+			'ipv6' 			=> '必须是 IPv6 地址',
+			'json' 			=> '必须是有效的 JSON 字符串',
+			'url' 			=> '必须是有效的 URL',
+		];
+	}
     
     /**
      * 数据字典：验证规则
@@ -47,24 +68,7 @@ trait SetDic
      * @return 		array                       
      */
     private function validateDic(){
-    	$data = [
-    		'bail' 			=> '第一次验证失败后停止运行验证规则（bail）',
-    		'required' 		=> '必填（required）',
-    		'alpha' 		=> '字段必须完全由字母构成（alpha）',
-    		'string' 		=> '字段必须是一个字符串（string）',
-    		'alpha_dash' 	=> '字段可能包含字母、数字，以及破折号 (-) 和下划线 ( _ )（alpha_dash）',
-    		'alpha_num' 	=> '字段必须是完全是字母、数字（alpha_num）',
-    		'date' 			=> '字段必须是有效的日期（date）',
-    		'email' 		=> '字段必须为正确格式的电子邮件地址（email）',
-    		'image' 		=> '文件必须是图片 (jpeg, png, bmp, gif, 或 svg)（image）',
-    		'integer' 		=> '验证的字段必须是整数（integer）',
-    		'numeric' 		=> '字段必须是数字（numeric）',
-    		'ip' 			=> '字段必须是 IP 地址（ip）',
-    		'ipv4' 			=> '字段必须是 IPv4 地址（ipv4）',
-    		'ipv6' 			=> '字段必须是 IPv6 地址（ipv6）',
-    		'json' 			=> '字段必须是有效的 JSON 字符串（json）',
-    		'url' 			=> '字段必须是有效的 URL（url）',
-    	];
+    	$data = validateRulesDic();
     	
     	$data_arr = [];
     	foreach($data as $k=>$v){
@@ -364,7 +368,7 @@ trait SetDic
 			['value' => '1', 	'name' => '自定义代码'],
 			['value' => '2', 	'name' => '数据表格'],
 			['value' => '3', 	'name' => '统计图表'],
-			['value' => '3', 	'name' => '配置文件'],
+			['value' => '4', 	'name' => '配置文件'],
 		];
 		
 		return $data;

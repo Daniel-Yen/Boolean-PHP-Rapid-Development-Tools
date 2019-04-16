@@ -512,8 +512,9 @@ class MenuController extends Controller
 		}
 		//dd(DB::getQueryLog());
 		//dd($attribute_arr);
+		$validate = explode(',',$attribute['validate']);
+		$attribute['validate'] = json_encode($validate);
 		//dd($attribute);
-		
 		view()->share([
 			'attribute_arr' 			=> $attribute,						//字段属性
 			'validate_dic_arr' 			=> $this->validateDic(),			//字典：验证规则
