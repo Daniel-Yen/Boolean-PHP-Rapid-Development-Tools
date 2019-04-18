@@ -6,7 +6,7 @@
   'url' => '/system/user/index',
   'method' => 'UserController@index',
   'module_id' => '2',
-  'main_table' => 'users',
+  'main_table' => 'blk_users',
   'associated_type' => NULL,
   'associated_table' => NULL,
   'external_field' => NULL,

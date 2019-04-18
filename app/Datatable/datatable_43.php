@@ -6,7 +6,7 @@
   'url' => '/system/permission/user_group',
   'method' => 'PermissionController@userGroup',
   'module_id' => '2',
-  'main_table' => 'user_group',
+  'main_table' => 'blk_user_group',
   'associated_type' => NULL,
   'associated_table' => NULL,
   'external_field' => NULL,
