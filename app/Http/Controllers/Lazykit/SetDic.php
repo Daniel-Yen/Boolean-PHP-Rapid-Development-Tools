@@ -78,7 +78,7 @@ trait SetDic
      * @return 		array                       
      */
     private function validateDic(){
-    	$data = validateRulesDic();
+    	$data = $this->validateRulesDic();
     	
     	$data_arr = [];
     	foreach($data as $k=>$v){

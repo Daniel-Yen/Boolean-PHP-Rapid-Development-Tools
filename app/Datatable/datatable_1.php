@@ -5,7 +5,7 @@
   'model' => '2',
   'url' => 'lazykit/menu/index',
   'method' => 'MenuController@index',
-  'module_id' => '1',
+  'module_id' => '1/1',
   'main_table' => 'blk_menu',
   'associated_type' => NULL,
   'associated_table' => NULL,
@@ -62,7 +62,7 @@
       'field_length' => '11',
       'sorting' => '0',
       'fixed' => NULL,
-      'title' => NULL,
+      'title' => 'ID',
       'field' => 'id',
       'field_from' => 'main_table',
       'width' => '80',
@@ -73,7 +73,7 @@
       'field_type' => 'varchar',
       'field_length' => '40',
       'sorting' => '1',
-      'fixed' => NULL,
+      'fixed' => 'left',
       'title' => '菜单名称',
       'field' => 'title',
       'field_from' => 'main_table',
@@ -146,10 +146,10 @@
       'field_length' => '20',
       'sorting' => '6',
       'fixed' => NULL,
-      'title' => '所属模块',
+      'title' => '所属系统 / 模块',
       'field' => 'module_id',
       'field_from' => 'main_table',
-      'width' => NULL,
+      'width' => '350',
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
@@ -165,6 +165,7 @@
       'field' => 'created_at',
       'field_from' => 'main_table',
       'width' => NULL,
+      'read' => 'on',
     ),
     'updated_at' => 
     array (
@@ -176,6 +177,7 @@
       'field' => 'updated_at',
       'field_from' => 'main_table',
       'width' => NULL,
+      'read' => 'on',
     ),
     'deleted_at' => 
     array (
@@ -187,6 +189,7 @@
       'field' => 'deleted_at',
       'field_from' => 'main_table',
       'width' => NULL,
+      'read' => 'on',
     ),
   ),
   'head_menu' => 
@@ -302,5 +305,4 @@
       'method' => 'set',
     ),
   ),
-);
-?>
+);?>

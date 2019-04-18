@@ -1,27 +1,27 @@
 <?php
 /**
- * 功能名称：{menu_title}
+ * 功能名称：系统管理
  * 该控制器类由Datatable生成器自动生成
  * @auther 		Buer Lazykit
  */
 
-namespace App\Http\Controllers\{module};
+namespace App\Http\Controllers\Lazykit;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class {NewController} extends Controller
+class SystemController extends Controller
 {
     /**
-     * {menu_title}
+     * 系统管理
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		public
      * @param  		\Illuminate\Http\Request $request
      * @return  	mixed
      */
-    public function {method}(Request $request)
+    public function index(Request $request)
     {
-    	create_datatable('datatable_{id}', [], $request);
+    	create_datatable('datatable_45', [], $request);
     }
 }

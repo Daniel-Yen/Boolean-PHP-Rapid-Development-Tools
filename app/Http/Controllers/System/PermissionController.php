@@ -10,7 +10,7 @@ namespace App\Http\Controllers\System;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Repositories\BlkMenuRepository;
-use App\Repositories\UserGroupRepository;
+use App\Repositories\BlkUserGroupRepository;
 
 class PermissionController extends Controller
 {
@@ -83,7 +83,7 @@ class PermissionController extends Controller
 		}
 		//dd($data);
 		
-		$user_group = UserGroupRepository::where('id', request()->id)->first();
+		$user_group = BlkUserGroupRepository::where('id', request()->id)->first();
 		//dd(json_decode($user_group->rules, true));
 		
 		return view('system.permissions', [
@@ -120,6 +120,6 @@ class PermissionController extends Controller
 			'rules' => json_encode($rules_arr),
 		];
 		//dd($param);
-		UserGroupRepository::where('id', request()->id)->update($param);
+		BlkUserGroupRepository::where('id', request()->id)->update($param);
 	}
 }

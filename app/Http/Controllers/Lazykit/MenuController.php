@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\BlkMenuRepository;
 use App\Repositories\BlkModuleRepository;
+use App\Repositories\BlkSystemRepository;
 use App\Repositories\BlkAttributeRepository;
 use App\Http\Controllers\Lazykit\SetDic;
 
@@ -55,7 +56,8 @@ class MenuController extends Controller
 	 * @param 		integer 	$datatable_arr 			菜单信息
 	 * @return  	array
 	 */
-	public function getRouteMessage($datatable_arr){
+	public function getRouteMessage($datatable_arr)
+	{
 		//获得控制器路径
 		$module_path = BlkModuleRepository::where('id', $datatable_arr['module_id'])->first(['module']);
 		//dd($datatable_arr);
@@ -156,7 +158,7 @@ class MenuController extends Controller
 					}
 				}
 			}
-			//创建按钮的控制其方法
+			//创建按钮的控制器方法[未实现]
 			if(isset($datatable_arr['new_head_menu'])){
 				$this->createMethod($datatable_arr['new_head_menu']);
 			}
@@ -233,12 +235,12 @@ class MenuController extends Controller
 		}
 	}
 	
-	//生成控制器方法
-// 	public function createMethod($anniu_config){
-// 		foreach($anniu_config as $v){
-// 			//$v['method']
-// 		}
-// 	}
+	//生成行按钮的控制器方法
+	public function createMethod($anniu_config){
+		foreach($anniu_config as $v){
+			//$v['method']
+		}
+	}
 	
 	/**
 	 * 设置菜单模型
@@ -248,7 +250,8 @@ class MenuController extends Controller
 	 * @param  		\Illuminate\Http\Request  $request
 	 * @return  	\Illuminate\Http\Response
 	 */
-	public function addModel(Request $request){
+	public function addModel(Request $request)
+	{
 		//dd($request->id);
 		$param = $request->post();
 		unset($param['_token']);
@@ -267,7 +270,8 @@ class MenuController extends Controller
 	 * @param 		string 		$tablename 				表名称
 	 * @return 		
 	 */
-	private function createRepositoryRequest($tablename){
+	private function createRepositoryRequest($tablename)
+	{
 		//根据数据库表名称获得要生成的模型的类名称跟文件名
 		$hump_name = Str::studly($tablename);
 		//dd($hump_name);
@@ -298,7 +302,8 @@ class MenuController extends Controller
 	 * @param 		array 		$datatable_arr 				数据表格记录
 	 * @return 		string
 	 */
-	private function getDatatableFielName($datatable_arr){
+	private function getDatatableFielName($datatable_arr)
+	{
 		return 'datatable_'.$datatable_arr['id'];
 	}
 	
@@ -483,11 +488,13 @@ class MenuController extends Controller
 	 * @param  		\Illuminate\Http\Request $request
 	 * @return  	\Illuminate\Http\Response
 	 */
-	public function attributeSet(Request $request){
+	public function attributeSet(Request $request)
+	{
 		if($request->isMethod('post')){
 			$data = $request->post();
 			unset($data['_token']);
 			//dd($data);
+			
 			//验证规则
 			if(isset($data['verify'])){
 				$verify = [];
@@ -503,10 +510,12 @@ class MenuController extends Controller
 				'datatable_id' => $request->datatable_id,
 				'field' => $request->field,
 			];
+			
 			$param = [
 				'field_from' => $request->field_from,
 				'attribute' => json_encode($data),
 			];
+			
 			//新增字段属性设置记录，如果已存在，则修改
 			//DB::connection()->enableQueryLog();
 			$result = BlkAttributeRepository::updateOrInsert($conditions, $param);
@@ -523,6 +532,7 @@ class MenuController extends Controller
 			['datatable_id', '=', $request->datatable_id],
 			['field', '=', $request->field],
 		];
+		
 		$attribute_arr = BlkAttributeRepository::where($conditions)->get();
 		if($attribute_arr->first()){
 			$attribute_arr = $attribute_arr->toArray();
@@ -532,8 +542,16 @@ class MenuController extends Controller
 		}
 		//dd(DB::getQueryLog());
 		//dd($attribute_arr);
-		$validate = explode(',',$attribute['validate']);
-		$attribute['validate'] = json_encode($validate);
+		
+		//获得验证类型
+		$validate = isset($attribute['validate'])?explode(',',$attribute['validate']):[];
+		if($validate){
+			$attribute['validate'] = json_encode($validate);
+		}else{
+			//没有验证规则，返回一个空的json
+			$attribute['validate'] = '{}';
+		}
+		
 		//dd($attribute);
 		view()->share([
 			'attribute_arr' 			=> $attribute,						//字段属性
@@ -557,7 +575,8 @@ class MenuController extends Controller
 	 * @access 		public
 	 * @return  	array
 	 */
-	public function attribute_pid(){
+	public function attribute_pid()
+	{
 		$data = BlkMenuRepository::select('id as value', 'title as name', 'pid')->get();
 		if($data->count()){
 			$data = $data->toArray();
@@ -578,13 +597,51 @@ class MenuController extends Controller
 	 * @access 		public
 	 * @return  	array
 	 */
-	public function attribute_module(){
-		$data = BlkModuleRepository::select('id as value', 'system_name as name')->get();
-		if($data->count()){
-			$data = $data->toArray();
-		}else{
-			$data = [];
+	public function attribute_module()
+	{
+// 		$data = BlkModuleRepository::select('id as value', 'module_name as name')->get();
+// 		if($data->count()){
+// 			$data = $data->toArray();
+// 		}else{
+// 			$data = [];
+// 		}
+// 		
+// 		return $data;
+		$system = BlkSystemRepository::select('system_name', 'id')->get();
+		
+		$data = [];
+		
+		if($system->count()){
+			$system = $system->toArray();
+			//dd($data);
+			foreach($system as $k=>$v){
+				$data[$k] = $v;
+				$data[$k]['name'] = $v['system_name'];
+				$data[$k]['value'] = $v['id'];
+				//树结构的查询条件
+				//$data[$k]['condition'] = [$system[$k]['id']];
+				$data[$k]['spread'] = 'true';
+				
+				$module = BlkModuleRepository::select('module_name', 'id')
+							->where('system_id', $v['id'])
+							->get();
+							
+				$data_module = [];
+				
+				if($module->count()){
+					$module = $module->toArray();
+					//dd($data);
+					foreach($module as $k1=>$v1){
+						$data_module[$k1] = $v1;
+						$data_module[$k1]['name'] = $v1['module_name'];
+						$data_module[$k1]['value'] = $v1['id'];
+						//$data_module[$k1]['condition'] = [$module[$k1]['id']];
+					}
+				}
+				$data[$k]['children'] = $data_module;
+			}
 		}
+		//dd($data);
 		
 		return $data;
 	}
@@ -596,17 +653,41 @@ class MenuController extends Controller
 	 * @access 		public
 	 * @return  	array
 	 */
-	public function leftDirectory(){
-		$data = BlkModuleRepository::get();
-		if($data->count()){
-			$data = $data->toArray();
+	public function leftDirectory()
+	{
+		$system = BlkSystemRepository::select('system_name', 'id')->get();
+		
+		$data = [];
+		
+		if($system->count()){
+			$system = $system->toArray();
 			//dd($data);
-			foreach($data as $k=>$v){
+			foreach($system as $k=>$v){
+				$data[$k] = $v;
 				$data[$k]['name'] = $v['system_name'];
-				$data[$k]['condition'] = [$data[$k]['id']];
+				$data[$k]['value'] = $v['id'];
+				//树结构的查询条件
+				$data[$k]['condition'] = [$system[$k]['id']];
+				$data[$k]['spread'] = 'true';
+				
+				$module = BlkModuleRepository::select('module_name', 'id')
+							->where('system_id', $v['id'])
+							->get();
+							
+				$data_module = [];
+				
+				if($module->count()){
+					$module = $module->toArray();
+					//dd($data);
+					foreach($module as $k1=>$v1){
+						$data_module[$k1] = $v1;
+						$data_module[$k1]['name'] = $v1['module_name'];
+						$data_module[$k1]['value'] = $v1['id'];
+						$data_module[$k1]['condition'] = [$module[$k1]['id']];
+					}
+				}
+				$data[$k]['children'] = $data_module;
 			}
-		}else{
-			$data = [];
 		}
 		//dd($data);
 		
