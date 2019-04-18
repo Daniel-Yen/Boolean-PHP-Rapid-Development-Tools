@@ -26,8 +26,11 @@ class MenuController extends Controller
 	
 	/**
 	 * datatable配置列表
-	 * @access 		public
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		\Illuminate\Http\Request $request
+	 * @return  	mixed
 	 */
 	public function index(Request $request)
     {
@@ -46,9 +49,11 @@ class MenuController extends Controller
 	
 	/**
 	 * 获得"buer_Blk_datatable"表中的路由信息，并判断类跟方法是否存在
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		public
 	 * @param 		integer 	$datatable_arr 			菜单信息
-	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @return  	array
 	 */
 	public function getRouteMessage($datatable_arr){
 		//获得控制器路径
@@ -93,9 +98,9 @@ class MenuController extends Controller
 	
 	/**
 	 * datatable生成器
-	 * @access    	public
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		public
+	 * @return  	\Illuminate\Http\Response
 	 */
 	public function set()
 	{
@@ -229,13 +234,20 @@ class MenuController extends Controller
 	}
 	
 	//生成控制器方法
-	public function createMethod($anniu_config){
-		foreach($anniu_config as $v){
-			//$v['method']
-		}
-	}
+// 	public function createMethod($anniu_config){
+// 		foreach($anniu_config as $v){
+// 			//$v['method']
+// 		}
+// 	}
 	
-	//设置菜单模型
+	/**
+	 * 设置菜单模型
+	 *
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		\Illuminate\Http\Request  $request
+	 * @return  	\Illuminate\Http\Response
+	 */
 	public function addModel(Request $request){
 		//dd($request->id);
 		$param = $request->post();
@@ -249,8 +261,9 @@ class MenuController extends Controller
 	/**
 	 * 根据表名称生成模型与验证器
 	 * 当配置存在数据表的时候根据数据表生成数据表对应的空模型类及空的验证器类,如果已存在同名文件则不重复生成
-	 * @access 		private
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
 	 * @param 		string 		$tablename 				表名称
 	 * @return 		
 	 */
@@ -279,8 +292,9 @@ class MenuController extends Controller
 	
 	/**
 	 * 获得数据表格配置文件名称加路径
-	 * @access 		private
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
 	 * @param 		array 		$datatable_arr 				数据表格记录
 	 * @return 		string
 	 */
@@ -290,8 +304,9 @@ class MenuController extends Controller
 	
 	/**
 	 * 根据表配置获得字段属性
-	 * @access 		private
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
 	 * @param 		array 		$datatable_arr 			数据表格记录
 	 * @param 		array 		$datatable_set_arr 		数据表格配置
 	 * @return 		array
@@ -383,10 +398,11 @@ class MenuController extends Controller
 	}
 	
 	/**
-	 * 获得数据库表
-	 * @access    	public
+	 * 获得Datatable字段属性
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
-	 * @return 		array          	返回数据库表数组
+	 * @access    	public
+	 * @return 		array          	返回Datatable字段属性
 	 */
 	public function mergeAttribute($datatable_set_arr, $result, $field_from)
 	{
@@ -435,8 +451,9 @@ class MenuController extends Controller
 	
 	/**
 	 * 获得数据库表
-	 * @access    	public
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access    	public
 	 * @return 		array          	返回数据库表数组
 	 */
 	public function getTables()
@@ -460,8 +477,11 @@ class MenuController extends Controller
 	
 	/**
 	 * 字段附加属性设置
-	 * @access 		public
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		\Illuminate\Http\Request $request
+	 * @return  	\Illuminate\Http\Response
 	 */
 	public function attributeSet(Request $request){
 		if($request->isMethod('post')){
@@ -530,7 +550,13 @@ class MenuController extends Controller
 		return view('lazykit.datatable.attribute_set');
 	}
 	
-	//pid字段的下拉选择
+	/**
+	 * pid字段的下拉选择
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @return  	array
+	 */
 	public function attribute_pid(){
 		$data = BlkMenuRepository::select('id as value', 'title as name', 'pid')->get();
 		if($data->count()){
@@ -545,7 +571,13 @@ class MenuController extends Controller
 		return $data;
 	}
 	
-	//module字段的下拉选择
+	/**
+	 * module字段的下拉选择
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @return  	array
+	 */
 	public function attribute_module(){
 		$data = BlkModuleRepository::select('id as value', 'system_name as name')->get();
 		if($data->count()){
@@ -557,7 +589,13 @@ class MenuController extends Controller
 		return $data;
 	}
 	
-	//左侧目录
+	/**
+	 * 左侧目录
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @return  	array
+	 */
 	public function leftDirectory(){
 		$data = BlkModuleRepository::get();
 		if($data->count()){
@@ -575,7 +613,13 @@ class MenuController extends Controller
 		return $data;
 	}
 	
-	//生成路由
+	/**
+	 * 生成路由
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @return  	json
+	 */
 	public function createRoute(){
 		$data = BlkMenuRepository::orderBy('module_id', 'asc')->get();
 		//dd($data);
@@ -638,5 +682,23 @@ Route::group(['middleware' => ['auth', 'permission']], function(){".PHP_EOL;
 			$result = ['code' => 1, 'msg' => "没有要生成的路由"];
 		}
 		return json_encode($result);
+	}
+	
+	/**
+	 * model字段的下拉选择
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	public function attribute_model(){
+		$data = [
+			['value' => '1', 	'name' => '自定义代码'],
+			['value' => '2', 	'name' => '数据表格'],
+			['value' => '3', 	'name' => '统计图表'],
+			['value' => '4', 	'name' => '配置文件'],
+		];
+		
+		return $data;
 	}
 }

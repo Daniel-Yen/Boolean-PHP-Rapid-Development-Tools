@@ -20,14 +20,16 @@ class DatatableController extends Controller
 	
 	/**
      * datatable配置文件存放路径
+	 *
      * @var 		string
      */
 	protected $datatablePath = '..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Datatable'.DIRECTORY_SEPARATOR;
 	
 	/**
 	 * datatable配置列表
-	 * @access 		public
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
 	 */
 	public function index(Request $request)
     {
@@ -46,6 +48,7 @@ class DatatableController extends Controller
 	
 	/**
 	 * 获得"buer_Blk_datatable"表中的路由信息，并判断类跟方法是否存在
+	 *
 	 * @access 		public
 	 * @param 		integer 	$datatable_arr 			菜单信息
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
@@ -93,8 +96,9 @@ class DatatableController extends Controller
 	
 	/**
 	 * datatable生成器
-	 * @access    	public
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access    	public
 	 * @access 		public
 	 */
 	public function set()
@@ -229,13 +233,20 @@ class DatatableController extends Controller
 	}
 	
 	//生成控制器方法
-	public function createMethod($anniu_config){
-		foreach($anniu_config as $v){
-			//$v['method']
-		}
-	}
+// 	public function createMethod($anniu_config){
+// 		foreach($anniu_config as $v){
+// 			//$v['method']
+// 		}
+// 	}
 	
-	//设置菜单模型
+	/**
+	 * 设置菜单模型
+	 *
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		\Illuminate\Http\Request  $request
+	 * @return  	\Illuminate\Http\Response
+	 */
 	public function addModel(Request $request){
 		//dd($request->id);
 		$param = $request->post();
@@ -249,8 +260,9 @@ class DatatableController extends Controller
 	/**
 	 * 根据表名称生成模型与验证器
 	 * 当配置存在数据表的时候根据数据表生成数据表对应的空模型类及空的验证器类,如果已存在同名文件则不重复生成
-	 * @access 		private
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
 	 * @param 		string 		$tablename 				表名称
 	 * @return 		
 	 */
@@ -279,8 +291,9 @@ class DatatableController extends Controller
 	
 	/**
 	 * 获得数据表格配置文件名称加路径
-	 * @access 		private
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
 	 * @param 		array 		$datatable_arr 				数据表格记录
 	 * @return 		string
 	 */
@@ -290,8 +303,9 @@ class DatatableController extends Controller
 	
 	/**
 	 * 根据表配置获得字段属性
-	 * @access 		private
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
 	 * @param 		array 		$datatable_arr 			数据表格记录
 	 * @param 		array 		$datatable_set_arr 		数据表格配置
 	 * @return 		array
@@ -384,8 +398,9 @@ class DatatableController extends Controller
 	
 	/**
 	 * 获得数据库表
-	 * @access    	public
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access    	public
 	 * @return 		array          	返回数据库表数组
 	 */
 	public function mergeAttribute($datatable_set_arr, $result, $field_from)
@@ -435,8 +450,9 @@ class DatatableController extends Controller
 	
 	/**
 	 * 获得数据库表
-	 * @access    	public
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access    	public
 	 * @return 		array          	返回数据库表数组
 	 */
 	public function getTables()
@@ -460,8 +476,11 @@ class DatatableController extends Controller
 	
 	/**
 	 * 字段附加属性设置
-	 * @access 		public
+	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		\Illuminate\Http\Request $request
+	 * @return  	\Illuminate\Http\Response
 	 */
 	public function attributeSet(Request $request){
 		if($request->isMethod('post')){
@@ -529,7 +548,13 @@ class DatatableController extends Controller
 		return view('lazykit.datatable.attribute_set');
 	}
 	
-	//pid字段的下拉选择
+	/**
+	 * pid字段的下拉选择
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @return  	array
+	 */
 	public function attribute_pid(){
 		$data = BlkMenuRepository::select('id as value', 'title as name', 'pid')->get();
 		if($data->count()){
@@ -544,7 +569,13 @@ class DatatableController extends Controller
 		return $data;
 	}
 	
-	//module字段的下拉选择
+	/**
+	 * module字段的下拉选择
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @return  	array
+	 */
 	public function attribute_module(){
 		$data = BlkModuleRepository::select('id as value', 'system_name as name')->get();
 		if($data->count()){
@@ -556,7 +587,13 @@ class DatatableController extends Controller
 		return $data;
 	}
 	
-	//左侧目录
+	/**
+	 * 左侧目录
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @return  	array
+	 */
 	public function leftDirectory(){
 		$data = BlkModuleRepository::get();
 		if($data->count()){
@@ -574,7 +611,13 @@ class DatatableController extends Controller
 		return $data;
 	}
 	
-	//生成路由
+	/**
+	 * 生成路由
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @return  	json
+	 */
 	public function createRoute(){
 		$data = BlkMenuRepository::orderBy('module_id', 'asc')->get();
 		//dd($data);

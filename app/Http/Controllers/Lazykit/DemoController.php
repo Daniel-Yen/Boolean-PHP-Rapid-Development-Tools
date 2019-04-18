@@ -15,8 +15,11 @@ class DemoController extends Controller
 {
     /**
      * DataGrid完整示例
-     * @access    	public
-     * @author    	倒车的螃蟹<yh15229262120@qq.com>
+     *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+     * @access 		public
+     * @param  		\Illuminate\Http\Request $request
+     * @return  	mixed
      */
     public function index(Request $request)
     {
@@ -25,8 +28,11 @@ class DemoController extends Controller
 	
 	/**
 	 * DataGrid自定义字段
-	 * @access    	public
-	 * @author    	倒车的螃蟹<yh15229262120@qq.com>
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		\Illuminate\Http\Request $request
+	 * @return  	mixed
 	 */
 	public function external(Request $request)
 	{
@@ -55,8 +61,11 @@ class DemoController extends Controller
 	
 	/**
 	 * DataGrid树形表格
-	 * @access    	public
-	 * @author    	倒车的螃蟹<yh15229262120@qq.com>
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		\Illuminate\Http\Request $request
+	 * @return  	mixed
 	 */
 	public function treeTable(Request $request)
 	{

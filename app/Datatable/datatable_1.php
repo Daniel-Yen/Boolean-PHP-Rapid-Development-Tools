@@ -263,7 +263,7 @@
   'directory' => 
   array (
     'has' => 'on',
-    'method' => 'App\\Http\\Controllers\\Lazykit\\DatatableController->leftDirectory',
+    'method' => 'App\\Http\\Controllers\\Lazykit\\MenuController->leftDirectory',
     'associated_field' => 'module_id',
     'width' => '200',
   ),
@@ -302,4 +302,5 @@
       'method' => 'set',
     ),
   ),
-);?>
+);
+?>

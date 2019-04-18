@@ -12,6 +12,13 @@ class IndexController extends Controller
 	    $this->middleware('auth');
 	}
 	
+	/**
+	 * 首页框架
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param 		string     	$datatable_config_name 		配置名称
+	 * @param 		array   	$additional_config 			调用数据表格生成器自定义的附加配置参数
+	 */
 	public function index()
 	{
 		$user = request()->user();
@@ -19,48 +26,16 @@ class IndexController extends Controller
 		//获得当前登录用户的用户组
 		$user_group = BlkUserGroupRepository::whereIn('id', explode(',', $user->user_group))->get();
 		//取的当前登录用户所属用户组的权限
-		$menu = [];
 		if($user_group->count()){
-			$rules_arr = [];
-			foreach($user_group as $v){
-				$rules = json_decode($v->rules, true);
-				foreach($rules as $k=>$v){
-					$rules_arr[] = $k;
-				}
-			}
-		
-			dd($rules_arr);
+			//根据用户组获取用户权限
+			$rules_arr = $this->getRules($user_group);
+			//dd($rules_arr);
+			
 			if($rules_arr){
-				$menu_arr = BlkMenuRepository::whereIn('url', $rules_arr)->get();
-				if($menu_arr->first()){
-					$menu_arr = $menu_arr->toArray();
-					$ids = [];
-					foreach($menu_arr as $k=>$v){
-						if($v['pid']){
-							$ids[] = $v['pid'];
-						}
-					}
-					//获取上级菜单
-					$menu_arr_1 = BlkMenuRepository::whereIn('id', $ids)->get();
-					if($menu_arr_1->first()){
-						$menu_arr_1 = $menu_arr_1->toArray();
-						$menu = array_merge($menu_arr, $menu_arr_1);
-						$ids = [];
-						foreach($menu_arr_1 as $k=>$v){
-							if($v['pid']){
-								$ids[] = $v['pid'];
-							}
-						}
-						//获取上级菜单的上级菜单
-						$menu_arr_2 = BlkMenuRepository::whereIn('id', $ids)->get();
-						if($menu_arr_2->first()){
-							$menu_arr_2 = $menu_arr_2->toArray();
-							$menu = array_merge($menu, $menu_arr_2);
-						}
-					}
-				}
-				//dd($menu);
-				//$menu = BlkMenuRepository::get()->toArray();;
+				//根据当前用户的用户组权限取的菜单
+				$menu = $this->getMenu($rules_arr);
+				
+				//获得菜单的树结构
 				$tree = new \App\Http\Controllers\Common\TreeController($menu);
 				$menu = $tree->listToTree();
 				//dd($menu);
@@ -72,6 +47,52 @@ class IndexController extends Controller
 		return view('index', [
 			'menu' => $menu,
 		]);
+	}
+	
+	public function getRules($user_group){
+		$rules_arr = [];
+		foreach($user_group as $v){
+			$rules = json_decode($v->rules, true);
+			foreach($rules as $k=>$v){
+				$rules_arr[] = $k;
+			}
+		}
+		
+		return $rules_arr;
+	}
+	
+	public function getMenu($rules_arr){
+		$menu_arr = BlkMenuRepository::whereIn('url', $rules_arr)->get();
+		$menu = [];
+		if($menu_arr->first()){
+			$menu_arr = $menu_arr->toArray();
+			$ids = [];
+			foreach($menu_arr as $k=>$v){
+				if($v['pid']){
+					$ids[] = $v['pid'];
+				}
+			}
+			//获取上级菜单
+			$menu_arr_1 = BlkMenuRepository::whereIn('id', $ids)->get();
+			if($menu_arr_1->first()){
+				$menu_arr_1 = $menu_arr_1->toArray();
+				$menu = array_merge($menu_arr, $menu_arr_1);
+				$ids = [];
+				foreach($menu_arr_1 as $k=>$v){
+					if($v['pid']){
+						$ids[] = $v['pid'];
+					}
+				}
+				//获取上级菜单的上级菜单
+				$menu_arr_2 = BlkMenuRepository::whereIn('id', $ids)->get();
+				if($menu_arr_2->first()){
+					$menu_arr_2 = $menu_arr_2->toArray();
+					$menu = array_merge($menu, $menu_arr_2);
+				}
+			}
+		}
+		
+		return $menu;
 	}
 	
 	public function welcome(){

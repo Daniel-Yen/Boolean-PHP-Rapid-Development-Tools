@@ -17,10 +17,13 @@ class DatatableGenerateController extends Controller
 {
 	/**
 	 * datatable模型, 调用它用助手函数：datatable
+	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param 		string     	$datatable_config_name 		配置名称
-	 * @param 		array   	$additional_config 			调用数据表格生成器自定义的附加配置参数
+	 * @param 		array     	$additional_config 			附加配置
+	 * @param  		\Illuminate\Http\Request  $request
+	 * @return 		mixed
 	 */
     public function createDatatable($datatable_config_name, $additional_config = [], $request)
     {
@@ -280,6 +283,7 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 将数据表格配置与数据表格附加配置合并并取得字典数据字典
+	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param  		string 		$datatable_config_name 			数据表格配置名称
@@ -313,7 +317,8 @@ class DatatableGenerateController extends Controller
 	 *		11、【已实现】自定义搜索页面，应用示例：$this->fetch('common@datatable/create');
 	 *		'search_page' => 'common@datatable/search',  
 	 *		
-	 *	];* @return 		array                      					返回处理后的Datatable数据表格的配置文件
+	 *	];
+	 * @return 		array       返回处理后的Datatable数据表格的配置文件
 	 */
 	private function getDatatableConfig($datatable_config_name, $additional_config = [])
 	{
@@ -441,8 +446,10 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 在新增、修改之前剔除数据库中未定义的字段
+	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
+	 * @param  		array 		$dom 			指定类型（create、update、read 等）的字段属性
 	 * @param 		array 		$post 			待新增或者修改的数据
 	 * @return 		array 						返回剔除数据库中未定义字段的数据
 	 */
@@ -478,11 +485,11 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 获得增、删、改、查、导入、导出需要的字段及字段属性
+	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
-	 * @param  		array 		$datatable_config 			datatable配置
+	 * @param  		array 		$datatable_config 			数据表格的配置文件
 	 * @param  		string 		$type 						$type参数的值为：create，update，read，search，import，export
-	 * @param  		boolean 	$isDic 						是否为字典返回数据
 	 * @return 		array                      				返回值为$type需要的字段
 	 */
 	private function getDataFieldSet($datatable_config, $type){
@@ -524,9 +531,11 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 字典转换
+	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param 		array 		$rows_arr 		待处理的数据集
+	 * @param  		array 		$datatable_config 	数据表格的配置文件
 	 * @return 		array
 	 */
 	private function dicToChar($rows_arr, $datatable_config){
@@ -573,9 +582,10 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 获得字典的一维数组
+	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
-	 * @param 		array 		$datatable_config 		从配置中读取的字典数据集（一般是树结构）
+	 * @param  		array 		$datatable_config 	数据表格的配置文件
 	 * @return 		array
 	 */
 	private function getDicList($datatable_config){
@@ -599,6 +609,7 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 获得字典的一维数组
+	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param 		array 		$dic_data 		从配置中读取的字典数据集（一般是树结构）
@@ -625,10 +636,12 @@ class DatatableGenerateController extends Controller
 	
 	/**
 	 * 获得控制器方法返回的数据
+	 *
 	 * 如果没有控制器，则方法默认控制器为生成数据表格控制器
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param  		string 		$method 					控制器及控制器方法 App\Http\Controllers\Lazykit\DatatableController->leftDirectory
+	 * @param  		array 		$datatable_config 			数据表格的配置文件
 	 * @return 		object                      			返回值为数据表模型实例化的对象
 	 */
 	private function getDataByMethod($method, $datatable_config){
@@ -641,24 +654,35 @@ class DatatableGenerateController extends Controller
 			//dd($controller);
 		}
 		//dd($controller);
-		$class = new $controller;
-		//dd($class);
-		if(method_exists($class, $method)){
-			$data = ['code' => 0, 'msg' => '数据获取成功', 'data'=>$class->$method()];
+		
+		//判断类是否存在
+		if (class_exists($controller)) {
+			$class = new $controller;
+			
+			//判断方法是否存在
+			if(method_exists($class, $method)){
+				$data = ['code' => 0, 'msg' => '数据获取成功', 'data'=>$class->$method()];
+			}else{
+				$msg = "请在控制器“".$controller."”中创建方法“".$method."”";
+				$data = ['code' => 1, 'msg' => $msg];
+			}
 		}else{
-			$msg = "请在控制器“".$controller."”中创建方法“".$method."”";
+			$msg = "控制器“".$controller."”不存在，请创建并添加“".$method."”方法";
 			$data = ['code' => 1, 'msg' => $msg];
 		}
+		
 		//dd($data);
 		return $data;
 	}
 	
 	/**
 	 * 处理Datatable表头
+	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
-	 * @param  		array 		$cols_arr 			根据datatable配置文件及字段属性表中的的字段属性生成的layui数据表格表头属性的数组
-	 * @return 		string                      	返回类似json的layui数据表格表头
+	 * @param  		array 		$dom 				指定类型（create、update、read 等）的字段属性
+	 * @param  		array 		$datatable_config 	数据表格的配置文件
+	 * @return 		json                      	返回类似json的layui数据表格表头
 	 */
 	private function cols($dom, $datatable_config)
 	{
@@ -721,7 +745,13 @@ class DatatableGenerateController extends Controller
 		return $cols;
 	}
 	
-	//验证规则
+	/**
+	 * 验证规则
+	 *
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                      		返回验证规则
+	 */
 	private function validateRulesDic(){
 		return $data = [
 			'bail' 			=> '第一次验证失败后停止运行验证规则',

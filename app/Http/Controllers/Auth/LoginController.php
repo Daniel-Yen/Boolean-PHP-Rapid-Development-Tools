@@ -14,9 +14,12 @@ class LoginController extends Controller
 	
 	/**
      * 登录页面
-     * @param  \Illuminate\Http\Request $request
-	 * @return 
-     */
+     *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+     * @access 		public
+     * @param  		\Illuminate\Http\Request $request
+	 * @return  	\Illuminate\Http\Response
+	 */
     public function login(Request $request)
     {
 //      $pwd = "123456";
@@ -39,7 +42,10 @@ class LoginController extends Controller
 	
 	/**
      * 处理登录认证
-     * @param  \Illuminate\Http\Request $request
+     *
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+     * @access 		public
+     * @param  		\Illuminate\Http\Request $request
      * @return 
      */
     public function checkLogin($request)
@@ -77,8 +83,11 @@ class LoginController extends Controller
 	
 	/**
 	 * 处理登录认证
-	 * @param  	\Illuminate\Http\Request $request
-	 * @return 	void
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		\Illuminate\Http\Request $request
+	 * @return  	\Illuminate\Http\Response
 	 */
 	public function logout()
 	{

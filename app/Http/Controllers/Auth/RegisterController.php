@@ -45,8 +45,11 @@ class RegisterController extends Controller
 
 	/**
      * 注册页面
-     * @param  \Illuminate\Http\Request $request
-	 * @return 
+	 *
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+     * @access 		public
+     * @param  		\Illuminate\Http\Request $request
+	 * @return  	\Illuminate\Http\Response
      */
     public function register(Request $request)
     {
@@ -60,8 +63,11 @@ class RegisterController extends Controller
 	
 	/**
      * 处理用户注册
-     * @param  \Illuminate\Http\Request $request
-     * @return 
+	 *
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+     * @access 		public
+     * @param  		\Illuminate\Http\Request $request
+     * @return 		mixed
      */
     public function registerUser($request)
     {
@@ -111,8 +117,8 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
-     * @return App\Repositories\BlkUsersRepository
+     * @param  	array  $data
+     * @return 	App\Repositories\BlkUsersRepository
      */
     protected function create(array $data)
     {

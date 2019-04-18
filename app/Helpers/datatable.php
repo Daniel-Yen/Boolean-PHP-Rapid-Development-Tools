@@ -139,7 +139,7 @@ if (!function_exists('error')) {
 			//跳转信息
 			'supplement' => $supplement ? $supplement : "当前操作出现意外，稍后为您跳转返回重新操作",
 		    //跳转等待时间（s）
-		    'jumpTime' => 2,
+		    'jumpTime' => 4,
 		]); 
 	}
 }
