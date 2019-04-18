@@ -11,3 +11,5 @@
 |
 */
 Auth::routes();
+//Route::any('/login', 			'Auth\LoginController@login');		//用户登录
+//Route::any('/logout', 			'Auth\LoginController@logout');		//用户登录

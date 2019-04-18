@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\BlkMenuRepository;
-use App\Repositories\UserGroupRepository;
+use App\Repositories\BlkUserGroupRepository;
 
 class IndexController extends Controller
 {
@@ -17,7 +17,7 @@ class IndexController extends Controller
 		$user = request()->user();
 		//dd($user);
 		//获得当前登录用户的用户组
-		$user_group = UserGroupRepository::whereIn('id', explode(',', $user->user_group))->get();
+		$user_group = BlkUserGroupRepository::whereIn('id', explode(',', $user->user_group))->get();
 		//取的当前登录用户所属用户组的权限
 		if($user_group->count()){
 			$rules_arr = [];

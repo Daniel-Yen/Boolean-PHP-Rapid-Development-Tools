@@ -203,3 +203,15 @@ if (!function_exists('create_dir')) {
 		}
 	}
 }
+
+if (!function_exists('lazykit_encryption')) {
+	/**
+	 * 判断目录存在否，存在给出提示，不存在则创建目录
+	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @param 		string		$path 		文件目录
+	 * @return 		boolean
+	 */
+	function lazykit_encryption($text) {
+		
+	}
+}

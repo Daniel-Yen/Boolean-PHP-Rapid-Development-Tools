@@ -18,17 +18,17 @@
 				@csrf
 				<div class="layui-form-item">
 					<label class="layadmin-user-login-icon layui-icon layui-icon-email" for="email"></label>
-					<input type="text" name="email" id="email" lay-verify="required" value="{{ old('email') }}" placeholder="邮箱" autocomplete="off" class="layui-input">
+					<input type="text" name="username" id="username" lay-verify="required" value="{{ old('email') }}" placeholder="邮箱" autocomplete="new-password" class="layui-input">
 				</div>
 				<div class="layui-form-item">
 					<label class="layadmin-user-login-icon layui-icon layui-icon-password" for="password"></label>
-					<input type="password" name="password" id="password" lay-verify="required|pass" placeholder="密码" autocomplete="off" class="layui-input">
+					<input type="password" name="password" id="password" lay-verify="required" placeholder="密码" autocomplete="new-password" class="layui-input">
 				</div>
 				<!-- <div class="layui-form-item">
 					<div class="layui-row">
 						<div class="layui-col-xs7">
 							<label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="vercode"></label>
-							<input type="text" name="vercode" id="vercode" lay-verify="required" placeholder="图形验证码" autocomplete="off" class="layui-input">
+							<input type="text" name="vercode" id="vercode" lay-verify="required" placeholder="图形验证码" autocomplete="new-password" class="layui-input">
 						</div>
 						<div class="layui-col-xs5">
 							<div style="margin-left: 10px;">

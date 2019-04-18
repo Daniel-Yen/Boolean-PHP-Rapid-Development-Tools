@@ -16,17 +16,17 @@
 		<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
 			<div class="layui-form-item">
 				<label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-name"></label>
-				<input type="text" name="name" id="LAY-user-login-name" lay-verify="required" placeholder="昵称 /  姓名" class="layui-input">
+				<input type="text" name="name" id="LAY-user-login-name" lay-verify="required" placeholder="昵称 /  姓名" autocomplete="new-password" class="layui-input">
 			</div>
 			<div class="layui-form-item">
 				<label class="layadmin-user-login-icon layui-icon layui-icon-mail" for="LAY-user-login-email"></label>
-				<input type="text" name="email" id="LAY-user-login-email" lay-verify="email" placeholder="邮箱" class="layui-input">
+				<input type="text" name="email" id="LAY-user-login-email" lay-verify="email" placeholder="邮箱" autocomplete="new-password" class="layui-input">
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-row">
 					<div class="layui-col-xs7">
 						<label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
-						<input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required" placeholder="验证码" class="layui-input">
+						<input type="text" name="vercode" id="LAY-user-login-vercode" lay-verify="required" placeholder="验证码" autocomplete="new-password" class="layui-input">
 					</div>
 					<div class="layui-col-xs5">
 						<div style="margin-left: 10px;">
@@ -37,11 +37,11 @@
 			</div>
 			<div class="layui-form-item">
 				<label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
-				<input type="password" name="password" id="LAY-user-login-password" lay-verify="pass" placeholder="密码" class="layui-input">
+				<input type="password" name="password" id="LAY-user-login-password" lay-verify="pass" placeholder="密码" autocomplete="new-password" class="layui-input">
 			</div>
 			<div class="layui-form-item">
 				<label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password-confirm"></label>
-				<input type="password" name="password-confirm" id="LAY-user-login-password-confirm" lay-verify="required" placeholder="确认密码" class="layui-input">
+				<input type="password" name="password-confirm" id="LAY-user-login-password-confirm" lay-verify="required" placeholder="确认密码" autocomplete="new-password" class="layui-input">
 			</div>
 			<div class="layui-form-item">
 				<input type="checkbox" name="agreement" lay-skin="primary" title="同意用户协议" checked>

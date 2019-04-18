@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Repositories\UserGroupRepository;
-use App\Repositories\UserRepository;
+use App\Repositories\BlkUserGroupRepository;
+use App\Repositories\BlkUserRepository;
 
 class Permission
 {
@@ -21,7 +21,7 @@ class Permission
 		//dd($user);
 		
 		//获得当前登录用户的用户组
-		$user_group = UserGroupRepository::whereIn('id', explode(',', $user->user_group))->get();
+		$user_group = BlkUserGroupRepository::whereIn('id', explode(',', $user->user_group))->get();
 		//取的当前登录用户所属用户组的权限
 		if($user_group->count()){
 			$rules = [];
