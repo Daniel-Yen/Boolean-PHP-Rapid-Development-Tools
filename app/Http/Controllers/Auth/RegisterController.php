@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Repositories\BlkUsersRepository;
 
 class RegisterController extends Controller
 {
@@ -40,7 +43,56 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    /**
+	/**
+     * 注册页面
+     * @param  \Illuminate\Http\Request $request
+	 * @return 
+     */
+    public function register(Request $request)
+    {
+		//用户注册
+		if($request->isMethod('post')){
+			return $this->registerUser($request);
+		}
+		
+		return view('auth.login');
+    }
+	
+	/**
+     * 处理用户注册
+     * @param  \Illuminate\Http\Request $request
+     * @return 
+     */
+    public function registerUser($request)
+    {
+        //dd($request->all());
+		$validator = $this->validator($request->post());
+		//\Illuminate\Support\Facades\DB::connection()->enableQueryLog();
+		
+		if ($validator->fails()) {
+            $errors = $validator->errors();
+			foreach ($errors->all() as $message) {
+				return error('注册失败', $message);
+			}
+        }
+		
+		$user = $this->create($request->post());
+		//dd($result);
+		//dd(\Illuminate\Support\Facades\DB::getQueryLog());
+		//dd($user);
+		if($user){
+			//注册成功直接登录系统
+			Auth::login($user);
+			//记录登录时间
+			BlkUsersRepository::where('status', '=', '1')
+				->update(['login_time' => date('Y-m-d H:i:s', time())]);
+			return redirect('/');
+		}else{
+			return error("您输入的登录账号错误");
+		}
+    }
+	
+	/**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
@@ -49,9 +101,10 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'name' 		=> ['required', 'string', 'max:255'],
+            'email' 	=> ['required', 'string', 'email', 'max:255', 'unique:blk_users'],
+            'phone' 	=> ['required', 'string', 'max:20', 'unique:blk_users'],
+            'password' 	=> ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
@@ -59,12 +112,13 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\User
+     * @return App\Repositories\BlkUsersRepository
      */
     protected function create(array $data)
     {
-        return User::create([
+        return BlkUsersRepository::create([
             'name' => $data['name'],
+            'phone' => $data['phone'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
