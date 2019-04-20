@@ -129,6 +129,8 @@ layui.config({
 	var ac = '&rand='+rand;
 	@endif
 	
+	var base_url = '{{$datatable_config['route_name']}}?{!!$parse_url_query!!}';
+	
 	//获取查询条件
 	$.fn.serializeObject = function() {
 		var o = {};
@@ -153,7 +155,7 @@ layui.config({
 	});
     var tableIns = table.render({
         elem: '#buer-table'
-        ,url: '{{$datatable_config['route_name']}}?do=data'+ac
+        ,url: base_url+'do=data'+ac
         ,toolbar: '#buer-table-toolbar'
 		,defaultToolbar:['filter','exports','print']
         ,title: '用户数据表'
@@ -183,6 +185,7 @@ layui.config({
 		switch(obj.event){
 			@if ($datatable_config['head_menu'])
 			@foreach ($datatable_config['head_menu'] as $key=>$vo)
+			//{{$vo['text']}}
 			case '{{$key}}':
 			@if (in_array($key, ['delete', 'recovery']))
 				//var data = JSON.stringify(checkStatus.data);
@@ -204,7 +207,7 @@ layui.config({
 							@if ( !empty( $datatable_config['delete_page'] ) )
 							url: "{{ $datatable_config['delete_page'] }}",
 							@else
-							url: "{{ $datatable_config['route_name'] }}?do={{ $key }}"+ac,
+							url: base_url+"do={{ $key }}"+ac,
 							@endif
 							data: {
 								'ids': JSON.stringify(ids)
@@ -215,11 +218,13 @@ layui.config({
 								if (res.code == 0) {
 									layer.msg(res.msg);
 									//table.reload('testReload');
-									@if ($key == 'recovery')
-									parent.tools.reload();
-									@else
-									tools.reload();
-									@endif
+									if (res.refresh == 'yes'){
+										@if ($key == 'recovery')
+										parent.tools.reload();
+										@else
+										tools.reload();
+										@endif
+									}
 								} else {
 									layer.msg(res.msg);
 								}
@@ -271,7 +276,7 @@ layui.config({
 					,shade: 0.3
 					,maxmin: false
 					,offset: 'auto' 
-					,content: '{{$datatable_config['route_name']}}?do={{$key}}'
+					,content: base_url+'do={{$key}}'
 				});
 			@elseif (in_array($key, ['update']))
 				var data = checkStatus.data;
@@ -285,7 +290,7 @@ layui.config({
 						,shade: 0.3
 						,maxmin: false
 						,offset: 'auto' 
-						,content: '{{$datatable_config['route_name']}}?do={{$key}}&id='+data['0']['id']
+						,content: base_url+'do={{$key}}&id='+data['0']['id']
 					});
 				}else if(data.length > 1){
 					layer.msg('请最多选中一条记录');
@@ -300,7 +305,7 @@ layui.config({
 					,shade: 0.3
 					,maxmin: false
 					,offset: 'auto' 
-					,content: '{{$datatable_config['route_name']}}?do={{$key}}'
+					,content: base_url+'do={{$key}}'
 				});
 			@endif
 			break;
@@ -310,6 +315,7 @@ layui.config({
 			//附加头部工具菜单
 			@if (isset($datatable_config['new_head_menu']))
 			@foreach ($datatable_config['new_head_menu'] as $key=>$vo)
+			//{{$vo['text']}}
 			case '{{$key}}':
 			@if ($vo['open_tepe'] == 'window')
 				layer.open({
@@ -319,18 +325,20 @@ layui.config({
 					,shade: 0.3
 					,maxmin: false
 					,offset: 'auto' 
-					,content: '{{$datatable_config['route_name']}}?do={{$key}}'
+					,content: base_url+'do={{$key}}'
 				});
 			@elseif ($vo['open_tepe'] == 'ajax')
 				layer.confirm("请确认当前操作?", {icon:3, title:'温馨提示'}, function() {
 					$.ajax({
-						url: "{{ $datatable_config['route_name'] }}?do={{ $key }}",
+						url: base_url+'do={{ $key }}',
 						type: "post",
 						dataType: 'json',
 						success: function(res) {
 							if (res.code == 0) {
 								layer.msg(res.msg);
-								tools.reload();
+								if (res.refresh == 'yes'){
+									tools.reload();
+								}
 							} else {
 								layer.msg(res.msg);
 							}
@@ -351,6 +359,7 @@ layui.config({
         switch(obj.event){
 			@if (isset($datatable_config['line_button']))
 			@foreach ($datatable_config['line_button'] as $key=>$vo)
+			//{{$vo['text']}}
 			case '{{$key}}':
       		@if ($vo['open_tepe'] == 'window')
       			layer.open({
@@ -359,20 +368,30 @@ layui.config({
       				,area: ['{{$vo['width']}}', '{{$vo['height']}}']
       				,shade: 0.3
       				,maxmin: false
-      				,offset: 'auto' 
-      				,content: "{{$datatable_config['route_name']}}?do={{$key}}&from=line&id="+data['id'],
+      				,offset: 'auto'
+					@if (isset($vo['route'])?$vo['route']:false)
+      				,content: "{{$vo['route']}}?{!!$parse_url_query!!}id="+data['id']
+					@else
+					,content: base_url+"do={{$key}}&from=line&id="+data['id'],
+					@endif
       			});
       		@elseif ($vo['open_tepe'] == 'ajax')
       			layer.confirm("请确认当前操作?", {icon:3, title:'温馨提示'}, function() {
       				$.ajax({
-      					url: "{{$datatable_config['route_name']}}?do={{$key}}&from=line&id="+data['id'],
-      					type: "post",
+      					@if (isset($vo['route'])?$vo['route']:false)
+      					url: "{{$vo['route']}}?{!!$parse_url_query!!}id="+data['id'],
+      					@else
+						url: base_url+"do={{$key}}&from=line&id="+data['id'],
+      					@endif
+						type: "post",
       					dataType: 'json',
       					success: function(res) {
       						if (res.code == 0) {
+								//alert(res.refresh);
       							layer.msg(res.msg);
-      							//table.reload('testReload');
-      							tools.reload();
+								if (res.refresh == 'yes'){
+									tools.reload();
+								}
       						} else {
       							layer.msg(res.msg);
       						}

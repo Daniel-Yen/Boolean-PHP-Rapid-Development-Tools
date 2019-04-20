@@ -8,6 +8,8 @@
 	.create td{padding: 0;}
 	.create td input{border: 0;}
 	.create .switch_area{padding-bottom:8px; text-align: center;}
+	.layui-form-checkbox{ height:25px; line-height:25px; padding-right:0;}
+	.layui-form-checkbox i{display:none;}
 </style>
 @endpush
 
@@ -22,8 +24,8 @@
 						<tr style="background-color:#fff;">
 							<!-- <th width='20'></th> -->
 							<th width='200'>菜单名称</th>
-							<th width='200'>规则名称</th>
-							<th>功能节点</th>
+							<!-- <th width='200'>规则名称</th> -->
+							<th>操作节点</th>
 						</tr> 
 					</thead>
 					<tbody>
@@ -35,8 +37,8 @@
 								@endif
 							</td> -->
 							<td>{!!$v['title']!!}</td>
-							<td>{!!$v['url']!!}</td>
-							<td style="line-height:40px;">
+							<!-- <td>{!!$v['url']!!}</td> -->
+							<td>
 								@if ($v['url'])
 								@if (isset($v['button'])?!empty($v['button']):false)
 								@foreach ($v['button'] as $key=>$value)

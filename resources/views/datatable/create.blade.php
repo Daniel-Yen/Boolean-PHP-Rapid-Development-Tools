@@ -371,7 +371,7 @@
 				
 			@include ('datatable.create_js')
 			
-			@include ('datatable.create_verify')
+			
 		});
 </script>
 @endpush

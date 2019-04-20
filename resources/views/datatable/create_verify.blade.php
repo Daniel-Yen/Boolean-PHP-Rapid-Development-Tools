@@ -15,4 +15,4 @@
 			}
 			@endif
 		@endforeach
-		});		
+		});

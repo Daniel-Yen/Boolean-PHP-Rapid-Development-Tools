@@ -27,59 +27,18 @@
 				方法：{{$route_message['method']}} &nbsp; 
 				@if ($route_message['method_exists']) <span class="layui-badge layui-bg-blue">存在</span> @else <span class="layui-badge">不存在</span> @endif  &nbsp;
 			</div>
-			<form class="layui-form" action="{{url('/lazykit/menu/add_model?id='.$datatable_arr['id'])}}" method="post">
-			@csrf
-			<table class="layui-table create">
-				<thead>
-					<tr>
-						<th>菜单名称</th>
-						<th>主表</th>
-						<th>关联类型</th>
-						<th>关联表</th>
-						<th>自定义字段</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td style="width:150px;">&nbsp; {{!empty($datatable_arr['title'])?$datatable_arr['title']:''}}</td>
-						<td class="main_table" style="width:150px;">
-						<select name="main_table" style="width:150px;">
-							<option value=""></option>
-							@foreach ($tables as $vo)
-							<option @if ($datatable_arr['main_table'] == $vo) selected="selected" @endif value="{{$vo}}">{{$vo}}</option>
-							@endforeach
-						</select>
-						</td>
-						<td style="width:120px;">
-						<select name="associated_type" style="width:120px;">
-							<option value=""></option>
-							@foreach ($join_type_arr as $ko=>$vo)
-							<option @if ($datatable_arr['associated_type'] == $ko) selected="selected" @endif value="{{$ko}}">{{$vo}}</option>
-							@endforeach
-						</select>
-						</td>
-						<td class="associated_table" style="width:150px;">
-						<select name="associated_table" style="width:150px;">
-							<option value=""></option>
-							@foreach ($tables as $vo)
-							<option @if ($datatable_arr['associated_table'] == $vo) selected="selected" @endif value="{{$vo}}">{{$vo}}</option>
-							@endforeach
-						</select>
-						</td>
-						<td class="external_field">
-						<input type="text" name="external_field" value="{{$datatable_arr['external_field']}}" placeholder="请输入用逗号隔开的字段" autocomplete="off" class="layui-input">
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<div class="layui-form-item" style="text-align:right;">
-				<button class="layui-btn"  lay-submit="" lay-filter="demo2">提交</button>
-			</div>
-			</form>
 			
-			@if ($datatable_arr['main_table'] != '' || $datatable_arr['external_field'] != '')
+			@if ($datatable_arr['model'] == 2)
+				@include ('lazykit.datatable.data_source_set')
+			@elseif ($datatable_arr['model'] == 5)
+				@include ('lazykit.datatable.inheritance_set')
+			@endif
+			
+			@if (in_array($datatable_arr['model'], [2, 5]))
+			@if ($datatable_arr['main_table'] != '' || $datatable_arr['external_field'] != '' || $datatable_arr['inheritance'] != '')
 			<form class="layui-form" action="" method="post">
 				@csrf
+				@if ($datatable_arr['model'] == 2)
 				<fieldset class="layui-elem-field layui-field-title">
 					<legend>Datatable设置</legend>
 				</fieldset>
@@ -206,6 +165,7 @@
 				<div class="layui-form-item">
 					操作提示：1、不同颜色的字段属性代表不同的字段来源。
 				</div>
+				@endif
 				<!-- <div class="layui-form-item">
 					<label class="layui-form-label">ORDER BY</label>
 					<div class="layui-input-inline">
@@ -357,6 +317,7 @@
 				</div>
 			</form>
 			@endif
+			@endif
 		</div>
 	</div>
 </div>
@@ -416,7 +377,7 @@
 			},
 			//title:表字段名称, field:字段, field_from:字段类型
 			openDialog: function(title, field, field_from) {
-				var url = '{{url("lazykit/menu/attribute_set")}}?datatable_id={{$datatable_id}}&field=' + field + '&field_from=' + field_from;
+				var url = '{{url("lazykit/functionpage/attribute_set")}}?datatable_id={{$datatable_id}}&field=' + field + '&field_from=' + field_from;
 				//执行重载
 				layer.open({
 					id: 'layerDemo',

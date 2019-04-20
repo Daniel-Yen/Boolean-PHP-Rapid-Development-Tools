@@ -9,21 +9,74 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\BlkMenuRepository;
+use App\Repositories\BlkFunctionPageRepository;
 use App\Repositories\BlkModuleRepository;
 use App\Repositories\BlkSystemRepository;
+use App\Repositories\BlkMenuRepository;
 use App\Repositories\BlkAttributeRepository;
+use App\Repositories\BlkAutoGenerateRepository;
 use App\Http\Controllers\Lazykit\SetDic;
+use App\Http\Controllers\Lazykit\SystemPath;
 
-class MenuController extends Controller
+class FunctionPageController extends Controller
 {
-    use SetDic;
+    /**
+     * 配置字典
+     */
+	use SetDic;
+	
+	/**
+	 * 系统所在路径
+	 */
+	use SystemPath;
+	
+	/**
+	 * 创建路由与菜单
+	 */
+	use CreateRouteMenu;
 	
 	/**
      * datatable配置文件存放路径
+	 *
      * @var 		string
      */
-	protected $datatablePath = '..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Datatable'.DIRECTORY_SEPARATOR;
+	//protected $datatablePath = '..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Datatable'.DIRECTORY_SEPARATOR;
+	//protected $datatablePath = 
+	
+	/**
+	 * 获得datatable配置的路径
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		\Illuminate\Http\Request $request
+	 * @return  	mixed
+	 */
+// 	private function getDatatablePath($system_id)
+// 	{
+// 	    $system = BlkSystemRepository::where('id', $system_id)->first();
+// 		if($system){
+// 			return $this->datatablePath = 'D:\BtSoft\laravel\boolean-laravel-lazykit'.DIRECTORY_SEPARATOR.$this->datatablePath;
+// 		}else{
+// 			return error('操作失败',"系统路径错误");
+// 		}
+// 	}
+	
+	/**
+	 * 系统列表
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		\Illuminate\Http\Request $request
+	 * @return  	mixed
+	 */
+	public function index(Request $request)
+    {
+    	$additional_config = [
+			//'hide_head_menu' => ['all']
+		];
+		
+		create_datatable('datatable_46', [], $request);
+    }
 	
 	/**
 	 * datatable配置列表
@@ -33,10 +86,10 @@ class MenuController extends Controller
 	 * @param  		\Illuminate\Http\Request $request
 	 * @return  	mixed
 	 */
-	public function index(Request $request)
-    {
-    	//新增的时候根据控制器及方法名生成路由
-    	if($request->isMethod('post') && ( $request->do == 'create' || $request->do == 'update' ) ){
+	public function design(Request $request)
+	{
+		//新增的时候根据控制器及方法名生成路由
+		if($request->isMethod('post') && ( $request->do == 'create' || $request->do == 'update' ) ){
 			$route_message = $this->getRouteMessage($request->post());
 			//dd($route_message);
 			//自定义请求参数
@@ -45,8 +98,15 @@ class MenuController extends Controller
 			}
 		}
 		
-		create_datatable('datatable_1', [], $request);
-    }
+		$additional_config = [
+			//数据查询条件
+			'conditions' => [
+				['system_id', '=', $request->id],
+			],
+		];
+		
+		create_datatable('datatable_1', $additional_config, $request);
+	}
 	
 	/**
 	 * 获得"buer_Blk_datatable"表中的路由信息，并判断类跟方法是否存在
@@ -58,7 +118,7 @@ class MenuController extends Controller
 	 */
 	public function getRouteMessage($datatable_arr)
 	{
-		//获得控制器路径
+		//获得控制器及方法名称
 		$module_path = BlkModuleRepository::where('id', $datatable_arr['module_id'])->first(['module']);
 		//dd($datatable_arr);
 		//dd($module_path);
@@ -107,18 +167,43 @@ class MenuController extends Controller
 	public function set()
 	{
 		$request = request();
+		
 		//dd($request->id);
-		$datatable_arr = BlkMenuRepository::where('id', $request->id)->first();
+		$datatable_arr = BlkFunctionPageRepository::where('id', $request->id)->first();
 		if($datatable_arr){
 			$datatable_arr = $datatable_arr->toArray();
+			
+			//获得当前菜单对应的系统
+			//$system_module_arr = explode('/',$datatable_arr['module_id']);
+			//dd($system_module_arr);
+			$system = BlkSystemRepository::where('id', $datatable_arr['system_id'])->first();
+			//dd($system);
+			
+			$path = $this->getPath($system);
+		}else{
+			die("功能记录不存在！");
 		}
+		//dd($path);
 		
 		unset($datatable_arr['created_at']);
 		unset($datatable_arr['updated_at']);
 		unset($datatable_arr['deleted_at']);
 		
+		//配置在对应系统中的文件路径
+		if($datatable_arr['model']){
+			$model = [
+				2 => 'datatable',
+				3 => 'chart',
+				4 => 'config',
+				5 => 'datatable',
+			];
+			$datatable_config_path = $path['datatable'].$model[$datatable_arr['model']].'_'.$datatable_arr['id'].'.php';
+		}else{
+			die("当前记录功能模型不存在！");
+		}
+		
 		//获得datatable配置名称
-		$datatable_config_name = $this->getDatatableFielName($datatable_arr);
+		//$datatable_config_name = $this->getDatatableFielName($datatable_arr);
 		if($request->isMethod('post')){
 			//datatable 字段配置:排序
 			$datatable_arr['datatable_set'] = array_sort($request->datatable_set,'sorting');
@@ -187,30 +272,55 @@ class MenuController extends Controller
 			}
 			//dd($method_arr);
 			
-			//保存datatable 配置文件
+			//将菜单对应的datatable 配置文件保存到数据库
+			BlkAutoGenerateRepository::updateOrInsert(
+					['function_page_id' => $datatable_arr['id']],
+					['config' => json_encode($datatable_arr)]
+				);
+			
+			//生成对应系统的改菜单对应的datatable 配置文件
+			unset($datatable_arr['module_id']);
 			$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';
-			file_put_contents($this->datatablePath.$datatable_config_name.'.php',$datatable_config);
+			file_put_contents($datatable_config_path,$datatable_config);
 			
 			//生成主表对应的模型类及验证器类
 			if($datatable_arr['main_table']){
-				$this->createRepositoryRequest($datatable_arr['main_table']);
+				$this->createRepositoryRequest($datatable_arr['main_table'], $path);
 			}
 			//生成关联表对应的模型类及验证器类
-			if($datatable_arr['associated_table']){
-				$this->createRepositoryRequest($datatable_arr['associated_table']);
-			}
+// 			if($datatable_arr['associated_table']){
+// 				$this->createRepositoryRequest($datatable_arr['associated_table']);
+// 			}
 			
 			return success("操作成功");
 		}else{
 			//根据datatable名称获得模型配置
-			$datatable_config = get_datatable_config($datatable_config_name);
+// 			if(file_exists($datatable_config_path)){
+// 				$datatable_config = require($datatable_config_path);
+// 			}else{
+// 				$datatable_config = [];
+// 			}
+			
+			$auto_generate = BlkAutoGenerateRepository::where('function_page_id', $datatable_arr['id'])->first();
+			//dd($datatable_config_path);
+			if($auto_generate){
+				$datatable_config = json_decode($auto_generate['config'], true);
+			}else{
+				if(file_exists($datatable_config_path)){
+					$datatable_config = require($datatable_config_path);
+				}else{
+					$datatable_config = [];
+				}
+			}
 			//dd($datatable_config);
+			
+			//生成控制器及当前配置对应页面的方法
 			$route_message = $this->getRouteMessage($datatable_arr);
 			if(!empty($route_message)){
 				//生成控制器及方法
 				if(!$route_message['controller_exists']){
 					create_controller($route_message);
-					$route_message = $this->getRouteMessage($datatable_arr);
+					//$route_message = $this->getRouteMessage($datatable_arr);
 					
 					return success('控制器及方法生成成功', '控制器：'.$route_message['controller'].'已生成，控制器方法：'.$route_message['method'].'已生成', url()->full() );
 				}
@@ -219,20 +329,53 @@ class MenuController extends Controller
 					'msg' => "没有指定的控制器及方法"
 				]);
 			}
+			
+			//dd($datatable_arr);
+			if($datatable_arr['model'] == 2){
+				view()->share([
+					'join_type_arr' 		=> $this->joinTypeDic(),								//字典：数据库表连接方式
+					'tables' 				=> $this->getTables($system),
+					'fixed_column_dic_arr' 	=> $this->fixedColumnDic(),								//字典：固定列的类型
+					'field_row_arr' 		=> $this->getFieldRow($datatable_arr, $datatable_config, $system),	//根据表配置获得字段属
+				]);
+			}else if($datatable_arr['model'] == 5){
+				view()->share([
+					'inheritance_datatable_arr' 	=> $this->getInheritanceDatatable($system),		//可继承的数据表格
+				]);
+			}
 			return view('lazykit.datatable.set', [
-				'field_row_arr' 		=> $this->getFieldRow($datatable_arr),						//根据表配置获得字段属
-				'fixed_column_dic_arr' 	=> $this->fixedColumnDic(),									//字典：固定列的类型
 				'button_style_type_arr' => $this->buttonStyleTypeDic(),								//字典：行按钮样式
 				'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),								//字典：按钮打开方式
-				'join_type_arr' 		=> $this->joinTypeDic(),									//字典：按钮打开方式
 				'head_menu_arr' 		=> $this->headMenu($datatable_config, $datatable_arr),		//datatable 头部工具菜单
 				'datatable_arr' 		=> $datatable_arr,											//datatable记录
 				'datatable_config' 		=> $datatable_config,	
 				'datatable_id' 			=> $request->id,
-				'tables' 				=> $this->getTables(),
 				'route_message' 		=> $route_message, 											//获得路由信息
-			]);
+			]);		
 		}
+	}
+	
+	/**
+	 * 获得获得可继承的数据表格
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access    	public
+	 * @param 		App\Repositories\BlkSystemRepository 	$system 	//当前操作的系统
+	 * @return 		array          	返回可继承的数据表格
+	 */
+	public function getInheritanceDatatable($system){
+		//dd($system);
+		$data = BlkFunctionPageRepository::where('system_id', $system->id)
+					->where('model', 2)
+					->get();
+		if($data->count()){
+			$data = $data->toArray();
+		}else{
+			$data = [];
+		}
+		
+		//dd($data);
+		return $data;
 	}
 	
 	//生成行按钮的控制器方法
@@ -256,9 +399,9 @@ class MenuController extends Controller
 		$param = $request->post();
 		unset($param['_token']);
 		//DB::connection()->enableQueryLog();
-		BlkMenuRepository::where('id', '=', $request->id)->update($param);
+		BlkFunctionPageRepository::where('id', '=', $request->id)->update($param);
 		//dd(DB::getQueryLog());
-		return success("菜单模型设置成功");
+		return success("数据源设置成功");
 	}
 	
 	/**
@@ -270,13 +413,13 @@ class MenuController extends Controller
 	 * @param 		string 		$tablename 				表名称
 	 * @return 		
 	 */
-	private function createRepositoryRequest($tablename)
+	private function createRepositoryRequest($tablename, $file_path)
 	{
 		//根据数据库表名称获得要生成的模型的类名称跟文件名
 		$hump_name = Str::studly($tablename);
 		//dd($hump_name);
 		//保存datatable配置的时候判断是否有数据库表,如果有表,生成数据表模型跟验证器
-		$path = ['..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Repositories'.DIRECTORY_SEPARATOR, '..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Requests'.DIRECTORY_SEPARATOR];
+		$path = [$file_path['repository'], $file_path['request']];
 		//foreach(['Repository','Request'] as $k=>$v){
 		foreach(['Repository'] as $k=>$v){
 			//读取空模型的模板
@@ -302,10 +445,10 @@ class MenuController extends Controller
 	 * @param 		array 		$datatable_arr 				数据表格记录
 	 * @return 		string
 	 */
-	private function getDatatableFielName($datatable_arr)
-	{
-		return 'datatable_'.$datatable_arr['id'];
-	}
+// 	private function getDatatableFielName($datatable_arr)
+// 	{
+// 		return 'datatable_'.$datatable_arr['id'];
+// 	}
 	
 	/**
 	 * 根据表配置获得字段属性
@@ -313,21 +456,22 @@ class MenuController extends Controller
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param 		array 		$datatable_arr 			数据表格记录
-	 * @param 		array 		$datatable_set_arr 		数据表格配置
+	 * @param 		array 		$datatable_config 		数据表格配置
+	 * @param 		App\Repositories\BlkSystemRepository 	$system 	//要重连的系统
 	 * @return 		array
 	 */
-	private function getFieldRow($datatable_arr)
+	private function getFieldRow($datatable_arr, $datatable_config, $system)
 	{
 		//获得数据表格配置文件名称
-		$datatable_file_name = $this->getDatatableFielName($datatable_arr);
-		//datatable配置文件存放路径
-		$path = $this->datatablePath.$datatable_file_name.'.php';
-		//dd($path);
-		if(file_exists($path)){
-			$datatable_set_arr = require($path);
-		}else{
-			$datatable_set_arr = [];
-		}
+// 		$datatable_file_name = $this->getDatatableFielName($datatable_arr);
+// 		//datatable配置文件存放路径
+// 		$path = $this->datatablePath.$datatable_file_name.'.php';
+// 		//dd($path);
+// 		if(file_exists($path)){
+// 			$datatable_set_arr = require($path);
+// 		}else{
+// 			$datatable_set_arr = [];
+// 		}
 		
 		//如果不存在主表,则无数据库字段
 		$main_table = $datatable_arr['main_table']?$datatable_arr['main_table']:'';
@@ -336,10 +480,10 @@ class MenuController extends Controller
 		$field_row_arr = $result = $result_2 = $result_3 = [];
 		if($main_table){
 			//获得数据库表
-			$tables_arr = $this->getTables();
+			$tables_arr = $this->getTables($system);
 			//如果主表在数据库中不存在,则返回空,没有主表,关联表设置无效
-			$prefix = config('database.connections.mysql.prefix');
-			$database = config('database.connections.mysql.database');
+			$prefix = $system->prefix;
+			//$database = config('database.connections.mysql.database');
 			
 			if(in_array($main_table, $tables_arr)){
 				//接收参数
@@ -350,7 +494,7 @@ class MenuController extends Controller
 				//dd($result);
 				if(count($result)){
 					//将数据表格配置信息与表字段数据合并，数据表格配置如果没有字段部分的数据,则这里不需要执行
-					$result = $this->mergeAttribute($datatable_set_arr, $result, 'main_table');
+					$result = $this->mergeAttribute($datatable_config, $result, 'main_table');
 				}
 				
 				if($associated_table){
@@ -363,7 +507,7 @@ class MenuController extends Controller
 						$result_2 = DB::select($sql_2);
 						//dd($result_2);
 						if(count($result_2)){
-							$result_2 = $this->mergeAttribute($datatable_set_arr, $result_2, 'associated_table');
+							$result_2 = $this->mergeAttribute($datatable_config, $result_2, 'associated_table');
 							//dump($result_2);
 							
 							//将主表字段属性跟关联表字段属性数组合并
@@ -386,13 +530,13 @@ class MenuController extends Controller
 				];
 			}
 			
-			$result_3 = $this->mergeAttribute($datatable_set_arr, $result_3, 'external_field');
+			$result_3 = $this->mergeAttribute($datatable_config, $result_3, 'external_field');
 			//dump($result_3);
 			$result = array_merge($result_3, $result);
 		}
 		
 		//如果没有配置文件则不排序
-		if(empty($datatable_set_arr)){
+		if(empty($datatable_config)){
 			$field_row_arr = $result;
 		}else{
 			$field_row_arr = array_sort($result,'sorting');
@@ -409,7 +553,7 @@ class MenuController extends Controller
 	 * @access    	public
 	 * @return 		array          	返回Datatable字段属性
 	 */
-	public function mergeAttribute($datatable_set_arr, $result, $field_from)
+	public function mergeAttribute($datatable_config, $result, $field_from)
 	{
 		//dd($result);
 		foreach($result as $k=>$v){
@@ -430,8 +574,8 @@ class MenuController extends Controller
 			
 			//如果数据库中已有改字段的配置记录，则将当前记录$v与配置数组合并
 			$v['field_from'] = $field_from;		//字段来自主表
-			if( isset($datatable_set_arr['datatable_set']) ){
-				$datatable_set = $datatable_set_arr['datatable_set'];
+			if( isset($datatable_config['datatable_set']) ){
+				$datatable_set = $datatable_config['datatable_set'];
 				if(isset($v['Field'])?isset($datatable_set[$v['Field']]):false){
 					//将created_at、updated_at、deleted_at三个功能性字段放到队尾
 					if(in_array($v['Field'],["created_at", "updated_at", "deleted_at"])){
@@ -459,12 +603,16 @@ class MenuController extends Controller
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access    	public
+	 * @param 		App\Repositories\BlkSystemRepository 	$system 	//要重连的系统
 	 * @return 		array          	返回数据库表数组
 	 */
-	public function getTables()
+	public function getTables($system)
 	{
-		$prefix = config('database.connections.mysql.prefix');
-		$database = config('database.connections.mysql.database');
+		$prefix = $system->prefix;
+		$database = $system->database;
+		
+		//动态改变数据库配置重连数据库
+		$this->reconnectDB($system);
 		
 		$result = DB::select('show tables');
 		$tables_arr = [];
@@ -478,6 +626,26 @@ class MenuController extends Controller
 		//dd($tables_arr);
 		
 		return $tables_arr;
+	}
+	
+	/**
+	 * 动态改变数据库配置重连数据库
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access    	public
+	 * @param 		App\Repositories\BlkSystemRepository 	$system 	//要重连的系统
+	 * @return 		void
+	 */
+	public function reconnectDB($system)
+	{
+		config('database.connections.mysql.host',$system->host);
+		config('database.connections.mysql.port',$system->port);
+		config('database.connections.mysql.database',$system->database);
+		config('database.connections.mysql.username',$system->username);
+		config('database.connections.mysql.password',$system->password);
+		config('database.connections.mysql.prefix',$system->prefix);
+		
+		DB::reconnect();
 	}
 	
 	/**
@@ -577,7 +745,7 @@ class MenuController extends Controller
 	 */
 	public function attribute_pid()
 	{
-		$data = BlkMenuRepository::select('id as value', 'title as name', 'pid')->get();
+		$data = BlkFunctionPageRepository::select('id as value', 'title as name', 'pid')->get();
 		if($data->count()){
 			$data = $data->toArray();
 			//转换为树结构
@@ -597,51 +765,14 @@ class MenuController extends Controller
 	 * @access 		public
 	 * @return  	array
 	 */
-	public function attribute_module()
+	public function attributeModule()
 	{
-// 		$data = BlkModuleRepository::select('id as value', 'module_name as name')->get();
-// 		if($data->count()){
-// 			$data = $data->toArray();
-// 		}else{
-// 			$data = [];
-// 		}
-// 		
-// 		return $data;
-		$system = BlkSystemRepository::select('system_name', 'id')->get();
-		
-		$data = [];
-		
-		if($system->count()){
-			$system = $system->toArray();
-			//dd($data);
-			foreach($system as $k=>$v){
-				$data[$k] = $v;
-				$data[$k]['name'] = $v['system_name'];
-				$data[$k]['value'] = $v['id'];
-				//树结构的查询条件
-				//$data[$k]['condition'] = [$system[$k]['id']];
-				$data[$k]['spread'] = 'true';
-				
-				$module = BlkModuleRepository::select('module_name', 'id')
-							->where('system_id', $v['id'])
-							->get();
-							
-				$data_module = [];
-				
-				if($module->count()){
-					$module = $module->toArray();
-					//dd($data);
-					foreach($module as $k1=>$v1){
-						$data_module[$k1] = $v1;
-						$data_module[$k1]['name'] = $v1['module_name'];
-						$data_module[$k1]['value'] = $v1['id'];
-						//$data_module[$k1]['condition'] = [$module[$k1]['id']];
-					}
-				}
-				$data[$k]['children'] = $data_module;
-			}
+		$data = BlkModuleRepository::select('id as value', 'module_name as name')->get();
+		if($data->count()){
+			$data = $data->toArray();
+		}else{
+			$data = [];
 		}
-		//dd($data);
 		
 		return $data;
 	}
@@ -695,74 +826,39 @@ class MenuController extends Controller
 	}
 	
 	/**
-	 * 生成路由
+	 * function_type字段的下拉选择
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
-	 * @access 		public
-	 * @return  	json
+	 * @access 		private
+	 * @return 		array                       
 	 */
-	public function createRoute(){
-		$data = BlkMenuRepository::orderBy('module_id', 'asc')->get();
-		//dd($data);
-		$route = "<?php
-/*
-|--------------------------------------------------------------------------
-| Datatable Routes
-|--------------------------------------------------------------------------
-| 此路由文件由布尔懒人工具包自动生成，包含DataTable生成器相关路由
-| 生成日期：".date('Y-m-d H:i:s', time())."
-| 注    意：请不要在此文件手写路由
-*/
-
-Route::group(['middleware' => ['auth', 'permission']], function(){".PHP_EOL;
-		
+	public function attributeSystem(){
+		$data = BlkSystemRepository::select('id as value', 'system_name as name')->get();
 		if($data->count()){
 			$data = $data->toArray();
-			//dd($data);
-			foreach($data as $k=>$v){
-				$module = BlkModuleRepository::where('id',$v['module_id'])->get();
-				//dd($module);
-				if($module->first()){
-					$module = $module->toArray()[0];
-				}else{
-					$module = [];
-				}
-				//dd($module);
-				//如果菜单没有对应模块则软删除该菜单
-				if(!empty($module)){
-					if($v['url'] && $v['method']){
-						$route_name = "'/".$v['url']."',";
-						//计算要补充的空格,让路由文件易读
-						$lenth = 35-strlen($route_name);
-						if($lenth>0){
-							for($i=0;$i<$lenth;$i++){
-								$route_name = $route_name.' ';
-							}
-						}
-						$method = $module['module'].'\\'.$v['method'];
-						$route_record = "	Route::any(".$route_name."'".$method."');";
-						$lenth = 90-strlen($route_record);
-						if($lenth>0){
-							for($i=0;$i<$lenth;$i++){
-								$route_record = $route_record.' ';
-							}
-						}
-						$route .= $route_record."  //".$v['title'].PHP_EOL;
-					}
-				}else{
-					$result = BlkMenuRepository::where('id',$v['id'])->delete();
-					//$result = ['code' => 1, 'msg' => "路由生成失败，菜单“".$v['title']."”没有对应的模块"];
-				}
-			}
-			$path = base_path('routes'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR.'datatable.php');
-			//dd($route);
-			$route .= '});';
-			file_put_contents($path, $route);
-			$result = ['code' => 0, 'msg' => "路由文件更新成功"];
 		}else{
-			$result = ['code' => 1, 'msg' => "没有要生成的路由"];
+			$data = [];
 		}
-		return json_encode($result);
+		
+		return $data;
+	}
+	
+	
+	/**
+	 * function_type字段的下拉选择
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	public function attributeFunctionType(){
+		$data = [
+			['value' => 1, 		'name' => '系统菜单'],
+			['value' => 2, 		'name' => '内页按钮'],
+			['value' => 3, 		'name' => '路由'],
+		];
+		
+		return $data;
 	}
 	
 	/**
@@ -774,12 +870,37 @@ Route::group(['middleware' => ['auth', 'permission']], function(){".PHP_EOL;
 	 */
 	public function attribute_model(){
 		$data = [
-			['value' => '1', 	'name' => '自定义代码'],
-			['value' => '2', 	'name' => '数据表格'],
-			['value' => '3', 	'name' => '统计图表'],
-			['value' => '4', 	'name' => '配置文件'],
+			['value' => 0, 	'name' => '无'],
+			['value' => 1, 	'name' => '自定义代码'],
+			['value' => 2, 	'name' => '数据表格'],
+			['value' => 3, 	'name' => '统计图表'],
+			['value' => 4, 	'name' => '配置文件'],
+			['value' => 5, 	'name' => '继承数据表格'],
 		];
 		
+		return $data;
+	}
+	
+	/**
+	 * inheritance字段的下拉选择
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	public function attributeInheritance(){
+		$function_page = BlkFunctionPageRepository::get();
+		
+		$data = [];
+		if($function_page->count()){
+			$function_page = $function_page->toArray();
+			foreach($function_page as $k=>$v){
+				$data[$k]['name'] = $v['title'].'('.$v['id'].')';
+				$data[$k]['value'] = $v['id'];
+			}
+		}
+		
+		//dd($data);
 		return $data;
 	}
 }

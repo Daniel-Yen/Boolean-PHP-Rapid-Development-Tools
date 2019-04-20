@@ -59,6 +59,10 @@
 
 @push('scripts')
 <script>
+	if (window!=top){
+		top.location.href =window.location.href;
+	}
+
 	layui.config({
 		base: '{{file_path('/include/')}}' //静态资源所在路径
 	}).extend({

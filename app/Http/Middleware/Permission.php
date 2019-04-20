@@ -62,7 +62,7 @@ class Permission
 		}
 		
 		if($status == 0){
-			return redirect('no_permission');
+			//return redirect('no_permission');
 		}
 		
 		return $next($request);

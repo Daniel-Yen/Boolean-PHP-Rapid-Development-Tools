@@ -5,6 +5,8 @@
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
+//数据库比对  https://blog.csdn.net/zhezhebie/article/details/78675711?utm_source=blogxgwz1
+
 if (!function_exists('create_datatable')) {
     /**
      * datatable生成器

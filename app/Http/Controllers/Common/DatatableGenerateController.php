@@ -153,17 +153,17 @@ class DatatableGenerateController extends Controller
 			}
 			//dd($result);
 			if($result){
-				echo json_encode(['code' => 0, 'msg' => "删除成功"]);
+				echo json_encode(['code' => 0, 'msg' => "删除成功", 'refresh' => 'yes']);
 			}else{
-				echo json_encode(['code' => 1, 'msg' => "删除失败"]);
+				echo json_encode(['code' => 1, 'msg' => "删除失败", 'refresh' => 'no']);
 			}
 		}elseif( $request->do == "recovery") {
 			//恢复数据
 			$result = $datatable_config['modelClass']::whereIn( 'id', json_decode( $request->ids ) )->restore();
 			if($result){
-				echo json_encode(['code' => 0, 'msg' => "数据恢复成功"]);
+				echo json_encode(['code' => 0, 'msg' => "数据恢复成功", 'refresh' => 'yes']);
 			}else{
-				echo json_encode(['code' => 1, 'msg' => "数据恢复失败"]);
+				echo json_encode(['code' => 1, 'msg' => "数据恢复失败", 'refresh' => 'no']);
 			}
 		}elseif( $request->do == "layui_upload") {
 			//处理layui文件上传,返回值为被上传文件在数据库中的记录的json结构
@@ -185,7 +185,7 @@ class DatatableGenerateController extends Controller
 				if(isset($additional_config['conditions'])){
 					$conditions = array_merge($conditions, $additional_config['conditions']);
 				}
-				
+				//dd($conditions);
 				//DB::connection()->enableQueryLog();
 				if(isset($datatable_config['other_set']['is_tree'])){
 					if($request->ac == "recycle"){
@@ -204,7 +204,7 @@ class DatatableGenerateController extends Controller
 					}else{
 						$rows_arr = [];
 					}
-					//dd($rows_arr);
+					//dd(DB::getQueryLog());
 					
 					//dd($rows_arr);
 					return datatable_callback_json(0, '数据读取成功', count($rows_arr), $rows_arr);
@@ -225,7 +225,7 @@ class DatatableGenerateController extends Controller
 					return datatable_callback_json(0, '数据读取成功', count($data_arr), $data_arr);
 				}
 			}
-		}elseif( $request->do == "open" || $request->do == "recycle" ) {     //open参数是才Permission中间件中赋的值
+		}elseif( $request->do == "open" || $request->do == "recycle" ) {     //open参数是在Permission中间件中赋的值
 			//回收站删除行内按钮
 			if($request->do == "recycle" && isset($datatable_config['line_button'])){
 				unset($datatable_config['line_button']);
@@ -249,12 +249,25 @@ class DatatableGenerateController extends Controller
 					$datatable_config['left_tree'] = $this->getDataByMethod($datatable_config['directory']['method'], $datatable_config);
 				}
 				
+				//获得要传递的url参数
+				$url_with_query = $request->fullUrl();
+				$parse_url = parse_url($url_with_query);
+				if(isset($parse_url['query'])?$parse_url['query']:false){
+					$parse_url_query = $parse_url['query'].'&';
+				}else{
+					$parse_url_query = '';
+				}
+				
+				//dd($parse_url['query']);
+				//http_build_query();
+				
 				view()->share([
 					'search' => $this->getDataFieldSet($datatable_config, 'search'), 		//搜索字段
 					'cols' => $this->cols($dom, $datatable_config),							//表头
 					'dom' => $dom,															//字段
 					'datatable_config' => $datatable_config,								//数据表格配置
 					'do' => $request->do,
+					'parse_url_query' => $parse_url_query,
 				]);
 				
 				$content = view('datatable.datatable');
@@ -323,18 +336,37 @@ class DatatableGenerateController extends Controller
 	private function getDatatableConfig($datatable_config_name, $additional_config = [])
 	{
 		$datatable_config = get_datatable_config($datatable_config_name);
+		//dd($datatable_config);
 		if(!empty($datatable_config)){
+			//处理模型中的继承关系
+			if(isset($datatable_config['inheritance'])?$datatable_config['inheritance']:false){
+				$inheritance_datatable_config = get_datatable_config('datatable_'.$datatable_config['inheritance']);
+				
+				$datatable_config['datatable_set'] = $inheritance_datatable_config['datatable_set'];
+				//$datatable_config['other_set']['line_button_area_width'] = $inheritance_datatable_config['other_set']['line_button_area_width'];
+				$datatable_config['main_table'] = $inheritance_datatable_config['main_table'];
+				$datatable_config['main_table'] = $inheritance_datatable_config['main_table'];
+			}
+			
 			//1、定义要隐藏的头部操作按钮
 			if(isset($additional_config['hide_head_menu'])){
-				foreach($additional_config['hide_head_menu'] as $v){
-					unset($datatable_config['head_menu'][$v]);
+				if($additional_config['hide_head_menu'][0] == 'all'){
+					$datatable_config['head_menu'] = [];
+				}else{
+					foreach($additional_config['hide_head_menu'] as $v){
+						unset($datatable_config['head_menu'][$v]);
+					}
 				}
 			}
 			
 			//2、定义要隐藏的行内操作按钮
 			if(isset($additional_config['hide_line_menu'])){
-				foreach($additional_config['hide_line_menu'] as $v){
-					unset($datatable_config['line_menu'][$v]);
+				if($additional_config['hide_line_menu'][0] == 'all'){
+					$datatable_config['line_button'] = [];
+				}else{
+					foreach($additional_config['hide_line_menu'] as $v){
+						unset($datatable_config['line_button'][$v]);
+					}
 				}
 			}
 			
@@ -425,8 +457,15 @@ class DatatableGenerateController extends Controller
 			//头部附加菜单权限
 			if(isset($datatable_config['new_head_menu'])){
 				foreach($datatable_config['new_head_menu'] as $k=>$v){
+					//根据权限判断可用按钮
 					if(!in_array($k, $lazykit_rules) && $k != 'search'){
 						unset($datatable_config['new_head_menu'][$k]);
+					}
+					
+					//判断按钮对应的操作地址
+					if(Str::contains($v['method'], '@')){
+						$arr = explode('@',$v['method']);
+						$datatable_config['new_head_menu'][$k]['route'] = '/'.$arr['1'];
 					}
 				}
 			}
@@ -434,12 +473,20 @@ class DatatableGenerateController extends Controller
 			//行内菜单权限
 			if(isset($datatable_config['line_button'])){
 				foreach($datatable_config['line_button'] as $k=>$v){
+					//根据权限判断可用按钮
 					if(!in_array($k, $lazykit_rules) && $k != 'search'){
 						unset($datatable_config['line_button'][$k]);
+					}
+					
+					//判断按钮对应的操作地址
+					if(Str::contains($v['method'], '@')){
+						$arr = explode('@',$v['method']);
+						$datatable_config['line_button'][$k]['route'] = '/'.$arr['1'];
 					}
 				}
 			}
 		}
+		
 		//dd($datatable_config);
 		return $datatable_config;
 	}
@@ -547,9 +594,7 @@ class DatatableGenerateController extends Controller
 				//判断字段是否在字典数组中,如果有则替换字段为在字典中的值
 				if(isset($dic_arr[$key])?!empty($dic_arr[$key]):false){
 					//字典在数据库中存储格式 1、 1,2、 1/2/3 
-					if(is_numeric($value)){
-						$dic_value = isset($dic_arr[$key][$value])?$dic_arr[$key][$value]:'';
-					}else if(Str::contains($value, ',')){
+					if(Str::contains($value, ',')){
 						$arr = explode(',',$value);
 						$dic= [];
 						foreach($arr as $v1){
@@ -570,7 +615,7 @@ class DatatableGenerateController extends Controller
 						}
 						$dic_value = join(' / ', $dic);
 					}else{
-						$dic_value = '';
+						$dic_value = isset($dic_arr[$key][$value])?$dic_arr[$key][$value]:'';
 					}
 					$v[$key] = $dic_value;
 				}
@@ -620,13 +665,15 @@ class DatatableGenerateController extends Controller
 		if(is_array($dic_data)){
 			foreach($dic_data as $v){
 				$arr = array();
-				$arr['value'] = $v['value']; 
-				$arr['name'] = $v['name']; 
-				$result[] = $arr;
-				//$result[$v['value']] = $v['name'];
-				if(isset($v['children'])?!empty($v['children']):false){
-					$children_result = $this->getDic($v['children']);
-					$result = array_merge($result,$children_result);
+				if(isset($v['value'])){
+					$arr['value'] = $v['value']; 
+					$arr['name'] = $v['name']; 
+					$result[] = $arr;
+					//$result[$v['value']] = $v['name'];
+					if(isset($v['children'])?!empty($v['children']):false){
+						$children_result = $this->getDic($v['children']);
+						$result = array_merge($result,$children_result);
+					}
 				}
 			}
 		}
