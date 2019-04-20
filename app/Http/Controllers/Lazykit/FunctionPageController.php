@@ -749,7 +749,7 @@ class FunctionPageController extends Controller
 		if($data->count()){
 			$data = $data->toArray();
 			//转换为树结构
-			$tree = new \App\Http\Controllers\Common\TreeController($data);
+			$tree = new \App\Http\Controllers\Blk\TreeController($data);
 			$data = $tree->listToSelectTree();
 		}else{
 			$data = [];

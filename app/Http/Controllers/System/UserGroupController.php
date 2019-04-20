@@ -12,14 +12,14 @@ use Illuminate\Http\Request;
 use App\Repositories\BlkFunctionPageRepository;
 use App\Repositories\BlkUserGroupRepository;
 
-class PermissionController extends Controller
+class UserGroupController extends Controller
 {
     /**
      * 用户组管理
      * @access    	public
      * @author    	Buer Lazykit
      */
-    public function userGroup(Request $request)
+    public function index(Request $request)
     {
     	create_datatable('datatable_43', [], $request);
     }

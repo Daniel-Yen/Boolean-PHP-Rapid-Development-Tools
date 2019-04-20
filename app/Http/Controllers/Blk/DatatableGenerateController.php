@@ -5,7 +5,7 @@
  * @param 		$additional_config = [				代码中定义的数据表格附加配置
  */
 
-namespace App\Http\Controllers\Common;
+namespace App\Http\Controllers\Blk;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -270,7 +270,7 @@ class DatatableGenerateController extends Controller
 					'parse_url_query' => $parse_url_query,
 				]);
 				
-				$content = view('datatable.datatable');
+				$content = view('blk.datatable.body');
 				$template = response($content)->getContent();
 				//cache($datatable_config_name, $template);
 				echo $template;
@@ -385,10 +385,10 @@ class DatatableGenerateController extends Controller
 			}
 			
 			//9、自定义新增页面
-			$datatable_config['create_page'] = isset($additional_config['create_page'])?$additional_config['create_page']:'datatable.create';
+			$datatable_config['create_page'] = isset($additional_config['create_page'])?$additional_config['create_page']:'blk.datatable.create';
 			
 			//10、自定义修改页面
-			$datatable_config['update_page'] = isset($additional_config['update_page'])?$additional_config['update_page']:'datatable.create';
+			$datatable_config['update_page'] = isset($additional_config['update_page'])?$additional_config['update_page']:'blk.datatable.create';
 			
 			//获取字段属性设置
 			foreach($datatable_config['datatable_set'] as $k=>$v){

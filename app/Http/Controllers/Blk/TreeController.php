@@ -3,7 +3,7 @@
 * 通用的树型类，可以生成任何树型结构
 */
 
-namespace App\Http\Controllers\Common;
+namespace App\Http\Controllers\Blk;
 
 use App\Http\Controllers\Controller;
 

@@ -6,8 +6,7 @@ if (!function_exists('is_empty')) {
      *
      * @param 	array|variable 		$param 		变量或者数据
      * @return 	boolean
-     *
-     * */
+     */
     function is_empty($param)
     {
         if(empty($param) || is_null($param)){
@@ -25,8 +24,7 @@ if (!function_exists('file_path')) {
      *
      * @param 	integer 	$file 	文件路径+文件名
      * @return 	string 				文件路径
-     *
-     * */
+     */
     function file_path($file)
     {
         return ''.$file;
@@ -37,7 +35,8 @@ if (!function_exists('file_path')) {
 if (!function_exists('array_sort')) {
 	/**
 	 * 对二维数组按指定键值进行升序或者降序排列
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 *
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @param 		array		$arr 		要排序的数组
 	 * @param 		string		$keys 		指定排序依据那个字段
 	 * @param 		boolean 	$desc 		如果$desc 为 true 则对关联数组按照键值进行降序排序。
@@ -65,7 +64,8 @@ if (!function_exists('array_sort')) {
 if (!function_exists('object_array')) {
 	/**
 	 * stdClass Object转array 
-	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 *
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @param 		object		$array 		要排序的数组
 	 * @return 		array
 	 */

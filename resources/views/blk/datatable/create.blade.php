@@ -369,7 +369,7 @@
 				formSelects = layui.formSelects,
 				colorpicker = layui.colorpicker;
 				
-			@include ('datatable.create_js')
+			@include ('blk.datatable.create_js')
 			
 			
 		});
