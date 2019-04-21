@@ -1,6 +1,7 @@
 <?php return array (
   'id' => 45,
   'title' => '系统管理',
+  'id_prefix' => 'system_',
   'pid' => 29,
   'model' => '2',
   'function_type' => '1',

@@ -1,6 +1,7 @@
 <?php return array (
   'id' => 24,
   'title' => 'Datatable树形表格',
+  'id_prefix' => 'treetable_',
   'pid' => 31,
   'model' => '2',
   'function_type' => '1',

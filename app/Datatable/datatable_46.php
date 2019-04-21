@@ -1,6 +1,7 @@
 <?php return array (
   'id' => 46,
   'title' => '开发设计',
+  'id_prefix' => 'system_',
   'pid' => 29,
   'model' => '5',
   'function_type' => '1',
@@ -18,9 +19,9 @@
   ),
   'head_menu' => 
   array (
-    'search2' => 
+    'search' => 
     array (
-      'text' => '搜索2',
+      'text' => '搜索',
       'icon' => 'layui-icon-search',
       'must' => 'on',
       'width' => '800px',
@@ -30,7 +31,7 @@
   ),
   'other_set' => 
   array (
-    'line_button_area_width' => '250',
+    'line_button_area_width' => '305',
   ),
   'route' => 
   array (
@@ -54,7 +55,7 @@
     ),
     'route' => 
     array (
-      'text' => '生成路由',
+      'text' => '更新路由',
       'style' => 'layui-btn-normal',
       'open_tepe' => 'ajax',
       'must' => 'on',
@@ -64,13 +65,24 @@
     ),
     'menu' => 
     array (
-      'text' => '生成菜单',
+      'text' => '更新菜单',
       'style' => 'layui-btn-warm',
       'open_tepe' => 'ajax',
       'must' => 'on',
       'width' => NULL,
       'height' => NULL,
       'method' => 'createMenu',
+    ),
+    'permission' => 
+    array (
+      'text' => '更新授权',
+      'style' => 'layui-btn-warm',
+      'icon' => NULL,
+      'open_tepe' => 'ajax',
+      'must' => 'on',
+      'width' => NULL,
+      'height' => NULL,
+      'method' => 'createPermissions',
     ),
   ),
 );?>

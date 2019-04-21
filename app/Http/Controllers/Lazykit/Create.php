@@ -59,17 +59,18 @@ trait Create
      * @return 		array
      */
     private function create_controller($route_message, $path) {
-    	if(!$route_message['controller_exists']){
+    	//dd($route_message, $path);
+		if(!$route_message['controller_exists']){
     		//$controller_path = app_path('Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.$route_message['module'].DIRECTORY_SEPARATOR);
     		$controller_path = $path['controller'].$route_message['module'].DIRECTORY_SEPARATOR;
 			//生成目录
-    		create_dir($path);
+    		create_dir($controller_path);
     		
- 			$path = $path.$route_message['controller'].'.php';
+ 			$file_path = $controller_path.$route_message['controller'].'.php';
 			$file = '<?php
 /**
  * 数据表格：{menu_title} 
- * 该控制器类由Boolean Lazy Kit 非法设计器生成器自动生成
+ * 该控制器类由 Boolean Lazy Kit 页面设计器自动生成
  *
  * @auther 	Blk
  */
@@ -100,7 +101,7 @@ class {NewController} extends Controller
     		$file = str_replace('{NewController}', $route_message['controller'], $file);
     		$file = str_replace('{method}', $route_message['method'], $file);
     		$file = str_replace('{id}', $route_message['id'], $file);
-    		file_put_contents($path, $file);
+    		file_put_contents($file_path, $file);
     	}
     }
 	
@@ -114,14 +115,13 @@ class {NewController} extends Controller
 	 */
 	public function reconnectDB($system)
 	{
-		config('database.connections.mysql.host',$system->host);
-		config('database.connections.mysql.port',$system->port);
-		config('database.connections.mysql.database',$system->database);
-		config('database.connections.mysql.username',$system->username);
-		config('database.connections.mysql.password',$system->password);
-		config('database.connections.mysql.prefix',$system->prefix);
+		config(['database.connections.mysql.host' 		=> $system->host]);
+		config(['database.connections.mysql.port' 		=> $system->port]);
+		config(['database.connections.mysql.database' 	=> $system->database]);
+		config(['database.connections.mysql.username' 	=> $system->username]);
+		config(['database.connections.mysql.password' 	=> $system->password]);
+		config(['database.connections.mysql.prefix' 	=> $system->prefix]);
 		
-		dd(config('database.connections.mysql.database'));
 		DB::reconnect();
 	}
 	
@@ -134,21 +134,21 @@ class {NewController} extends Controller
      */
     public function createPermissions()
     {
-    	//要生成菜单的系统
-    	$system = BlkSystemRepository::where('id', request()->id)->first();
-    	
-    	//根据系统数据中的数据库信息动态改变数据库配置重连数据库
-    	$this->reconnectDB($system);
-    	
-		//清除菜单表中已有的数据
-    	DB::table('blk_permissions')->truncate();
-    	
-    	$data = BlkFunctionPageRepository::where('system_id', request()->id)
-    				->where('function_type', 1) 			//function_type = 1 取的所有"系统菜单"的页面记录
+    	$data = BlkFunctionPageRepository::where('system_id', request()->system_id)
+    				//->where('function_type', 1) 			//function_type = 1 取的所有"系统菜单"的页面记录
     				->get();
     	if($data->count()){
     		$data = $data->toArray();
+			
+    		//要生成菜单的系统
+    		$system = BlkSystemRepository::where('id', request()->system_id)->first();
     		
+    		//根据系统数据中的数据库信息动态改变数据库配置重连数据库
+    		$this->reconnectDB($system);
+			
+			//清除菜单表中已有的数据
+			DB::table('blk_permissions')->truncate();
+			
     		//将"BlkFunctionPageRepository"中查询到的数据转换为blk_menu表的数据并插入
     		$permissions = [];
     		foreach($data as $k=>$v){
@@ -161,14 +161,15 @@ class {NewController} extends Controller
     			];
     		}
     		
-    		$this->reconnectDB($system);
 			$result = DB::table('blk_permissions')->insert($permissions);
     		if($result){
     			echo json_encode(['code' => 0, 'msg' => "可授权页面生成成功", 'refresh' => 'no']);
     		}else{
     			echo json_encode(['code' => 1, 'msg' => "可授权页面生成失败", 'refresh' => 'no']);
     		}
-    	}
+    	}else{
+			echo json_encode(['code' => 1, 'msg' => "没有可生成的授权页面", 'refresh' => 'no']);
+		}
     }
 	
 	/**
@@ -180,21 +181,23 @@ class {NewController} extends Controller
      */
     public function createMenu()
     {
-    	//要生成菜单的系统
-		$system = BlkSystemRepository::where('id', request()->id)->first();
-		
-		//根据系统数据中的数据库信息动态改变数据库配置重连数据库
-    	$this->reconnectDB($system);
-		
-		//清除菜单表中已有的数据
-    	DB::table('blk_menu')->truncate();
-		
-    	$data = BlkFunctionPageRepository::where('system_id', request()->id)
+    	$data = BlkFunctionPageRepository::where('system_id', request()->system_id)
     				->where('function_type', 1) 			//function_type = 1 取的所有"系统菜单"的页面记录
     				->get();
     	if($data->count()){
     		$data = $data->toArray();
     		
+			//要生成菜单的系统
+			$system = BlkSystemRepository::where('id', request()->system_id)->first();
+			
+			//根据系统数据中的数据库信息动态改变数据库配置重连数据库
+			$this->reconnectDB($system);
+			
+			//清除菜单表中已有的数据
+			//DB::connection()->enableQueryLog();
+			DB::table('blk_menu')->truncate();
+			//dd(DB::getQueryLog());
+			
 			//将"BlkFunctionPageRepository"中查询到的数据转换为blk_menu表的数据并插入
     		$menu = [];
     		foreach($data as $k=>$v){
@@ -225,7 +228,7 @@ class {NewController} extends Controller
 	public function createRoute()
 	{
 		//获得系统信息
-		$system = BlkSystemRepository::where('id', request()->id)->first();
+		$system = BlkSystemRepository::where('id', request()->system_id)->first();
 		
 		//获得当前系统对应的各类路径
 		$path = $this->getPath($system);

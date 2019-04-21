@@ -62,6 +62,7 @@ class Permission
 		}
 		
 		if($status == 0){
+			exception_thrown(2001, '没有操作权限');
 			//return redirect('no_permission');
 		}
 		

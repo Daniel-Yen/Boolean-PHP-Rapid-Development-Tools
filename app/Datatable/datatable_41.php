@@ -1,6 +1,7 @@
 <?php return array (
   'id' => 41,
   'title' => '系统信息',
+  'id_prefix' => 'env_',
   'pid' => 40,
   'model' => '2',
   'url' => '/system/environment/server',
@@ -39,9 +40,9 @@
   ),
   'head_menu' => 
   array (
-    'search2' => 
+    'search' => 
     array (
-      'text' => '搜索2',
+      'text' => '搜索',
       'icon' => 'layui-icon-search',
       'width' => '800px',
       'height' => '90%',

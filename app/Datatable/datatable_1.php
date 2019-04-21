@@ -1,6 +1,7 @@
 <?php return array (
   'id' => 1,
   'title' => '页面设计',
+  'id_prefix' => 'design_',
   'pid' => 46,
   'model' => '2',
   'function_type' => '2',
@@ -8,7 +9,6 @@
   'method' => 'FunctionPageController@design',
   'inheritance' => NULL,
   'inheritance_note' => NULL,
-  'system_id' => '1',
   'main_table' => 'blk_function_page',
   'associated_type' => NULL,
   'associated_table' => NULL,
@@ -26,14 +26,14 @@
       'field_from' => 'main_table',
       'width' => NULL,
     ),
-    'associated_table' => 
+    'main_table' => 
     array (
       'field_type' => 'varchar',
       'field_length' => '30',
       'sorting' => NULL,
       'fixed' => NULL,
-      'title' => '关联表',
-      'field' => 'associated_table',
+      'title' => '主表',
+      'field' => 'main_table',
       'field_from' => 'main_table',
       'width' => NULL,
     ),
@@ -48,14 +48,14 @@
       'field_from' => 'main_table',
       'width' => NULL,
     ),
-    'main_table' => 
+    'associated_table' => 
     array (
       'field_type' => 'varchar',
       'field_length' => '30',
       'sorting' => NULL,
       'fixed' => NULL,
-      'title' => '主表',
-      'field' => 'main_table',
+      'title' => '关联表',
+      'field' => 'associated_table',
       'field_from' => 'main_table',
       'width' => NULL,
     ),
@@ -96,6 +96,20 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+    ),
+    'prefix' => 
+    array (
+      'field_type' => 'varchar',
+      'field_length' => '40',
+      'sorting' => '2',
+      'fixed' => NULL,
+      'title' => 'ID前缀',
+      'field' => 'prefix',
+      'field_from' => 'main_table',
+      'width' => NULL,
+      'create' => 'on',
+      'update' => 'on',
+      'read' => 'on',
     ),
     'pid' => 
     array (
@@ -320,7 +334,7 @@
   array (
     'route' => 
     array (
-      'text' => '生成路由',
+      'text' => '更新路由',
       'icon' => NULL,
       'open_tepe' => 'ajax',
       'must' => 'on',
@@ -330,7 +344,7 @@
     ),
     'menu' => 
     array (
-      'text' => '生成菜单',
+      'text' => '更新菜单',
       'icon' => NULL,
       'open_tepe' => 'ajax',
       'must' => 'on',
@@ -340,7 +354,7 @@
     ),
     'permission' => 
     array (
-      'text' => '生成授权',
+      'text' => '更新授权',
       'icon' => NULL,
       'open_tepe' => 'ajax',
       'must' => 'on',
@@ -353,7 +367,7 @@
   array (
     'set' => 
     array (
-      'text' => '生成配置',
+      'text' => '更新配置',
       'style' => 'layui-btn-danger',
       'open_tepe' => 'window',
       'must' => 'on',

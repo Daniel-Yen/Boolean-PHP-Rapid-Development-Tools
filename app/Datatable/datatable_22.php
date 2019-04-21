@@ -1,6 +1,7 @@
 <?php return array (
   'id' => 22,
   'title' => 'Datatable自定义字段',
+  'id_prefix' => 'diy_',
   'pid' => 31,
   'model' => '2',
   'url' => '/lazykit/demo/external',

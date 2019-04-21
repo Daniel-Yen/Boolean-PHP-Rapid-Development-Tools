@@ -1,6 +1,7 @@
 <?php return array (
   'id' => 43,
   'title' => '用户组管理',
+  'id_prefix' => 'user_group_',
   'pid' => 40,
   'model' => '2',
   'url' => '/system/user_group/index',

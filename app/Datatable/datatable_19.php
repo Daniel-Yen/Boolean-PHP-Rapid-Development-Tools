@@ -1,6 +1,7 @@
 <?php return array (
   'id' => 19,
   'title' => '模块管理',
+  'id_prefix' => 'module_',
   'pid' => 29,
   'model' => '2',
   'url' => 'lazykit/module/index',

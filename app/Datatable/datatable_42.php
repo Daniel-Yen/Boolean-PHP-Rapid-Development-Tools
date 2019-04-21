@@ -1,6 +1,7 @@
 <?php return array (
   'id' => 42,
   'title' => '系统用户管理',
+  'id_prefix' => 'user_',
   'pid' => 40,
   'model' => '2',
   'url' => '/system/user/index',

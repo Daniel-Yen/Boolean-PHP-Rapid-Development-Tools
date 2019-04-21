@@ -91,7 +91,7 @@ class FunctionPageController extends Controller
 		$additional_config = [
 			//数据查询条件
 			'conditions' => [
-				['system_id', '=', $request->id],
+				['system_id', '=', $request->system_id],
 			],
 		];
 		
@@ -124,6 +124,7 @@ class FunctionPageController extends Controller
 	 */
 	public function getRouteMessage($datatable_arr)
 	{
+		//dd($datatable_arr);
 		//获得控制器及方法名称
 		$module_path = BlkModuleRepository::where('id', $datatable_arr['module_id'])->first(['module']);
 		//dd($datatable_arr);
@@ -175,21 +176,33 @@ class FunctionPageController extends Controller
 		$request = request();
 		
 		//dd($request->id);
-		$datatable_arr = BlkFunctionPageRepository::where('id', $request->id)->first();
+		$datatable_arr = BlkFunctionPageRepository::where('id', $request->design_id)->first();
+		//dd($datatable_arr);
 		if($datatable_arr){
 			$datatable_arr = $datatable_arr->toArray();
 			
-			$system = BlkSystemRepository::where('id', $datatable_arr['system_id'])->first();
-			
-			$path = $this->getPath($system);
+			//判断当前页面是存在对应的模型
+			$module = BlkModuleRepository::where('id', $datatable_arr['module_id'])->first();
+			if($module){
+				//判断当前页面是存在对应的系统
+				$system = BlkSystemRepository::where('id', $datatable_arr['system_id'])->first();
+				if($system){
+					$path = $this->getPath($system);
+					
+					//去除不需要记录在配置中的页面设计中的字段
+					unset($datatable_arr['created_at']);
+					unset($datatable_arr['updated_at']);
+					unset($datatable_arr['deleted_at']);
+				}else{
+					die("当前页面没有对应的系统模块！");
+				}
+			}else{
+				die("当前页面没有对应的系统模块！");
+			}
 		}else{
-			die("功能记录不存在！");
+			$datatable_arr = [];
 		}
 		//dd($path);
-		
-		unset($datatable_arr['created_at']);
-		unset($datatable_arr['updated_at']);
-		unset($datatable_arr['deleted_at']);
 		
 		//配置在对应系统中的文件路径
 		if($datatable_arr['model']){
@@ -203,6 +216,7 @@ class FunctionPageController extends Controller
 		}else{
 			die("当前记录功能模型不存在！");
 		}
+		//dd($datatable_config_path);
 		
 		//获得datatable配置名称
 		//$datatable_config_name = $this->getDatatableFielName($datatable_arr);
@@ -285,6 +299,7 @@ class FunctionPageController extends Controller
 			
 			//生成对应系统的改菜单对应的datatable 配置文件
 			unset($datatable_arr['module_id']);
+			unset($datatable_arr['system_id']);
 			$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';
 			file_put_contents($datatable_config_path,$datatable_config);
 			
@@ -306,13 +321,13 @@ class FunctionPageController extends Controller
 // 				$datatable_config = [];
 // 			}
 			
-			$auto_generate = BlkAutoGenerateRepository::where('function_page_id', $datatable_arr['id'])->first();
-			//dd($datatable_config_path);
-			if($auto_generate){
-				$datatable_config = json_decode($auto_generate['config'], true);
+			if(file_exists($datatable_config_path)){
+				$datatable_config = require($datatable_config_path);
 			}else{
-				if(file_exists($datatable_config_path)){
-					$datatable_config = require($datatable_config_path);
+				$auto_generate = BlkAutoGenerateRepository::where('function_page_id', $datatable_arr['id'])->first();
+				//dd($datatable_config_path);
+				if($auto_generate){
+					$datatable_config = json_decode($auto_generate['config'], true);
 				}else{
 					$datatable_config = [];
 				}

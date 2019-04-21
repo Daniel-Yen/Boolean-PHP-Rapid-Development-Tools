@@ -370,18 +370,18 @@ layui.config({
       				,maxmin: false
       				,offset: 'auto'
 					@if (isset($vo['route'])?$vo['route']:false)
-      				,content: "{{$vo['route']}}?{!!$parse_url_query!!}id="+data['id']
+      				,content: "{{$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id']
 					@else
-					,content: base_url+"do={{$key}}&from=line&id="+data['id'],
+					,content: base_url+"do={{$key}}&from=line&{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
 					@endif
       			});
       		@elseif ($vo['open_tepe'] == 'ajax')
       			layer.confirm("请确认当前操作?", {icon:3, title:'温馨提示'}, function() {
       				$.ajax({
       					@if (isset($vo['route'])?$vo['route']:false)
-      					url: "{{$vo['route']}}?{!!$parse_url_query!!}id="+data['id'],
+      					url: "{{$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
       					@else
-						url: base_url+"do={{$key}}&from=line&id="+data['id'],
+						url: base_url+"do={{$key}}&from=line&{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
       					@endif
 						type: "post",
       					dataType: 'json',

@@ -1,9 +1,12 @@
 <?php
 /**
- * 运行环境信息
- * @auther 		杨鸿<yh15229262120@qq.com>
+ * 数据表格：系统信息 
+ * 该控制器类由 Boolean Lazy Kit 页面设计器自动生成
+ *
+ * @auther 	Blk
  */
-namespace App\Http\Controllers\System;
+
+namespace App\Http\Controllers\Lazykit;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -12,23 +15,27 @@ use Illuminate\Http\Request;
 class EnvironmentController extends Controller
 {
     /**
-	 * 系统信息
-	 * @access    	public
-	 */
-	public function server(Request $request)
-	{
-		$additional_config = [
-			'data_source_method' => 'data_source',		//控制器类的方法:获得表格数据
-		];
+     * 系统信息
+     *
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+     * @access 		public
+     * @param  		\Illuminate\Http\Request $request
+     * @return  	mixed
+     */
+    public function server(Request $request)
+    {
+    	$additional_config = [
+    		'data_source_method' => 'dataDource',		//控制器类的方法:获得表格数据
+    	];
 		
 		create_datatable('datatable_41', $additional_config, $request);
-	}
+    }
 	
 	/**
 	 * 系统信息数据源
 	 * @access    	public
 	 */
-    public function data_source()
+    public function dataDource()
     {
        $sql_ver = DB::select('select version() as ver');
 	   return $sys_info_arr = [
@@ -49,22 +56,4 @@ class EnvironmentController extends Controller
 			['set' => '内存分配',		'key' => ini_get('memory_limit')   ],
 		];
     }
-	
-	/**
-	 * 菜单管理
-	 * @access    	public
-	 */
-	public function menu()
-	{
-		$additional_config = [
-			'condition' => [
-				['module', '=', request()->module()]
-			],
-			'create_param' => [
-				'module' => request()->module()
-			]
-		];
-		
-		datagrid('datagrid_25',$additional_config);
-	}
 }

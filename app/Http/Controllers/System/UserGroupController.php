@@ -42,6 +42,7 @@ class UserGroupController extends Controller
 					->get()
 					->map(function ($value) {return (array)$value;})
 					->toArray();
+		//dump($data);
 		if($data){
 			//转换为树结构
 			$tree = new \App\Http\Controllers\Blk\TreeController($data);
@@ -86,12 +87,17 @@ class UserGroupController extends Controller
 		}
 		//dd($data);
 		
-		$user_group = BlkUserGroupRepository::where('id', request()->id)->first();
+		$user_group = BlkUserGroupRepository::where('id', request()->user_group_id)->first();
 		//dd(json_decode($user_group->rules, true));
+		if($user_group){
+			$rules = json_decode($user_group->rules, true);
+		}else{
+			$rules = '';
+		}
 		
 		return view('system.permissions', [
 			'data' => $data,
-			'rules' => json_decode($user_group->rules, true)
+			'rules' => $rules
 		]);
 	}
 	
@@ -123,6 +129,6 @@ class UserGroupController extends Controller
 			'rules' => json_encode($rules_arr),
 		];
 		//dd($param);
-		BlkUserGroupRepository::where('id', request()->id)->update($param);
+		BlkUserGroupRepository::where('id', request()->user_group_id)->update($param);
 	}
 }
