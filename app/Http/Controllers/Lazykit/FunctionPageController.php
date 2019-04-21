@@ -179,11 +179,7 @@ class FunctionPageController extends Controller
 		if($datatable_arr){
 			$datatable_arr = $datatable_arr->toArray();
 			
-			//获得当前菜单对应的系统
-			//$system_module_arr = explode('/',$datatable_arr['module_id']);
-			//dd($system_module_arr);
 			$system = BlkSystemRepository::where('id', $datatable_arr['system_id'])->first();
-			//dd($system);
 			
 			$path = $this->getPath($system);
 		}else{
@@ -603,26 +599,6 @@ class FunctionPageController extends Controller
 		//dd($tables_arr);
 		
 		return $tables_arr;
-	}
-	
-	/**
-	 * 动态改变数据库配置重连数据库
-	 *
-	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
-	 * @access    	public
-	 * @param 		App\Repositories\BlkSystemRepository 	$system 	//要重连的系统
-	 * @return 		void
-	 */
-	public function reconnectDB($system)
-	{
-		config('database.connections.mysql.host',$system->host);
-		config('database.connections.mysql.port',$system->port);
-		config('database.connections.mysql.database',$system->database);
-		config('database.connections.mysql.username',$system->username);
-		config('database.connections.mysql.password',$system->password);
-		config('database.connections.mysql.prefix',$system->prefix);
-		
-		DB::reconnect();
 	}
 	
 	/**

@@ -121,6 +121,7 @@ class {NewController} extends Controller
 		config('database.connections.mysql.password',$system->password);
 		config('database.connections.mysql.prefix',$system->prefix);
 		
+		dd(config('database.connections.mysql.database'));
 		DB::reconnect();
 	}
 	
@@ -160,7 +161,8 @@ class {NewController} extends Controller
     			];
     		}
     		
-    		$result = DB::table('blk_permissions')->insert($permissions);
+    		$this->reconnectDB($system);
+			$result = DB::table('blk_permissions')->insert($permissions);
     		if($result){
     			echo json_encode(['code' => 0, 'msg' => "可授权页面生成成功", 'refresh' => 'no']);
     		}else{

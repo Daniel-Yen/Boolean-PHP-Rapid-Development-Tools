@@ -9,6 +9,7 @@ namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Repositories\BlkFunctionPageRepository;
 use App\Repositories\BlkUserGroupRepository;
 
@@ -37,9 +38,11 @@ class UserGroupController extends Controller
 			return success("用户组权限设置成功");
 		}
 		
-		$data = BlkFunctionPageRepository::get();
-		if($data->count()){
-			$data = $data->toArray();
+		$data = DB::table('blk_permissions')
+					->get()
+					->map(function ($value) {return (array)$value;})
+					->toArray();
+		if($data){
 			//转换为树结构
 			$tree = new \App\Http\Controllers\Blk\TreeController($data);
 			$data = $tree->listToDatatableTree();
