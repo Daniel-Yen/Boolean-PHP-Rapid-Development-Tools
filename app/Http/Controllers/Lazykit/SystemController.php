@@ -15,9 +15,9 @@ use App\Repositories\BlkMenuRepository;
 class SystemController extends Controller
 {
     /**
-     * 创建路由与菜单
+     * 创建路由、菜单、模型、验证器等
      */
-    use CreateRouteMenu;
+    use Create;
 	
 	/**
      * 系统管理

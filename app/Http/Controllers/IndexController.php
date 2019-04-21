@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Repositories\BlkMenuRepository;
 use App\Repositories\BlkUserGroupRepository;
 
@@ -36,7 +37,7 @@ class IndexController extends Controller
 				$menu = $this->getMenu($rules_arr);
 				
 				//获得菜单的树结构
-				$tree = new \App\Http\Controllers\Common\TreeController($menu);
+				$tree = new \App\Http\Controllers\Blk\TreeController($menu);
 				$menu = $tree->listToTree();
 				//dd($menu);
 			}else{
@@ -62,10 +63,14 @@ class IndexController extends Controller
 	}
 	
 	public function getMenu($rules_arr){
-		$menu_arr = BlkMenuRepository::whereIn('url', $rules_arr)->get();
+		$menu_arr = DB::table('blk_menu')
+						->whereIn('url', $rules_arr)
+						->get()
+						->map(function ($value) {return (array)$value;})
+						->toArray();
+		//dd($menu_arr);
 		$menu = [];
-		if($menu_arr->first()){
-			$menu_arr = $menu_arr->toArray();
+		if(!empty($menu_arr)){
 			$ids = [];
 			foreach($menu_arr as $k=>$v){
 				if($v['pid']){
@@ -73,9 +78,12 @@ class IndexController extends Controller
 				}
 			}
 			//获取上级菜单
-			$menu_arr_1 = BlkMenuRepository::whereIn('id', $ids)->get();
-			if($menu_arr_1->first()){
-				$menu_arr_1 = $menu_arr_1->toArray();
+			$menu_arr_1 = DB::table('blk_menu')
+								->whereIn('id', $ids)
+								->get()
+								->map(function ($value) {return (array)$value;})
+								->toArray();
+			if(!empty($menu_arr_1)){
 				$menu = array_merge($menu_arr, $menu_arr_1);
 				$ids = [];
 				foreach($menu_arr_1 as $k=>$v){
@@ -84,9 +92,12 @@ class IndexController extends Controller
 					}
 				}
 				//获取上级菜单的上级菜单
-				$menu_arr_2 = BlkMenuRepository::whereIn('id', $ids)->get();
-				if($menu_arr_2->first()){
-					$menu_arr_2 = $menu_arr_2->toArray();
+				$menu_arr_2 = DB::table('blk_menu')
+									->whereIn('id', $ids)
+									->get()
+									->map(function ($value) {return (array)$value;})
+									->toArray();
+				if(!empty($menu_arr_2)){
 					$menu = array_merge($menu, $menu_arr_2);
 				}
 			}

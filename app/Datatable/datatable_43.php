@@ -3,8 +3,8 @@
   'title' => '用户组管理',
   'pid' => 40,
   'model' => '2',
-  'url' => '/system/permission/user_group',
-  'method' => 'PermissionController@userGroup',
+  'url' => '/system/user_group/index',
+  'method' => 'UserGroupController@index',
   'module_id' => '2',
   'main_table' => 'blk_user_group',
   'associated_type' => NULL,
@@ -153,10 +153,10 @@
   ),
   'route' => 
   array (
-    'route_path' => '/system/permission/',
-    'route_name' => 'user_group',
-    'controller' => 'App\\Http\\Controllers\\System\\PermissionController',
-    'method' => 'userGroup',
+    'route_path' => '/system/user_group/',
+    'route_name' => 'index',
+    'controller' => 'App\\Http\\Controllers\\System\\UserGroupController',
+    'method' => 'index',
   ),
   'new_head_menu' => NULL,
   'line_button' => 

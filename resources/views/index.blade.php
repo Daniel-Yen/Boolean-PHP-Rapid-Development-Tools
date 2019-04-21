@@ -94,7 +94,7 @@
 				<ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
 					@foreach ($menu as $v)
 					<li data-name="home" class="layui-nav-item @if($loop->first) layui-nav-itemed @endif ">
-						<a href="javascript:;" lay-tips="主页" lay-direction="2">
+						<a href="javascript:;" lay-tips="{{$v['title']}}" lay-direction="2">
 							<i class="layui-icon layui-icon-home"></i>
 							<cite>{{$v['title']}}</cite>
 						</a>

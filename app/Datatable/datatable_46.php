@@ -4,7 +4,7 @@
   'pid' => 29,
   'model' => '5',
   'function_type' => '1',
-  'url' => 'lazykit/functionpage/index',
+  'url' => 'lazykit/function_page/index',
   'method' => 'FunctionPageController@index',
   'inheritance' => '45',
   'inheritance_note' => '继承系统管理的列表显示，增加功能按钮',
@@ -34,7 +34,7 @@
   ),
   'route' => 
   array (
-    'route_path' => 'lazykit/functionpage/',
+    'route_path' => 'lazykit/function_page/',
     'route_name' => 'index',
     'controller' => 'App\\Http\\Controllers\\Lazykit\\FunctionPageController',
     'method' => 'index',
@@ -50,7 +50,7 @@
       'must' => 'on',
       'width' => '100%',
       'height' => '100%',
-      'method' => 'route@lazykit/functionpage/design',
+      'method' => 'route@lazykit/function_page/design',
     ),
     'route' => 
     array (

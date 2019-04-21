@@ -31,9 +31,9 @@ class FunctionPageController extends Controller
 	use SystemPath;
 	
 	/**
-	 * 创建路由与菜单
+	 * 创建路由、菜单、模型、验证器等
 	 */
-	use CreateRouteMenu;
+	use Create;
 	
 	/**
      * datatable配置文件存放路径
@@ -88,22 +88,28 @@ class FunctionPageController extends Controller
 	 */
 	public function design(Request $request)
 	{
-		//新增的时候根据控制器及方法名生成路由
-		if($request->isMethod('post') && ( $request->do == 'create' || $request->do == 'update' ) ){
-			$route_message = $this->getRouteMessage($request->post());
-			//dd($route_message);
-			//自定义请求参数
-			if($request->method){
-				$request->offsetSet('url', $route_message['route_path'].$route_message['route_name']);
-			}
-		}
-		
 		$additional_config = [
 			//数据查询条件
 			'conditions' => [
 				['system_id', '=', $request->id],
 			],
 		];
+		
+		//新增的时候根据控制器及方法名生成路由
+		if($request->isMethod('post') && ( $request->do == 'create' || $request->do == 'update' ) ){
+			$route_message = $this->getRouteMessage($request->post());
+			//dd($route_message);
+			
+			//附加的新增数据
+			$additional_config['create_param'] = [
+				'url' => $route_message['route_path'].$route_message['route_name'],
+			];
+			
+			//附加的修改数据
+			$additional_config['create_param'] = [
+				'url' => $route_message['route_path'].$route_message['route_name'],
+			];
+		}
 		
 		create_datatable('datatable_1', $additional_config, $request);
 	}
@@ -126,7 +132,7 @@ class FunctionPageController extends Controller
 		if($datatable_arr['method']){
 			$method_arr = explode('@', $datatable_arr['method']);
 		
-			$route_path = strtolower($module_path['module']).'/'.strtolower(str_replace('Controller','',$method_arr[0])).'/';
+			$route_path = strtolower($module_path['module']).'/'.\Illuminate\Support\Str::snake(str_replace('Controller','',$method_arr[0])).'/';
 			//dd($route_path);
 			$route_arr = [
 				'id' 			=> isset($datatable_arr['id'])?$datatable_arr['id']:'',
@@ -243,11 +249,13 @@ class FunctionPageController extends Controller
 					}
 				}
 			}
+			
 			//创建按钮的控制器方法[未实现]
 			if(isset($datatable_arr['new_head_menu'])){
 				$this->createMethod($datatable_arr['new_head_menu']);
 			}
 			//dd($datatable_arr['new_head_menu']);
+			
 			//datatable 附加工具菜单
 			$datatable_arr['line_button'] = $request->line_button_list;
 			if(isset($request->line_button['type'])){
@@ -266,7 +274,8 @@ class FunctionPageController extends Controller
 					}
 				}
 			}
-			//创建按钮的控制其方法
+			
+			//创建按钮的控制器方法
 			if(isset($datatable_arr['line_button'])){
 				$this->createMethod($datatable_arr['line_button']);
 			}
@@ -319,7 +328,8 @@ class FunctionPageController extends Controller
 			if(!empty($route_message)){
 				//生成控制器及方法
 				if(!$route_message['controller_exists']){
-					create_controller($route_message);
+					//如果控制器不存在则生成当前数据表格的控制器及方法
+					$this->create_controller($route_message, $path);
 					//$route_message = $this->getRouteMessage($datatable_arr);
 					
 					return success('控制器及方法生成成功', '控制器：'.$route_message['controller'].'已生成，控制器方法：'.$route_message['method'].'已生成', url()->full() );
@@ -402,39 +412,6 @@ class FunctionPageController extends Controller
 		BlkFunctionPageRepository::where('id', '=', $request->id)->update($param);
 		//dd(DB::getQueryLog());
 		return success("数据源设置成功");
-	}
-	
-	/**
-	 * 根据表名称生成模型与验证器
-	 * 当配置存在数据表的时候根据数据表生成数据表对应的空模型类及空的验证器类,如果已存在同名文件则不重复生成
-	 *
-	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
-	 * @access 		private
-	 * @param 		string 		$tablename 				表名称
-	 * @return 		
-	 */
-	private function createRepositoryRequest($tablename, $file_path)
-	{
-		//根据数据库表名称获得要生成的模型的类名称跟文件名
-		$hump_name = Str::studly($tablename);
-		//dd($hump_name);
-		//保存datatable配置的时候判断是否有数据库表,如果有表,生成数据表模型跟验证器
-		$path = [$file_path['repository'], $file_path['request']];
-		//foreach(['Repository','Request'] as $k=>$v){
-		foreach(['Repository'] as $k=>$v){
-			//读取空模型的模板
-			$file_path = $path[$k];
-			create_dir($file_path);
-			$file_name = $file_path.$hump_name.$v.'.php';
-			if(!file_exists($file_name)){
-				$file = file_get_contents($file_path.'New'.$v.'.php');
-				
-				//替换空模型模板中的类名称
-				$file = str_replace('New',$hump_name,$file);
-				$file = str_replace('table_name',$tablename,$file);
-				file_put_contents($file_name,$file);
-			}
-		}
 	}
 	
 	/**

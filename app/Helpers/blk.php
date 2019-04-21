@@ -106,7 +106,7 @@ if (!function_exists('success')) {
 	 */
 	function success($message = '', $supplement = '', $url = '') {
 		//dd(request()->fullUrl());
-		return view('datatable.success')->with([
+		return view('blk.success')->with([
 			//跳转信息
 			'message' => $message ? $message : "操作成功",
 			//跳转信息
@@ -128,7 +128,7 @@ if (!function_exists('error')) {
 	 */
 	function error($message = '', $supplement = '') {
 		//dd(request()->fullUrl());
-		return view('datatable.error')->with([
+		return view('blk.error')->with([
 			//跳转信息
 			'message' => $message ? $message : "操作失败",
 			//跳转信息

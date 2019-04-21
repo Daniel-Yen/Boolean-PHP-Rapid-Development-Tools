@@ -4,7 +4,7 @@
   'pid' => 46,
   'model' => '2',
   'function_type' => '2',
-  'url' => 'lazykit/functionpage/design',
+  'url' => 'lazykit/function_page/design',
   'method' => 'FunctionPageController@design',
   'inheritance' => NULL,
   'inheritance_note' => NULL,
@@ -311,7 +311,7 @@
   ),
   'route' => 
   array (
-    'route_path' => 'lazykit/functionpage/',
+    'route_path' => 'lazykit/function_page/',
     'route_name' => 'design',
     'controller' => 'App\\Http\\Controllers\\Lazykit\\FunctionPageController',
     'method' => 'design',
@@ -337,6 +337,16 @@
       'width' => NULL,
       'height' => NULL,
       'method' => 'createMenu',
+    ),
+    'permission' => 
+    array (
+      'text' => '生成授权',
+      'icon' => NULL,
+      'open_tepe' => 'ajax',
+      'must' => 'on',
+      'width' => NULL,
+      'height' => NULL,
+      'method' => 'createPermissions',
     ),
   ),
   'line_button' => 

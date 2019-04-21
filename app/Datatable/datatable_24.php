@@ -3,9 +3,12 @@
   'title' => 'Datatable树形表格',
   'pid' => 31,
   'model' => '2',
-  'url' => '/lazykit/demo/treetable',
+  'function_type' => '1',
+  'url' => 'lazykit/demo/treetable',
   'method' => 'DemoController@treetable',
-  'module_id' => '1',
+  'inheritance' => NULL,
+  'inheritance_note' => NULL,
+  'system_id' => '1',
   'main_table' => 'blk_demo_tree',
   'associated_type' => NULL,
   'associated_table' => NULL,
@@ -108,6 +111,7 @@
     array (
       'text' => '搜索',
       'icon' => 'layui-icon-search',
+      'must' => 'on',
       'width' => '800px',
       'height' => '90%',
       'method' => NULL,
@@ -167,7 +171,7 @@
   ),
   'route' => 
   array (
-    'route_path' => '/lazykit/demo/',
+    'route_path' => 'lazykit/demo/',
     'route_name' => 'treetable',
     'controller' => 'App\\Http\\Controllers\\Lazykit\\DemoController',
     'method' => 'treetable',
