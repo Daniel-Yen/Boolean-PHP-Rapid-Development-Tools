@@ -36,32 +36,6 @@ class FunctionPageController extends Controller
 	use Create;
 	
 	/**
-     * datatable配置文件存放路径
-	 *
-     * @var 		string
-     */
-	//protected $datatablePath = '..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Datatable'.DIRECTORY_SEPARATOR;
-	//protected $datatablePath = 
-	
-	/**
-	 * 获得datatable配置的路径
-	 *
-	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
-	 * @access 		public
-	 * @param  		\Illuminate\Http\Request $request
-	 * @return  	mixed
-	 */
-// 	private function getDatatablePath($system_id)
-// 	{
-// 	    $system = BlkSystemRepository::where('id', $system_id)->first();
-// 		if($system){
-// 			return $this->datatablePath = 'D:\BtSoft\laravel\boolean-laravel-lazykit'.DIRECTORY_SEPARATOR.$this->datatablePath;
-// 		}else{
-// 			return error('操作失败',"系统路径错误");
-// 		}
-// 	}
-	
-	/**
 	 * 系统列表
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
@@ -71,11 +45,7 @@ class FunctionPageController extends Controller
 	 */
 	public function index(Request $request)
     {
-    	$additional_config = [
-			//'hide_head_menu' => ['all']
-		];
-		
-		create_datatable('datatable_46', [], $request);
+    	create_datatable('datatable_46', [], $request);
     }
 	
 	/**
@@ -97,7 +67,7 @@ class FunctionPageController extends Controller
 		
 		//新增的时候根据控制器及方法名生成路由
 		if($request->isMethod('post') && ( $request->do == 'create' || $request->do == 'update' ) ){
-			$route_message = $this->getRouteMessage($request->post());
+			$route_message = $this->getRouteMessage($request->post(), []);
 			//dd($route_message);
 			
 			//附加的新增数据
@@ -122,7 +92,7 @@ class FunctionPageController extends Controller
 	 * @param 		integer 	$datatable_arr 			菜单信息
 	 * @return  	array
 	 */
-	public function getRouteMessage($datatable_arr)
+	public function getRouteMessage($datatable_arr, $path)
 	{
 		//dd($datatable_arr);
 		//获得控制器及方法名称
@@ -145,18 +115,26 @@ class FunctionPageController extends Controller
 				'module' 		=> $module_path['module'],
 				'menu_title' 	=> $datatable_arr['title'],
 			];
-			$class = $route_arr['namespace'].'\\'.$route_arr['controller'];
-			//dd($class);
-			if(class_exists($class)){
-				$route_arr['controller_exists'] = true;
-				if(method_exists(new $class, $route_arr['method'])){
-					$route_arr['method_exists'] = true;
-				}else{
-					$route_arr['method_exists'] = false;
-				}
-			}else{
+			
+			if($path){
+				$class_path = $path['controller'].$module_path['module'].'\\'.$route_arr['controller'].'.php';
+				$class = $route_arr['namespace'].'\\'.$route_arr['controller'];
+				//dd($class_path, $class);
+				
 				$route_arr['controller_exists'] = false;
 				$route_arr['method_exists'] = false;
+				
+				if(file_exists($class_path)){
+					include_once($class_path);
+					if(class_exists($class)){
+						$route_arr['controller_exists'] = true;
+						if(method_exists(new $class, $route_arr['method'])){
+							$route_arr['method_exists'] = true;
+						}else{
+							$route_arr['method_exists'] = false;
+						}
+					}
+				}
 			}
 		}else{
 			$route_arr = [];
@@ -218,17 +196,33 @@ class FunctionPageController extends Controller
 		}
 		//dd($datatable_config_path);
 		
+		//获得当前页面设计的路由信息
+		$route_message = $this->getRouteMessage($datatable_arr, $path);
+				
 		//获得datatable配置名称
 		//$datatable_config_name = $this->getDatatableFielName($datatable_arr);
 		if($request->isMethod('post')){
 			//datatable 字段配置:排序
 			$datatable_arr['datatable_set'] = array_sort($request->datatable_set,'sorting');
+			foreach($datatable_arr['datatable_set'] as $k=>$v){
+				//取设置的字段属性,用于表单生成
+				$conditions = [
+					['design_id', '=', $datatable_arr['id']],
+					['field', '=', $v['field']],
+				];
+				$attribute_arr = BlkAttributeRepository::where($conditions)->first();
+				if($attribute_arr){
+					$datatable_arr['datatable_set'][$k]['attribute'] = json_decode($attribute_arr['attribute'], true);
+				}else{
+					$datatable_arr['datatable_set'][$k]['attribute'] = NULL;
+				}
+			}
+			
 			//datatable 头部工具菜单:内置(不可更改)
 			$datatable_arr['head_menu'] = $request->head_menu;
 			//datatable 其他设置
 			$datatable_arr['other_set'] = $request->other_set;
-			//datatable 路由信息
-			$route_message = $this->getRouteMessage($datatable_arr);
+			
 			$datatable_arr['route'] = [
 				'route_path' 	=> $route_message['route_path'],
 				'route_name' 	=> $route_message['route_name'],
@@ -291,13 +285,13 @@ class FunctionPageController extends Controller
 			}
 			//dd($method_arr);
 			
-			//将菜单对应的datatable 配置文件保存到数据库
+			//将页面设计对应的datatable 配置文件保存到数据库
 			BlkAutoGenerateRepository::updateOrInsert(
 					['function_page_id' => $datatable_arr['id']],
 					['config' => json_encode($datatable_arr)]
 				);
 			
-			//生成对应系统的改菜单对应的datatable 配置文件
+			//生成对应系统的改页面设计对应的datatable 配置文件
 			unset($datatable_arr['module_id']);
 			unset($datatable_arr['system_id']);
 			$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';
@@ -335,13 +329,11 @@ class FunctionPageController extends Controller
 			//dd($datatable_config);
 			
 			//生成控制器及当前配置对应页面的方法
-			$route_message = $this->getRouteMessage($datatable_arr);
 			if(!empty($route_message)){
 				//生成控制器及方法
 				if(!$route_message['controller_exists']){
 					//如果控制器不存在则生成当前数据表格的控制器及方法
 					$this->create_controller($route_message, $path);
-					//$route_message = $this->getRouteMessage($datatable_arr);
 					
 					return success('控制器及方法生成成功', '控制器：'.$route_message['controller'].'已生成，控制器方法：'.$route_message['method'].'已生成', url()->full() );
 				}
@@ -370,7 +362,8 @@ class FunctionPageController extends Controller
 				'head_menu_arr' 		=> $this->headMenu($datatable_config, $datatable_arr),		//datatable 头部工具菜单
 				'datatable_arr' 		=> $datatable_arr,											//datatable记录
 				'datatable_config' 		=> $datatable_config,	
-				'datatable_id' 			=> $request->id,
+				'design_id' 			=> $request->design_id,			//页面设计ID
+				'system_id' 			=> $request->system_id,			//系统ID
 				'route_message' 		=> $route_message, 											//获得路由信息
 			]);		
 		}
@@ -426,19 +419,6 @@ class FunctionPageController extends Controller
 	}
 	
 	/**
-	 * 获得数据表格配置文件名称加路径
-	 *
-	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
-	 * @access 		private
-	 * @param 		array 		$datatable_arr 				数据表格记录
-	 * @return 		string
-	 */
-// 	private function getDatatableFielName($datatable_arr)
-// 	{
-// 		return 'datatable_'.$datatable_arr['id'];
-// 	}
-	
-	/**
 	 * 根据表配置获得字段属性
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
@@ -450,17 +430,6 @@ class FunctionPageController extends Controller
 	 */
 	private function getFieldRow($datatable_arr, $datatable_config, $system)
 	{
-		//获得数据表格配置文件名称
-// 		$datatable_file_name = $this->getDatatableFielName($datatable_arr);
-// 		//datatable配置文件存放路径
-// 		$path = $this->datatablePath.$datatable_file_name.'.php';
-// 		//dd($path);
-// 		if(file_exists($path)){
-// 			$datatable_set_arr = require($path);
-// 		}else{
-// 			$datatable_set_arr = [];
-// 		}
-		
 		//如果不存在主表,则无数据库字段
 		$main_table = $datatable_arr['main_table']?$datatable_arr['main_table']:'';
 		$associated_table = $datatable_arr['associated_table']?$datatable_arr['associated_table']:'';
@@ -631,19 +600,8 @@ class FunctionPageController extends Controller
 			unset($data['_token']);
 			//dd($data);
 			
-			//验证规则
-			if(isset($data['verify'])){
-				$verify = [];
-				foreach($data['verify'] as $k=>$v){
-					if($v == 'on'){
-						$verify[] = $k;
-					}
-				}
-				$data['verify'] = join(',',$verify);
-			}
-			
 			$conditions = [
-				'datatable_id' => $request->datatable_id,
+				'design_id' => $request->design_id,
 				'field' => $request->field,
 			];
 			
@@ -657,6 +615,39 @@ class FunctionPageController extends Controller
 			$result = BlkAttributeRepository::updateOrInsert($conditions, $param);
 			//dd(DB::getQueryLog());
 			if($result){
+				//获得当前页面信息
+				$datatable_arr = BlkFunctionPageRepository::where('id', $request->design_id)->first();
+				//将字段属性设置写入Datatable配置文件
+				$system = BlkSystemRepository::where('id', $request->system_id)->first();
+				//dd($system);
+				if($system){
+					$path = $this->getPath($system);
+					//dd($path);
+					
+					$model = [
+						2 => 'datatable',
+						3 => 'chart',
+						4 => 'config',
+						5 => 'datatable',
+					];
+					$datatable_config_path = $path['datatable'].$model[$datatable_arr['model']].'_'.$request->design_id.'.php';
+					
+					if(file_exists($datatable_config_path)){
+						$datatable_arr = require($datatable_config_path);
+						$datatable_arr['datatable_set'][$request->field]['attribute'] = $data;
+						//dd($datatable_config);
+						
+						$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';
+						file_put_contents($datatable_config_path,$datatable_config);
+					}
+					
+					//将页面设计对应的datatable 配置文件保存到数据库
+					BlkAutoGenerateRepository::updateOrInsert(
+							['function_page_id' => $request->design_id],
+							['config' => json_encode($datatable_arr)]
+						);
+				}
+				
 				return success("保存成功");
 			}else{
 				return error("保存失败");
@@ -665,7 +656,7 @@ class FunctionPageController extends Controller
 		
 		//DB::connection()->enableQueryLog();
 		$conditions = [
-			['datatable_id', '=', $request->datatable_id],
+			['design_id', '=', $request->design_id],
 			['field', '=', $request->field],
 		];
 		

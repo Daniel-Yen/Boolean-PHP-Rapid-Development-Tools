@@ -4,9 +4,11 @@
   'id_prefix' => 'module_',
   'pid' => 29,
   'model' => '2',
+  'function_type' => '1',
   'url' => 'lazykit/module/index',
   'method' => 'ModuleController@index',
-  'module_id' => '1',
+  'inheritance' => NULL,
+  'inheritance_note' => NULL,
   'main_table' => 'blk_module',
   'associated_type' => NULL,
   'associated_table' => NULL,
@@ -23,6 +25,7 @@
       'field' => 'id',
       'field_from' => 'main_table',
       'width' => NULL,
+      'attribute' => NULL,
     ),
     'module_name' => 
     array (
@@ -38,6 +41,7 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => NULL,
     ),
     'system_id' => 
     array (
@@ -53,6 +57,22 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'select',
+        'data_source_type' => 'sql',
+        'data_source' => 'select id as value, system_name as name from buer_blk_system where deleted_at is NULL',
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'module' => 
     array (
@@ -67,6 +87,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'remark' => 
     array (
@@ -81,6 +102,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'created_at' => 
     array (
@@ -93,6 +115,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'updated_at' => 
     array (
@@ -105,6 +128,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'deleted_at' => 
     array (
@@ -117,6 +141,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
   ),
   'head_menu' => 

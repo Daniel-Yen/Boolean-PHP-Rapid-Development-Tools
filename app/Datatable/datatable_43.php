@@ -4,9 +4,11 @@
   'id_prefix' => 'user_group_',
   'pid' => 40,
   'model' => '2',
-  'url' => '/system/user_group/index',
+  'function_type' => '1',
+  'url' => 'system/user_group/index',
   'method' => 'UserGroupController@index',
-  'module_id' => '2',
+  'inheritance' => NULL,
+  'inheritance_note' => NULL,
   'main_table' => 'blk_user_group',
   'associated_type' => NULL,
   'associated_table' => NULL,
@@ -23,6 +25,19 @@
       'field' => 'id',
       'field_from' => 'main_table',
       'width' => NULL,
+      'attribute' => NULL,
+    ),
+    'rules' => 
+    array (
+      'field_type' => 'text',
+      'field_length' => 'no_limit',
+      'sorting' => NULL,
+      'fixed' => NULL,
+      'title' => '权限规则',
+      'field' => 'rules',
+      'field_from' => 'main_table',
+      'width' => NULL,
+      'attribute' => NULL,
     ),
     'name' => 
     array (
@@ -37,6 +52,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'note' => 
     array (
@@ -51,6 +67,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'created_at' => 
     array (
@@ -63,6 +80,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'updated_at' => 
     array (
@@ -75,6 +93,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'deleted_at' => 
     array (
@@ -87,6 +106,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
   ),
   'head_menu' => 
@@ -154,7 +174,7 @@
   ),
   'route' => 
   array (
-    'route_path' => '/system/user_group/',
+    'route_path' => 'system/user_group/',
     'route_name' => 'index',
     'controller' => 'App\\Http\\Controllers\\System\\UserGroupController',
     'method' => 'index',

@@ -10,7 +10,6 @@ namespace App\Http\Controllers\System;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\BlkFunctionPageRepository;
 use App\Repositories\BlkUserGroupRepository;
 
 class UserGroupController extends Controller
@@ -108,7 +107,7 @@ class UserGroupController extends Controller
 	 */
 	private function permissionsAdd($post)
 	{
-		$rules = $post['rules'];
+		$rules = isset($post['rules'])?$post['rules']:[];
 		$rules_arr = [];
 		foreach($rules as $k=>$v){
 			$button = [];

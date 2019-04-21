@@ -9,7 +9,6 @@
   'method' => 'SystemController@index',
   'inheritance' => NULL,
   'inheritance_note' => NULL,
-  'system_id' => '1',
   'main_table' => 'blk_system',
   'associated_type' => NULL,
   'associated_table' => NULL,
@@ -26,6 +25,7 @@
       'field' => 'id',
       'field_from' => 'main_table',
       'width' => NULL,
+      'attribute' => NULL,
     ),
     'system_name' => 
     array (
@@ -40,6 +40,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'file_path' => 
     array (
@@ -54,6 +55,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'framework' => 
     array (
@@ -68,6 +70,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'host' => 
     array (
@@ -82,6 +85,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'port' => 
     array (
@@ -96,6 +100,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'database' => 
     array (
@@ -110,6 +115,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'username' => 
     array (
@@ -124,6 +130,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'password' => 
     array (
@@ -138,6 +145,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'prefix' => 
     array (
@@ -152,6 +160,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'remark' => 
     array (
@@ -166,6 +175,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'created_at' => 
     array (
@@ -178,6 +188,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'updated_at' => 
     array (
@@ -190,6 +201,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'deleted_at' => 
     array (
@@ -202,6 +214,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
   ),
   'head_menu' => 

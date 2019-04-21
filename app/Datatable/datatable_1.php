@@ -25,6 +25,7 @@
       'field' => 'inheritance_note',
       'field_from' => 'main_table',
       'width' => NULL,
+      'attribute' => NULL,
     ),
     'main_table' => 
     array (
@@ -36,6 +37,7 @@
       'field' => 'main_table',
       'field_from' => 'main_table',
       'width' => NULL,
+      'attribute' => NULL,
     ),
     'external_field' => 
     array (
@@ -47,6 +49,7 @@
       'field' => 'external_field',
       'field_from' => 'main_table',
       'width' => NULL,
+      'attribute' => NULL,
     ),
     'associated_table' => 
     array (
@@ -58,6 +61,7 @@
       'field' => 'associated_table',
       'field_from' => 'main_table',
       'width' => NULL,
+      'attribute' => NULL,
     ),
     'associated_type' => 
     array (
@@ -69,6 +73,7 @@
       'field' => 'associated_type',
       'field_from' => 'main_table',
       'width' => NULL,
+      'attribute' => NULL,
     ),
     'id' => 
     array (
@@ -81,6 +86,22 @@
       'field_from' => 'main_table',
       'width' => '80',
       'read' => 'on',
+      'attribute' => NULL,
+    ),
+    'id_prefix' => 
+    array (
+      'field_type' => 'varchar',
+      'field_length' => '40',
+      'sorting' => '2',
+      'fixed' => NULL,
+      'title' => 'ID前缀',
+      'field' => 'id_prefix',
+      'field_from' => 'main_table',
+      'width' => NULL,
+      'create' => 'on',
+      'update' => 'on',
+      'read' => 'on',
+      'attribute' => NULL,
     ),
     'title' => 
     array (
@@ -96,20 +117,23 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
-    ),
-    'prefix' => 
-    array (
-      'field_type' => 'varchar',
-      'field_length' => '40',
-      'sorting' => '2',
-      'fixed' => NULL,
-      'title' => 'ID前缀',
-      'field' => 'prefix',
-      'field_from' => 'main_table',
-      'width' => NULL,
-      'create' => 'on',
-      'update' => 'on',
-      'read' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'data_source_type' => 'method',
+        'data_source' => NULL,
+        'validate' => NULL,
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'window_title' => 'on',
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'pid' => 
     array (
@@ -123,6 +147,22 @@
       'width' => NULL,
       'create' => 'on',
       'update' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'tree_select',
+        'data_source_type' => 'method',
+        'data_source' => 'attribute_pid',
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'model' => 
     array (
@@ -138,6 +178,22 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'select',
+        'data_source_type' => 'method',
+        'data_source' => 'attribute_model',
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'inheritance' => 
     array (
@@ -150,6 +206,22 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'select',
+        'data_source_type' => 'method',
+        'data_source' => 'attributeInheritance',
+        'validate' => NULL,
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'function_type' => 
     array (
@@ -165,6 +237,22 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'select',
+        'data_source_type' => 'method',
+        'data_source' => 'attributeFunctionType',
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'url' => 
     array (
@@ -179,6 +267,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'method' => 
     array (
@@ -194,6 +283,7 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => NULL,
     ),
     'system_id' => 
     array (
@@ -206,6 +296,22 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'select',
+        'data_source_type' => 'method',
+        'data_source' => 'attributeSystem',
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'module_id' => 
     array (
@@ -221,6 +327,22 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'select',
+        'data_source_type' => 'method',
+        'data_source' => 'attributeModule',
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'created_at' => 
     array (
@@ -233,6 +355,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'updated_at' => 
     array (
@@ -245,6 +368,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'deleted_at' => 
     array (
@@ -257,6 +381,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
   ),
   'head_menu' => 

@@ -4,9 +4,11 @@
   'id_prefix' => 'user_',
   'pid' => 40,
   'model' => '2',
-  'url' => '/system/user/index',
+  'function_type' => '1',
+  'url' => 'system/user/index',
   'method' => 'UserController@index',
-  'module_id' => '2',
+  'inheritance' => NULL,
+  'inheritance_note' => NULL,
   'main_table' => 'blk_users',
   'associated_type' => NULL,
   'associated_table' => NULL,
@@ -23,6 +25,7 @@
       'field' => 'remember_token',
       'field_from' => 'main_table',
       'width' => NULL,
+      'attribute' => NULL,
     ),
     'id' => 
     array (
@@ -35,6 +38,7 @@
       'field_from' => 'main_table',
       'width' => '80',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'name' => 
     array (
@@ -50,6 +54,7 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => NULL,
     ),
     'phone' => 
     array (
@@ -65,6 +70,7 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => NULL,
     ),
     'email' => 
     array (
@@ -80,6 +86,7 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => NULL,
     ),
     'email_verified_at' => 
     array (
@@ -91,6 +98,7 @@
       'field' => 'email_verified_at',
       'field_from' => 'main_table',
       'width' => NULL,
+      'attribute' => NULL,
     ),
     'password' => 
     array (
@@ -103,6 +111,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'create' => 'on',
+      'attribute' => NULL,
     ),
     'user_group' => 
     array (
@@ -118,6 +127,22 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'multiple_select',
+        'data_source_type' => 'sql',
+        'data_source' => 'select id as value,name from buer_blk_user_group where 1',
+        'validate' => NULL,
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'status' => 
     array (
@@ -131,6 +156,7 @@
       'width' => NULL,
       'read' => 'on',
       'search' => 'on',
+      'attribute' => NULL,
     ),
     'login_time' => 
     array (
@@ -143,6 +169,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'remark' => 
     array (
@@ -157,6 +184,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'created_at' => 
     array (
@@ -169,6 +197,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'updated_at' => 
     array (
@@ -181,6 +210,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'deleted_at' => 
     array (
@@ -193,6 +223,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
   ),
   'head_menu' => 
@@ -260,7 +291,7 @@
   ),
   'route' => 
   array (
-    'route_path' => '/system/user/',
+    'route_path' => 'system/user/',
     'route_name' => 'index',
     'controller' => 'App\\Http\\Controllers\\System\\UserController',
     'method' => 'index',

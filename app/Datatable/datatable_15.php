@@ -1,12 +1,14 @@
 <?php return array (
   'id' => 15,
   'title' => 'Datatable完整演示',
-	'id_prefix' => 'demo_',
+  'id_prefix' => 'demo_',
   'pid' => 31,
   'model' => '2',
-  'url' => '/lazykit/demo',
+  'function_type' => '1',
+  'url' => 'lazykit/demo/index',
   'method' => 'DemoController@index',
-  'module_id' => '1',
+  'inheritance' => NULL,
+  'inheritance_note' => NULL,
   'main_table' => 'blk_demo',
   'associated_type' => NULL,
   'associated_table' => NULL,
@@ -23,6 +25,21 @@
       'field' => 'id',
       'field_from' => 'main_table',
       'width' => NULL,
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'url_type' => 'window',
+        'url' => '',
+        'cell_style_template' => '',
+        'verify' => '',
+      ),
     ),
     'the_title' => 
     array (
@@ -38,6 +55,25 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'data_source_type' => 'method',
+        'data_source' => NULL,
+        'validate' => 'bail,required',
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'sort' => 'on',
+        'window_title' => 'on',
+        'isurl' => 'on',
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'text' => 
     array (
@@ -53,6 +89,20 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'input',
+        'validation_rules' => '',
+        'can_sorted' => 'on',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'textarea' => 
     array (
@@ -67,6 +117,19 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'textarea',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'select' => 
     array (
@@ -82,6 +145,21 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'select',
+        'data_source_type' => 'method',
+        'data_source' => 'App\\Http\\Controllers\\Lazykit\\DemoController->attribute_select',
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'tree_select' => 
     array (
@@ -97,6 +175,21 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'tree_select',
+        'data_source_type' => 'method',
+        'data_source' => 'App\\Http\\Controllers\\Lazykit\\DemoController->attribute_tree_select',
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'multiple_select' => 
     array (
@@ -112,6 +205,64 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'multiple_select',
+        'data_source_type' => 'json',
+        'data_source' => '[{
+	"name": "陕西",
+	"value": "1",
+	"children": [{
+		"name": "西安",
+		"value": "2",
+		"children": [{
+			"name": "灞桥区",
+			"value": "3"
+		}, {
+			"name": "长安区",
+			"value": "4"
+		}, {
+			"name": "未央区",
+			"value": "5"
+		}]
+	}, {
+		"name": "汉中",
+		"value": "6"
+	}, {
+		"name": "咸阳",
+		"value": "7"
+	}]
+}, {
+	"name": "甘肃",
+	"value": "8",
+	"children": [{
+		"name": "武威",
+		"value": "9",
+		"children": [{
+			"name": "古浪县",
+			"value": "10"
+		}, {
+			"name": "民勤县",
+			"value": "11"
+		}]
+	}, {
+		"name": "天水",
+		"value": "12"
+	}, {
+		"name": "庆阳",
+		"value": "13"
+	}]
+}]',
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'cascade_select' => 
     array (
@@ -127,6 +278,21 @@
       'update' => 'on',
       'read' => 'on',
       'search' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'cascade_select',
+        'data_source_type' => 'method',
+        'data_source' => 'App\\Http\\Controllers\\Lazykit\\DemoController->attribute_tree_select',
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'editormd' => 
     array (
@@ -141,6 +307,20 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'editormd',
+        'dom_width' => '',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'layui_editer' => 
     array (
@@ -155,6 +335,20 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'layui_editer',
+        'dom_width' => '',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'layui_editer_simple' => 
     array (
@@ -169,6 +363,20 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'layui_editer_simple',
+        'dom_width' => '',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'single_photo_upload' => 
     array (
@@ -183,6 +391,22 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'single_photo_upload',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_template' => '{{#  if(d.single_photo_upload){ }}
+{{#  layui.each(JSON.parse(d.single_photo_upload), function(index, item){ }}
+  <img height="25" src="{{ item.src }}" />
+{{#  }); }}
+{{#  } }}',
+      ),
     ),
     'photos_upload' => 
     array (
@@ -197,6 +421,22 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'photos_upload',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_template' => '{{#  if(d.photos_upload){ }}
+{{#  layui.each(JSON.parse(d.photos_upload), function(index, item){ }}
+<img height="25" src="{{ item.src }}" />
+{{#  }); }}
+{{#  } }}',
+      ),
     ),
     'single_file_upload' => 
     array (
@@ -211,6 +451,27 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'single_file_upload',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_template' => '{{#  if(d.single_file_upload){ }}
+<ul>
+{{#  layui.each(JSON.parse(d.single_file_upload), function(index, item){ }}
+  <li>
+     <i class="layui-icon layui-icon-file-b"></i>   
+     <a href="{{ item.src }}" >{{ item.name}}</a>
+  </li>
+{{#  }); }}
+</ul>
+{{#  } }}',
+      ),
     ),
     'files_upload' => 
     array (
@@ -225,6 +486,27 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'files_upload',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_template' => '{{#  if(d.files_upload){ }}
+<ul>
+{{#  layui.each(JSON.parse(d.files_upload), function(index, item){ }}
+  <li>
+    <i class="layui-icon layui-icon-file-b"></i>
+    <a href="{{ item.src }}" >{{ item.name}}</a>
+  </li>
+{{#  }); }}
+</ul>
+{{#  } }}',
+      ),
     ),
     'year' => 
     array (
@@ -239,6 +521,20 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'year',
+        'dom_width' => '',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'year_mouth' => 
     array (
@@ -253,6 +549,20 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'year_mouth',
+        'dom_width' => '',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'date' => 
     array (
@@ -267,6 +577,19 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'date',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'time' => 
     array (
@@ -281,6 +604,20 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'time',
+        'dom_width' => '',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'datetime' => 
     array (
@@ -295,6 +632,19 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'datetime',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'date_scope' => 
     array (
@@ -309,6 +659,20 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'date_scope',
+        'dom_width' => '',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'year_scope' => 
     array (
@@ -323,6 +687,20 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'year_scope',
+        'dom_width' => '',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'year_mouth_scope' => 
     array (
@@ -337,6 +715,20 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'year_mouth_scope',
+        'dom_width' => '',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'time_scope' => 
     array (
@@ -351,6 +743,20 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'time_scope',
+        'dom_width' => '',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'datetime_scope' => 
     array (
@@ -365,6 +771,20 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'datetime_scope',
+        'dom_width' => '',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'color_choices' => 
     array (
@@ -379,6 +799,19 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'data_input_form' => 'color_choices',
+        'validation_rules' => '',
+        'dic_type' => 'no_dic',
+        'dic_static' => '',
+        'dic_table' => '',
+        'dic_key' => '',
+        'dic_value' => '',
+        'function' => '',
+        'cell_style_id' => '',
+        'cell_style_template' => '',
+      ),
     ),
     'created_at' => 
     array (
@@ -391,6 +824,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'updated_at' => 
     array (
@@ -403,6 +837,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'deleted_at' => 
     array (
@@ -415,6 +850,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
   ),
   'head_menu' => 
@@ -482,7 +918,7 @@
   ),
   'route' => 
   array (
-    'route_path' => '/lazykit/demo/',
+    'route_path' => 'lazykit/demo/',
     'route_name' => 'index',
     'controller' => 'App\\Http\\Controllers\\Lazykit\\DemoController',
     'method' => 'index',

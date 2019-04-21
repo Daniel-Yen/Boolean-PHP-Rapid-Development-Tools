@@ -1,7 +1,7 @@
 <?php return array (
   'id' => 46,
   'title' => '开发设计',
-  'id_prefix' => 'system_',
+  'id_prefix' => 'design_',
   'pid' => 29,
   'model' => '5',
   'function_type' => '1',
@@ -9,7 +9,6 @@
   'method' => 'FunctionPageController@index',
   'inheritance' => '45',
   'inheritance_note' => '继承系统管理的列表显示，增加功能按钮',
-  'system_id' => '1',
   'main_table' => NULL,
   'associated_type' => NULL,
   'associated_table' => NULL,
@@ -19,9 +18,9 @@
   ),
   'head_menu' => 
   array (
-    'search' => 
+    'search2' => 
     array (
-      'text' => '搜索',
+      'text' => '搜索2',
       'icon' => 'layui-icon-search',
       'must' => 'on',
       'width' => '800px',
@@ -77,7 +76,6 @@
     array (
       'text' => '更新授权',
       'style' => 'layui-btn-warm',
-      'icon' => NULL,
       'open_tepe' => 'ajax',
       'must' => 'on',
       'width' => NULL,

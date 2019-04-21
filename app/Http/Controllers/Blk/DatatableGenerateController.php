@@ -389,20 +389,21 @@ class DatatableGenerateController extends Controller
 			
 			//10、自定义修改页面
 			$datatable_config['update_page'] = isset($additional_config['update_page'])?$additional_config['update_page']:'blk.datatable.create';
+			//dd($datatable_config);
 			
 			//获取字段属性设置
 			foreach($datatable_config['datatable_set'] as $k=>$v){
 				//取设置的字段属性,用于表单生成
-				$BlkAttributeRepository = new BlkAttributeRepository();
-				$conditions = [
-					['datatable_id', '=', $datatable_config['id']],
-					['field', '=', $v['field']],
-				];
-				$attribute_arr = $BlkAttributeRepository->where($conditions)->first();
+// 				$conditions = [
+// 					['design_id', '=', $datatable_config['id']],
+// 					['field', '=', $v['field']],
+// 				];
+// 				$attribute_arr = BlkAttributeRepository::where($conditions)->first();
 				
-				if($attribute_arr){
-					$attribute_arr = $attribute_arr->toArray();
-					$attribute = json_decode($attribute_arr['attribute'], true);
+				if(isset($v['attribute'])){
+					$attribute = $v['attribute'];
+					//$attribute_arr = $attribute_arr->toArray();
+					//$attribute = json_decode($attribute_arr['attribute'], true);
 					//根据属性配置获取下拉选择的数据源
 					if(isset($attribute['data_input_form'])?in_array($attribute['data_input_form'], ['select', 'tree_select', 'multiple_select', 'cascade_select']):false){
 						if(isset($attribute['data_source_type']) && isset($attribute['data_source'])?$attribute['data_source']:false){
@@ -420,6 +421,7 @@ class DatatableGenerateController extends Controller
 						}else{
 							$attribute['dic_data'] = ['code' => 1, 'msg' => '请设置字段属性'];
 						}
+						//dd($attribute);
 					}
 				}else{
 					//如果字段没有设置属性,则默认该字段输入方式为input单行文本
@@ -429,6 +431,7 @@ class DatatableGenerateController extends Controller
 				}
 				
 				$datatable_config['datatable_set'][$k] = array_merge($v,$attribute);
+				//dd($datatable_config);
 			}
 			
 			//获得数据模型

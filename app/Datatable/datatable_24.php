@@ -9,7 +9,6 @@
   'method' => 'DemoController@treetable',
   'inheritance' => NULL,
   'inheritance_note' => NULL,
-  'system_id' => '1',
   'main_table' => 'blk_demo_tree',
   'associated_type' => NULL,
   'associated_table' => NULL,
@@ -26,6 +25,7 @@
       'field' => 'id',
       'field_from' => 'main_table',
       'width' => NULL,
+      'attribute' => NULL,
     ),
     'title' => 
     array (
@@ -40,6 +40,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'pid' => 
     array (
@@ -54,6 +55,21 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'tree_select',
+        'data_source_type' => 'method',
+        'data_source' => 'App\\Http\\Controllers\\Lazykit\\DemoController->attribute_pid',
+        'dic_static' => NULL,
+        'dic_table' => NULL,
+        'dic_key' => NULL,
+        'dic_value' => NULL,
+        'function' => NULL,
+        'url_type' => 'window',
+        'url' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'enable' => 
     array (
@@ -68,6 +84,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'created_at' => 
     array (
@@ -80,6 +97,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'updated_at' => 
     array (
@@ -92,6 +110,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
     'deleted_at' => 
     array (
@@ -104,6 +123,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'attribute' => NULL,
     ),
   ),
   'head_menu' => 
