@@ -1,13 +1,13 @@
-<?php
+<?php		
 /*
 |--------------------------------------------------------------------------
 | Datatable Routes
 |--------------------------------------------------------------------------
 | 此路由文件由布尔懒人工具包自动生成，包含DataTable生成器相关路由
-| 生成日期：2019-04-21 21:19:11
+| 生成日期：2019-04-22 12:21:32
 | 注    意：请不要在此文件手写路由
 */
-
+		
 Route::group(['middleware' => ['auth', 'permission']], function(){
 	Route::any('/lazykit/function_page/design',   'Lazykit\FunctionPageController@design');    //页面设计
 	Route::any('/lazykit/demo/index',             'Lazykit\DemoController@index');             //Datatable完整演示

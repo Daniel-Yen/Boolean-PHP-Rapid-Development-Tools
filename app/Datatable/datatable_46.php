@@ -1,7 +1,7 @@
 <?php return array (
   'id' => 46,
   'title' => '开发设计',
-  'id_prefix' => 'design_',
+  'id_prefix' => 'system_',
   'pid' => 29,
   'model' => '5',
   'function_type' => '1',

@@ -65,20 +65,23 @@ class FunctionPageController extends Controller
 			],
 		];
 		
-		//新增的时候根据控制器及方法名生成路由
+		//新增的时候如果method（处理方法）字段不为空，则根据控制器及方法名生成路由
 		if($request->isMethod('post') && ( $request->do == 'create' || $request->do == 'update' ) ){
-			$route_message = $this->getRouteMessage($request->post(), []);
-			//dd($route_message);
-			
-			//附加的新增数据
-			$additional_config['create_param'] = [
-				'url' => $route_message['route_path'].$route_message['route_name'],
-			];
-			
-			//附加的修改数据
-			$additional_config['create_param'] = [
-				'url' => $route_message['route_path'].$route_message['route_name'],
-			];
+			if($request->method){
+				$route_message = $this->getRouteMessage($request->post(), []);
+				//dd($route_message);
+				
+				//附加的新增数据
+				$additional_config['create_param'] = [
+					'url' => $route_message['route_path'].$route_message['route_name'],
+				];
+				
+				//附加的修改数据
+				$additional_config['update_param'] = [
+					'url' => $route_message['route_path'].$route_message['route_name'],
+				];
+			}
+			$additional_config['create_param']['system_id'] = $request->system_id;
 		}
 		
 		create_datatable('datatable_1', $additional_config, $request);
@@ -280,9 +283,9 @@ class FunctionPageController extends Controller
 			}
 			
 			//创建按钮的控制器方法
-			if(isset($datatable_arr['line_button'])){
-				$this->createMethod($datatable_arr['line_button']);
-			}
+// 			if(isset($datatable_arr['line_button'])){
+// 				$this->createMethod($datatable_arr['line_button']);
+// 			}
 			//dd($method_arr);
 			
 			//将页面设计对应的datatable 配置文件保存到数据库
@@ -299,11 +302,11 @@ class FunctionPageController extends Controller
 			
 			//生成主表对应的模型类及验证器类
 			if($datatable_arr['main_table']){
-				$this->createRepositoryRequest($datatable_arr['main_table'], $path);
+				$this->createRepository($datatable_arr['main_table'], $path);
 			}
 			//生成关联表对应的模型类及验证器类
 // 			if($datatable_arr['associated_table']){
-// 				$this->createRepositoryRequest($datatable_arr['associated_table']);
+// 				$this->createRequest($datatable_arr['associated_table']);
 // 			}
 			
 			return success("操作成功");
@@ -360,12 +363,14 @@ class FunctionPageController extends Controller
 				'button_style_type_arr' => $this->buttonStyleTypeDic(),								//字典：行按钮样式
 				'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),								//字典：按钮打开方式
 				'head_menu_arr' 		=> $this->headMenu($datatable_config, $datatable_arr),		//datatable 头部工具菜单
-				'datatable_arr' 		=> $datatable_arr,											//datatable记录
-				'datatable_config' 		=> $datatable_config,	
-				'design_id' 			=> $request->design_id,			//页面设计ID
-				'system_id' 			=> $request->system_id,			//系统ID
+				'datatable_arr' 		=> $datatable_arr,											//datatable 记录
+				'datatable_config' 		=> $datatable_config,										//datatable 配置
+				'design_id' 			=> $request->design_id,										//页面设计ID
+				'system_id' 			=> $request->system_id,										//系统ID
 				'route_message' 		=> $route_message, 											//获得路由信息
-			]);		
+			]);	
+			
+			return view('lazykit.datatable.set');
 		}
 	}
 	
@@ -447,8 +452,11 @@ class FunctionPageController extends Controller
 				$main_table = $prefix . $main_table;
 				// 查询结果 
 				$sql = 'SHOW FULL COLUMNS FROM `'.$main_table.'`';
+				$this->reconnectDB($system);
 				$result = DB::select($sql);
+				$this->reconnectBlkDB();
 				//dd($result);
+				
 				if(count($result)){
 					//将数据表格配置信息与表字段数据合并，数据表格配置如果没有字段部分的数据,则这里不需要执行
 					$result = $this->mergeAttribute($datatable_config, $result, 'main_table');
@@ -461,8 +469,11 @@ class FunctionPageController extends Controller
 						
 						// 查询结果
 						$sql_2 = 'SHOW FULL COLUMNS FROM `'.$associated_table.'`';
+						$this->reconnectDB($system);
 						$result_2 = DB::select($sql_2);
+						$this->reconnectBlkDB();
 						//dd($result_2);
+						
 						if(count($result_2)){
 							$result_2 = $this->mergeAttribute($datatable_config, $result_2, 'associated_table');
 							//dump($result_2);
@@ -572,6 +583,10 @@ class FunctionPageController extends Controller
 		$this->reconnectDB($system);
 		
 		$result = DB::select('show tables');
+		
+		//将数据库重连回boolean lazykit
+		$this->reconnectBlkDB();
+		
 		$tables_arr = [];
 		//dd($result);
 		foreach($result as $k=>$v){
@@ -702,9 +717,11 @@ class FunctionPageController extends Controller
 	 * @access 		public
 	 * @return  	array
 	 */
-	public function attribute_pid()
+	public function attributePid()
 	{
-		$data = BlkFunctionPageRepository::select('id as value', 'title as name', 'pid')->get();
+		$data = BlkFunctionPageRepository::select('id as value', 'title as name', 'pid')
+					->where('system_id', request()->system_id)
+					->get();
 		if($data->count()){
 			$data = $data->toArray();
 			//转换为树结构
@@ -726,7 +743,9 @@ class FunctionPageController extends Controller
 	 */
 	public function attributeModule()
 	{
-		$data = BlkModuleRepository::select('id as value', 'module_name as name')->get();
+		$data = BlkModuleRepository::select('id as value', 'module_name as name')
+					->where('system_id', request()->system_id)
+					->get();
 		if($data->count()){
 			$data = $data->toArray();
 		}else{
@@ -827,7 +846,7 @@ class FunctionPageController extends Controller
 	 * @access 		private
 	 * @return 		array                       
 	 */
-	public function attribute_model(){
+	public function attributeModel(){
 		$data = [
 			['value' => 0, 	'name' => '无'],
 			['value' => 1, 	'name' => '自定义代码'],

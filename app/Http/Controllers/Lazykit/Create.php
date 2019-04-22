@@ -17,7 +17,7 @@ use App\Repositories\BlkMenuRepository;
 trait Create
 {
     /**
-     * 根据表名称生成模型与验证器
+     * 根据表名称生成表模型
      * 当配置存在数据表的时候根据数据表生成数据表对应的空模型类及空的验证器类,如果已存在同名文件则不重复生成
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
@@ -25,27 +25,19 @@ trait Create
      * @param 		string 		$tablename 				表名称
      * @return 		
      */
-    private function createRepositoryRequest($tablename, $file_path)
+    private function createRepository($tablename, $path)
     {
     	//根据数据库表名称获得要生成的模型的类名称跟文件名
     	$hump_name = Str::studly($tablename);
-    	//dd($hump_name);
-    	//保存datatable配置的时候判断是否有数据库表,如果有表,生成数据表模型跟验证器
-    	$path = [$file_path['repository'], $file_path['request']];
-    	//foreach(['Repository','Request'] as $k=>$v){
-    	foreach(['Repository'] as $k=>$v){
-    		//读取空模型的模板
-    		$file_path = $path[$k];
-    		create_dir($file_path);
-    		$file_name = $file_path.$hump_name.$v.'.php';
-    		if(!file_exists($file_name)){
-    			$file = file_get_contents($file_path.'New'.$v.'.php');
-    			
-    			//替换空模型模板中的类名称
-    			$file = str_replace('New',$hump_name,$file);
-    			$file = str_replace('table_name',$tablename,$file);
-    			file_put_contents($file_name,$file);
-    		}
+    	//读取空模型的模板
+    	create_dir($path['repository']);
+    	$file_name = $path['repository'].$hump_name.'Repository'.'.php';
+    	if(!file_exists($file_name)){
+    		//替换空模型模板中的数据
+    		$file = $path['repository_tpl'];
+			$file = str_replace('{New}',$hump_name,$file);
+    		$file = str_replace('{table_name}',$tablename,$file);
+    		file_put_contents($file_name,$file);
     	}
     }
     
@@ -67,34 +59,7 @@ trait Create
     		create_dir($controller_path);
     		
  			$file_path = $controller_path.$route_message['controller'].'.php';
-			$file = '<?php
-/**
- * 数据表格：{menu_title} 
- * 该控制器类由 Boolean Lazy Kit 页面设计器自动生成
- *
- * @auther 	Blk
- */
-
-namespace App\Http\Controllers\{module};
-
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
-class {NewController} extends Controller
-{
-    /**
-     * {menu_title}
-     *
-     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
-     * @access 		public
-     * @param  		\Illuminate\Http\Request $request
-     * @return  	mixed
-     */
-    public function {method}(Request $request)
-    {
-    	create_datatable(\'datatable_{id}\', [], $request);
-    }
-}';
+			$file = $path['controller_tpl'];
     		//$file = file_get_contents(app_path('Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.'NewController.php'));
     		$file = str_replace('{menu_title}', $route_message['menu_title'], $file);
     		$file = str_replace('{module}', $route_message['module'], $file);
@@ -126,67 +91,109 @@ class {NewController} extends Controller
 	}
 	
 	/**
+	 * 动态改变数据库配置重连回布尔懒人工具包的数据库
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access    	public
+	 * @param 		App\Repositories\BlkSystemRepository 	$system 	//要重连的系统
+	 * @return 		void
+	 */
+	public function reconnectBlkDB()
+	{
+		config(['database.connections.mysql.host' 		=> env('DB_HOST')]);
+		config(['database.connections.mysql.port' 		=> env('DB_PORT')]);
+		config(['database.connections.mysql.database' 	=> env('DB_DATABASE')]);
+		config(['database.connections.mysql.username' 	=> env('DB_USERNAME')]);
+		config(['database.connections.mysql.password' 	=> env('DB_PASSWORD')]);
+		config(['database.connections.mysql.prefix' 	=> env('DB_PREFIX')]);
+		
+		DB::reconnect();
+	}
+	
+	/**
      * 生成用户组授权数据
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		public
-     * @return  	mixed
+     * @return  	void
      */
     public function createPermissions()
     {
-    	$data = BlkFunctionPageRepository::where('system_id', request()->system_id)
-    				//->where('function_type', 1) 			//function_type = 1 取的所有"系统菜单"的页面记录
-    				->get();
-    	if($data->count()){
-    		$data = $data->toArray();
+    	$callback = $this->createPermissionsDo();
+		
+		echo json_encode($callback);
+    }
+	
+	protected function createPermissionsDo()
+	{
+		$data = BlkFunctionPageRepository::where('system_id', request()->system_id)
+					//->where('function_type', 1) 			//function_type = 1 取的所有"系统菜单"的页面记录
+					->get();
+		if($data->count()){
+			$data = $data->toArray();
 			
-    		//要生成菜单的系统
-    		$system = BlkSystemRepository::where('id', request()->system_id)->first();
-    		
-    		//根据系统数据中的数据库信息动态改变数据库配置重连数据库
-    		$this->reconnectDB($system);
+			//要生成菜单的系统
+			$system = BlkSystemRepository::where('id', request()->system_id)->first();
+			
+			//根据系统数据中的数据库信息动态改变数据库配置重连数据库
+			$this->reconnectDB($system);
 			
 			//清除菜单表中已有的数据
 			DB::table('blk_permissions')->truncate();
 			
-    		//将"BlkFunctionPageRepository"中查询到的数据转换为blk_menu表的数据并插入
-    		$permissions = [];
-    		foreach($data as $k=>$v){
-    			$permissions[$k] = [
-    				'id' 	=> $v['id'],
-    				'title' => $v['title'],
-    				'pid' 	=> $v['pid'],
-    				'url' 	=> $v['url']?$v['url']:NULL,
-    				'model' => $v['model'],
-    			];
-    		}
-    		
+			//将"BlkFunctionPageRepository"中查询到的数据转换为blk_menu表的数据并插入
+			$permissions = [];
+			foreach($data as $k=>$v){
+				$permissions[$k] = [
+					'id' 	=> $v['id'],
+					'title' => $v['title'],
+					'pid' 	=> $v['pid'],
+					'url' 	=> $v['url']?$v['url']:NULL,
+					'model' => $v['model'],
+				];
+			}
+			
 			$result = DB::table('blk_permissions')->insert($permissions);
-    		if($result){
-    			echo json_encode(['code' => 0, 'msg' => "可授权页面生成成功", 'refresh' => 'no']);
-    		}else{
-    			echo json_encode(['code' => 1, 'msg' => "可授权页面生成失败", 'refresh' => 'no']);
-    		}
-    	}else{
-			echo json_encode(['code' => 1, 'msg' => "没有可生成的授权页面", 'refresh' => 'no']);
+			
+			//将数据库重连回boolean lazykit
+			$this->reconnectBlkDB();
+			
+			if($result){
+				$callback = ['code' => 0, 'msg' => "可授权页面生成成功", 'refresh' => 'no'];
+			}else{
+				$callback = ['code' => 1, 'msg' => "可授权页面生成失败", 'refresh' => 'no'];
+			}
+		}else{
+			$callback = ['code' => 1, 'msg' => "没有可生成的授权页面", 'refresh' => 'no'];
 		}
-    }
+		
+		return $callback;
+	}
 	
 	/**
      * 生成系统菜单
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		public
-     * @return  	mixed
+     * @return  	void
      */
     public function createMenu()
     {
-    	$data = BlkFunctionPageRepository::where('system_id', request()->system_id)
-    				->where('function_type', 1) 			//function_type = 1 取的所有"系统菜单"的页面记录
-    				->get();
-    	if($data->count()){
-    		$data = $data->toArray();
-    		
+    	$callback = $this->createMenuDo();
+    	
+    	echo json_encode($callback);
+    }
+	
+	protected function createMenuDo()
+	{
+		$data = BlkFunctionPageRepository::where('system_id', request()->system_id)
+					->where('function_type', 1) 			//function_type = 1 取的所有"系统菜单"的页面记录
+					->get();
+		
+		$result = false;
+		if($data->count()){
+			$data = $data->toArray();
+			
 			//要生成菜单的系统
 			$system = BlkSystemRepository::where('id', request()->system_id)->first();
 			
@@ -199,24 +206,30 @@ class {NewController} extends Controller
 			//dd(DB::getQueryLog());
 			
 			//将"BlkFunctionPageRepository"中查询到的数据转换为blk_menu表的数据并插入
-    		$menu = [];
-    		foreach($data as $k=>$v){
-    			$menu[$k] = [
-    				'id' 	=> $v['id'],
-    				'title' => $v['title'],
-    				'pid' 	=> $v['pid'],
-    				'url' 	=> $v['url']?$v['url']:NULL,
-    			];
-    		}
-    		
-    		$result = DB::table('blk_menu')->insert($menu);
-    		if($result){
-    			echo json_encode(['code' => 0, 'msg' => "菜单生成成功", 'refresh' => 'no']);
-    		}else{
-    			echo json_encode(['code' => 1, 'msg' => "菜单生成失败", 'refresh' => 'no']);
-    		}
-    	}
-    }
+			$menu = [];
+			foreach($data as $k=>$v){
+				$menu[$k] = [
+					'id' 	=> $v['id'],
+					'title' => $v['title'],
+					'pid' 	=> $v['pid'],
+					'url' 	=> $v['url']?$v['url']:NULL,
+				];
+			}
+			
+			$result = DB::table('blk_menu')->insert($menu);
+			
+			//将数据库重连回boolean lazykit
+			$this->reconnectBlkDB();
+		}
+		
+		if($result){
+			$callback = ['code' => 0, 'msg' => "菜单生成成功", 'refresh' => 'no'];
+		}else{
+			$callback = ['code' => 1, 'msg' => "菜单生成失败", 'refresh' => 'no'];
+		}
+		
+		return $callback;
+	}
 	
 	/**
 	 * 生成路由
@@ -226,6 +239,13 @@ class {NewController} extends Controller
 	 * @return  	json
 	 */
 	public function createRoute()
+	{
+		$callback = $this->createRouteDo();
+		
+		echo json_encode($callback);
+	}
+	
+	protected function createRouteDo()
 	{
 		//获得系统信息
 		$system = BlkSystemRepository::where('id', request()->system_id)->first();
@@ -239,7 +259,7 @@ class {NewController} extends Controller
 					->where('method', '!=', '')
 					->get();
 		//dd($data);
-		$route = "<?php
+		$route = "<?php		
 /*
 |--------------------------------------------------------------------------
 | Datatable Routes
@@ -248,9 +268,9 @@ class {NewController} extends Controller
 | 生成日期：".date('Y-m-d H:i:s', time())."
 | 注    意：请不要在此文件手写路由
 */
-
-Route::group(['middleware' => ['auth', 'permission']], function(){".PHP_EOL;
 		
+Route::group(['middleware' => ['auth', 'permission']], function(){".PHP_EOL;
+				
 		if($data->count()){
 			$data = $data->toArray();
 			//dd($data);
@@ -285,8 +305,8 @@ Route::group(['middleware' => ['auth', 'permission']], function(){".PHP_EOL;
 						$route .= $route_record."  //".$v['title'].PHP_EOL;
 					}
 				}else{
-					$result = BlkMenuRepository::where('id',$v['id'])->delete();
-					//$result = ['code' => 1, 'msg' => "路由生成失败，菜单“".$v['title']."”没有对应的模块"];
+					//删除没有对应模块跟系统的菜单
+					//BlkMenuRepository::where('id',$v['id'])->delete();
 				}
 			}
 			//dd($route);
@@ -297,11 +317,28 @@ Route::group(['middleware' => ['auth', 'permission']], function(){".PHP_EOL;
 			//dd($route_path);
 			file_put_contents($route_path, $route);
 			
-			$result = ['code' => 0, 'msg' => "路由文件更新成功", 'refresh' => 'no'];
+			$callback = ['code' => 0, 'msg' => "路由文件更新成功", 'refresh' => 'no'];
 		}else{
-			$result = ['code' => 1, 'msg' => "没有要生成的路由", 'refresh' => 'no'];
+			$callback = ['code' => 1, 'msg' => "没有要生成的路由", 'refresh' => 'no'];
 		}
 		
-		return json_encode($result);
+		return $callback;
+	}
+	
+	/**
+	 * 生成路由、菜单、权限
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @return  	void
+	 */
+	public function createRouteMenuPermissions()
+	{
+		$callback = $this->createRouteDo();
+		$callback = $this->createMenuDo();
+		$callback = $this->createPermissionsDo();
+		
+		//将数据库重连回boolean lazykit
+		$this->reconnectBlkDB();
 	}
 }

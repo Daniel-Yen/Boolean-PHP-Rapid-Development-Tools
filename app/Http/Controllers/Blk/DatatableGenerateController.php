@@ -91,11 +91,14 @@ class DatatableGenerateController extends Controller
 				$param = $this->getAllowField($dom, $request->post());
 				//dump($param); die();
 				//6、附加的修改数据
-				if(isset($additional_config['create_param'])){
-					foreach($additional_config['create_param'] as $k=>$v){
-						$param[$k] = $v;
+				if(isset($additional_config['update_param'])){
+					if($additional_config['update_param']){
+						foreach($additional_config['update_param'] as $k=>$v){
+							$param[$k] = $v;
+						}
 					}
 				}
+				
 				//dd($param);
 				$datatable_config['modelClass']::where('id', $request->id)->update($param);
 				//dd(DB::getQueryLog());

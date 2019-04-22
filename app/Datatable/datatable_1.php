@@ -88,21 +88,6 @@
       'read' => 'on',
       'attribute' => NULL,
     ),
-    'id_prefix' => 
-    array (
-      'field_type' => 'varchar',
-      'field_length' => '40',
-      'sorting' => '2',
-      'fixed' => NULL,
-      'title' => 'ID前缀',
-      'field' => 'id_prefix',
-      'field_from' => 'main_table',
-      'width' => NULL,
-      'create' => 'on',
-      'update' => 'on',
-      'read' => 'on',
-      'attribute' => NULL,
-    ),
     'title' => 
     array (
       'field_type' => 'varchar',
@@ -135,6 +120,21 @@
         'cell_style_template' => NULL,
       ),
     ),
+    'id_prefix' => 
+    array (
+      'field_type' => 'varchar',
+      'field_length' => '40',
+      'sorting' => '2',
+      'fixed' => NULL,
+      'title' => 'ID前缀',
+      'field' => 'id_prefix',
+      'field_from' => 'main_table',
+      'width' => NULL,
+      'create' => 'on',
+      'update' => 'on',
+      'read' => 'on',
+      'attribute' => NULL,
+    ),
     'pid' => 
     array (
       'field_type' => 'int',
@@ -152,7 +152,7 @@
         'align' => 'left',
         'data_input_form' => 'tree_select',
         'data_source_type' => 'method',
-        'data_source' => 'attribute_pid',
+        'data_source' => 'attributePid',
         'validate' => 'required',
         'dic_static' => NULL,
         'dic_table' => NULL,
@@ -183,7 +183,7 @@
         'align' => 'left',
         'data_input_form' => 'select',
         'data_source_type' => 'method',
-        'data_source' => 'attribute_model',
+        'data_source' => 'attributeModel',
         'validate' => 'required',
         'dic_static' => NULL,
         'dic_table' => NULL,
