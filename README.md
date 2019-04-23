@@ -1,5 +1,4 @@
-Boolean-Laravel-Lazy-Kit
-------------
+<h1>Boolean-Laravel-Lazy-Kit</h1>
 
 BLK简介
 ------------
