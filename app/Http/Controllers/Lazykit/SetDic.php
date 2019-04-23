@@ -256,9 +256,9 @@ trait SetDic
     	//如果没有主表,则头部菜单只有搜索
     	if(empty($datatable_arr['main_table'])){
     		$menu = [
-    			'search2' => 
+    			'search' => 
     			[
-    			  'text' => '搜索2',
+    			  'text' => '搜索',
     			  'must' => 'on',
     			  'new_action' => '',
     			  'width' => '800px',
