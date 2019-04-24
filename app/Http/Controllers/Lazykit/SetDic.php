@@ -342,13 +342,13 @@ trait SetDic
      * @access 		private
      * @return 		array                       
      */
-    private function dicTypeDic(){
-    	return [
-    		'no_dic' 		=> '不关联数据字典',
-    		'static_dic' 	=> '关联静态数据字典',
-    		'table_dic' 	=> '关联数据库数据字典',
-    	];
-    }
+//     private function dicTypeDic(){
+//     	return [
+//     		'no_dic' 		=> '不关联数据字典',
+//     		'static_dic' 	=> '关联静态数据字典',
+//     		'table_dic' 	=> '关联数据库数据字典',
+//     	];
+//     }
     
     /**
      * select/tree_select数据源类型
@@ -377,6 +377,23 @@ trait SetDic
     		'left' 		=> '居左',
     		'center' 	=> '居中',
     		'right' 	=> '居右',
+    	];
+    }
+    
+    /**
+     * 搜索条件字段
+     *
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+     * @access 		private
+     * @return 		array                       
+     */
+    private function searchConditionsDic(){
+    	return [
+    		'=' 	=> '等于',
+    		'>' 	=> '大于',
+    		'<' 	=> '小于',
+    		'like' 	=> 'LIKE',
+    		'Between' 	=> '区间',
     	];
     }
 }

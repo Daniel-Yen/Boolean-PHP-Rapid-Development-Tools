@@ -189,43 +189,65 @@ class DatatableGenerateController extends Controller
 					$conditions = array_merge($conditions, $additional_config['conditions']);
 				}
 				//dd($conditions);
-				//DB::connection()->enableQueryLog();
+				DB::connection()->enableQueryLog();
+				//获得要查询的字段
+				$read = $this->getDataFieldSet($datatable_config, 'read');
+				//dd($read);
+				$fields_arr = [];
+				foreach($read as $k=>$v){
+					$fields_arr[] = $k;
+				}
+				$fields = join(',', $fields_arr);
+				//dd($fields);
+				$data = $datatable_config['modelClass']::select($fields_arr);
+				$search = $request->post();
+				//绑定查询条件
+				foreach($search as $k=>$v){
+					if(!in_array($k,['do', 'rand', 'page', 'limit', 'lazykit_rules'])){
+						if($read[$k]['field_type'] == ''){
+							
+						}
+					}
+				}
+				//print_r($search);die();
+				//加入查询条件
 				if(isset($datatable_config['other_set']['is_tree'])){
 					if($request->ac == "recycle"){
-						$rows_arr = $datatable_config['modelClass']::where($conditions)->onlyTrashed()->get();
+						$data = $data->onlyTrashed()->get();
 					}else{
-						$rows_arr = $datatable_config['modelClass']::where($conditions)->get();
+						$data = $data->get();
 					}
-					if($rows_arr->first()){
-						$rows_arr = $rows_arr->toArray();
+					if($data->first()){
+						$data = $data->toArray();
 						//如果是回收站则不输出树结构
 						if($request->ac != "recycle"){
-							$tree = new TreeController($rows_arr);
-							$rows_arr = $tree->listToDatatableTree();
+							$tree = new TreeController($data);
+							$data = $tree->listToDatatableTree();
 						}
-						$rows_arr = $this->dicToChar($rows_arr, $datatable_config);
+						$data = $this->dicToChar($data, $datatable_config);
 					}else{
-						$rows_arr = [];
+						$data = [];
 					}
 					//dd(DB::getQueryLog());
 					
-					//dd($rows_arr);
-					return datatable_callback_json(0, '数据读取成功', count($rows_arr), $rows_arr);
+					//dd($data);
+					return datatable_callback_json(0, '数据读取成功', count($data), $data); 
 				}else{
 					if($request->ac == "recycle"){
-						$rows_arr = $datatable_config['modelClass']::where($conditions)->onlyTrashed()->paginate(30);
+						$data = $data->onlyTrashed()->paginate(30);
 					}else{
-						$rows_arr = $datatable_config['modelClass']::where($conditions)->paginate(30);
+						$data = $data;
+						$data = $data->paginate(30);
 					}
-					if($rows_arr->first()){
-						$rows_arr = $rows_arr->toArray();
-						$data_arr = $this->dicToChar($rows_arr['data'], $datatable_config);
+					if($data->first()){
+						$data = $data->toArray();
+						$data = $this->dicToChar($data['data'], $datatable_config);
 					}else{
-						$data_arr = [];
+						$data = [];
 					}
-					//dd($rows_arr);
-					//dd(DB::getQueryLog());
-					return datatable_callback_json(0, '数据读取成功', count($data_arr), $data_arr);
+					//dd($data);
+					dd(DB::getQueryLog());
+					return datatable_callback_json(0, '数据读取成功', count($data), $data);
 				}
 			}
 		}elseif( $request->do == "open" || $request->do == "recycle" ) {     //open参数是在Permission中间件中赋的值

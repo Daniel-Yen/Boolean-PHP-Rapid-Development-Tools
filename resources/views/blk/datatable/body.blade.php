@@ -7,6 +7,7 @@
 	.layui-table-view{margin: 0;}
 	.layui-table-tool{background-color: #FFFFFF;}
 </style>
+<link rel="stylesheet" href="{{file_path('/include/formSelects-v4.css')}}" media="all">
 @endpush
 
 @section('content')
@@ -60,12 +61,12 @@
 	</script>
 </div>
 
-<form class="layui-form layui-hide" id="where" lay-filter="where">
+<form class="layui-form layui-hide" id="where" style="width:95%" lay-filter="where">
 	<div id="left_directory"></div>
 	<div id="search">
 		<div class="layui-fluid">
 			<div class="layui-row layui-col-space15">
-				<div class="layui-col-md12">
+				<div class="layui-col-md11">
 				@if (isset($dom))
 				@include ('blk.datatable.form_input')
 				@endif
@@ -90,12 +91,15 @@
 layui.config({
     base: '{{file_path('/include/')}}',
 }).extend({
-    index: 'lib/index' //主入口模块
-}).use(['tree', 'index', 'layer', 'table'], function(){
+    index: 'lib/index',
+	formSelects: 'formSelects-v4'
+}).use(['tree', 'index', 'layer', 'table', 'laydate', 'formSelects'], function(){
     var admin = layui.admin
-		,table = layui.table
-		,$ = layui.jquery
-		,layer = layui.layer;
+		table = layui.table,
+		$ = layui.jquery,
+		layer = layui.layer,
+		laydate = layui.laydate,
+		formSelects = layui.formSelects;
 	
 	var rand = Math.floor(Math.random()*10000+1);
 	@if ($do == "recycle")
@@ -243,6 +247,7 @@ layui.config({
 					}
 				});
 				form.render(null, 'where');
+				formSelects.local.render(null, 'where');
 			@elseif (in_array($key, ['create']))
 				layer.open({
 					type: 2

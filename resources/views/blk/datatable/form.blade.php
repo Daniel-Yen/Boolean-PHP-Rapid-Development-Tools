@@ -63,21 +63,20 @@
 	layui.config({
 		base: '{{file_path('/include/')}}',
 	}).extend({
-		index: 'lib/index', //主入口模块
+		index: 'lib/index',
 		formSelects: 'formSelects-v4'
-	}).use(['jquery', 'form', 'layer', 'eleTree', 'layedit', 'laydate', 'element', 'slider', 'table','colorpicker', 'upload', 'formSelects'], function() {
+	}).use(['jquery', 'form', 'layer', 'layedit', 'laydate', 'element', 'slider', 'table','colorpicker', 'upload', 'formSelects'], function() {
 			var $ = layui.$,
 				form = layui.form,
 				layer = layui.layer,
-				eleTree = layui.eleTree, //树下拉选择
 				layedit = layui.layedit,
 				laydate = layui.laydate,
 				element = layui.element,
 				slider = layui.slider,
 				table = layui.table,
 				upload = layui.upload,
-				formSelects = layui.formSelects,
-				colorpicker = layui.colorpicker;
+				colorpicker = layui.colorpicker,
+				formSelects = layui.formSelects;
 				
 			@include ('blk.datatable.form_js')
 			

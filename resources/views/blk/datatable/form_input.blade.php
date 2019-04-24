@@ -21,7 +21,7 @@
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
 						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
-						<select name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" xm-select-skin="default" xm-select="{{$vo['field']}}" xm-select-radio>
+						<select name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" xm-select-skin="default" xm-select="{{$vo['field']}}" xm-select-radio xm-select-direction="down">
 							<option value="">请选择</option>
 						</select>
 						@else
@@ -35,7 +35,7 @@
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
 						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
-						<select name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" xm-select-skin="default" xm-select="{{$vo['field']}}" xm-select-radio>
+						<select name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" xm-select-skin="default" xm-select="{{$vo['field']}}" xm-select-radio xm-select-direction="down">
 							<option value="">请选择</option>
 						</select>
 						@else
@@ -49,7 +49,7 @@
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
 						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
-						<select name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" xm-select-skin="default" xm-select="{{$vo['field']}}">
+						<select name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" xm-select-skin="default" xm-select="{{$vo['field']}}" xm-select-direction="down">
 							<option value="">请选择</option>
 						</select>
 						@else
@@ -63,7 +63,7 @@
 					<label class="layui-form-label">{{$vo['title']}}</label>
 					<div class="layui-input-block">
 						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )
-						<select name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" xm-select-skin="default" xm-select="{{$vo['field']}}" xm-select-radio>
+						<select name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" xm-select-skin="default" xm-select="{{$vo['field']}}" xm-select-radio xm-select-direction="down">
 							<option value="">请选择</option>
 						</select>
 						@else

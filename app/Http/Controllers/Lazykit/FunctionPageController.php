@@ -362,6 +362,7 @@ class FunctionPageController extends Controller
 			return view('lazykit.datatable.set', [
 				'button_style_type_arr' => $this->buttonStyleTypeDic(),								//字典：行按钮样式
 				'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),								//字典：按钮打开方式
+				'search_conditions_dic_arr' => $this->searchConditionsDic(),								//字典：按钮打开方式
 				'head_menu_arr' 		=> $this->headMenu($datatable_config, $datatable_arr),		//datatable 头部工具菜单
 				'datatable_arr' 		=> $datatable_arr,											//datatable 记录
 				'datatable_config' 		=> $datatable_config,										//datatable 配置
@@ -700,7 +701,7 @@ class FunctionPageController extends Controller
 			'validate_dic_arr' 			=> $this->validateDic(),			//字典：验证规则
 			'data_input_form_dic_arr' 	=> $this->dataInputFormDic(),		//字典：数据输入方式选择
 			'url_type_dic_arr' 			=> $this->urlTypeDic(),				//字典：行内链接类型
-			'dic_type_dic_arr' 			=> $this->dicTypeDic(),				//字典：数据字典类型
+			//'dic_type_dic_arr' 			=> $this->dicTypeDic(),				//字典：数据字典类型
 			'verify_dic_arr' 			=> $this->verifyDic(),				//字典：数据字典类型
 			'align_dic_arr' 			=> $this->alignDic(),				//字典：单元格排列方式
 			'data_source_dic_arr' 		=> $this->dataSourceDic(),			//字典：单元格排列方式
