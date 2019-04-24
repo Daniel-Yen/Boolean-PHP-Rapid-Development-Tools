@@ -91,24 +91,10 @@
 						<textarea id="dic_static" name="dic_static" placeholder="请输入静态数据键值对的JSON格式数据" class="layui-textarea">{{isset($attribute_arr['dic_static'])?$attribute_arr['dic_static']:''}}</textarea>
 					</div>
 				</div>
-				<div class="layui-form-item layui-form-text" style="display: none;" id="table_dic_area">
-					<label class="layui-form-label"></label>
-					<div class="layui-inline">
-						<div class="layui-input-inline" style="width: 170px;">
-							<input type="text" id="dic_table" name="dic_table" value="{{isset($attribute_arr['dic_table'])?$attribute_arr['dic_table']:''}}" placeholder="请输入数据表" autocomplete="off" class="layui-input">
-						</div>
-						<div class="layui-input-inline" style="width: 130px;">
-							<input type="text" id="dic_key" name="dic_key" value="{{isset($attribute_arr['dic_key'])?$attribute_arr['dic_key']:''}}" placeholder="键" autocomplete="off" class="layui-input">
-						</div>
-						<div class="layui-input-inline" style="width: 130px;">
-							<input type="text" id="dic_value" name="dic_value" value="{{isset($attribute_arr['dic_value'])?$attribute_arr['dic_value']:''}}" placeholder="值" autocomplete="off" class="layui-input">
-						</div>
-					</div>
-				</div>
 				<div class="layui-form-item">
-					<label class="layui-form-label">后端函数</label>
+					<label class="layui-form-label">后端方法</label>
 					<div class="layui-input-block">
-						<input type="text" name="function" value="{{isset($attribute_arr['function'])?$attribute_arr['function']:''}}" placeholder="请输入新增修改时针对该字段的处理函数" autocomplete="off" class="layui-input">
+						<input type="text" name="method" value="{{isset($attribute_arr['method'])?$attribute_arr['method']:''}}" placeholder="请输入新增修改时针对该字段的操作方法" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				@endif
@@ -127,22 +113,22 @@
 					<div class="layui-form-mid layui-word-aux">选择是，该字段将出现在相关操作打开的弹窗标题中</div>
 				</div>
 				<div class="layui-form-item">
-					<label class="layui-form-label">行内超链接</label>
+					<label class="layui-form-label">单元格事件</label>
 					<div class="layui-input-inline" style="width: 40px;">
-						<input type="checkbox" name="isurl" lay-skin="switch" @if (isset($attribute_arr['isurl'])) @if ($attribute_arr['isurl'] == 'on') checked="checked" @endif  @endif lay-text="是|否"> 
+						<input type="checkbox" name="event" lay-skin="switch" @if (isset($attribute_arr['event'])) @if ($attribute_arr['event'] == 'on') checked="checked" @endif  @endif lay-text="是|否"> 
 					</div>
-					<label class="layui-form-label" style="width: 60px;">链接类型</label>
+					<label class="layui-form-label" style="width: 60px;">事件类型</label>
 					<div class="layui-input-inline">
-						<select name="url_type" lay-filter="url_type" lay-verify="required">
+						<select name="event_type" lay-filter="event_type" lay-verify="required">
 							<option value="window">默认（弹出窗口）</option>
-							@foreach ($url_type_dic_arr as $key=>$vo)
-							<option @if (isset($attribute_arr['url_type'])) @if ($attribute_arr['url_type'] == $k) selected="selected" @endif  @endif value="{{$key}}">{{$vo}}</option>
+							@foreach ($event_type_dic_arr as $key=>$vo)
+							<option @if (isset($attribute_arr['event_type'])) @if ($attribute_arr['event_type'] == $key) selected="selected" @endif  @endif value="{{$key}}">{{$vo}}</option>
 							@endforeach
 						</select>
 					</div>
-					<label class="layui-form-label" style="width: 30px;">链接</label>
-					<div class="layui-input-inline" style="width: 350px;">
-						<input type="text" name="url" value="{{isset($attribute_arr['url'])?$attribute_arr['url']:''}}" placeholder="请输入URL链接" autocomplete="off" class="layui-input">
+					<label class="layui-form-label" style="width: 30px;">行为</label>
+					<div class="layui-input-inline" style="width: 370px;">
+						<input type="text" name="event_behavior" value="{{isset($attribute_arr['event_behavior'])?$attribute_arr['event_behavior']:''}}" placeholder="请输入点击单元格触发的超链接、路由或者控制器方法" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-form-item layui-form-text">

@@ -341,45 +341,101 @@ layui.config({
 			@foreach ($datatable_config['line_button'] as $key=>$vo)
 			//{{$vo['text']}}
 			case '{{$key}}':
-      		@if ($vo['open_tepe'] == 'window')
-      			layer.open({
-      				type: 2
-      				,title: '{{$vo['text']}}'
-      				,area: ['{{$vo['width']}}', '{{$vo['height']}}']
-      				,shade: 0.3
-      				,maxmin: false
-      				,offset: 'auto'
+			@if ($vo['open_tepe'] == 'window')
+				layer.open({
+					type: 2
+					,title: '{{$vo['text']}}'
+					,area: ['{{$vo['width']}}', '{{$vo['height']}}']
+					,shade: 0.3
+					,maxmin: false
+					,offset: 'auto'
 					@if (isset($vo['route'])?$vo['route']:false)
-      				,content: "{{$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id']
+					,content: "{{$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id']
 					@else
 					,content: base_url+"do={{$key}}&from=line&{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
 					@endif
-      			});
-      		@elseif ($vo['open_tepe'] == 'ajax')
-      			layer.confirm("请确认当前操作?", {icon:3, title:'温馨提示'}, function() {
-      				$.ajax({
-      					@if (isset($vo['route'])?$vo['route']:false)
-      					url: "{{$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
-      					@else
+				});
+			@elseif ($vo['open_tepe'] == 'ajax')
+				layer.confirm("请确认当前操作?", {icon:3, title:'温馨提示'}, function() {
+					$.ajax({
+						@if (isset($vo['route'])?$vo['route']:false)
+						url: "{{$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
+						@else
 						url: base_url+"do={{$key}}&from=line&{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
-      					@endif
+						@endif
 						type: "post",
-      					dataType: 'json',
-      					success: function(res) {
-      						if (res.code == 0) {
+						dataType: 'json',
+						success: function(res) {
+							if (res.code == 0) {
 								//alert(res.refresh);
-      							layer.msg(res.msg);
+								layer.msg(res.msg);
 								if (res.refresh == 'yes'){
 									tools.reload();
 								}
-      						} else {
-      							layer.msg(res.msg);
-      						}
-      					}
-      				});
-      			});
-      		@endif
-      		break;
+							} else {
+								layer.msg(res.msg);
+							}
+						}
+					});
+				});
+			@endif
+			break;
+			@endforeach
+			@endif
+			
+			//添加单元格事件
+			@if (isset($datatable_config['datatable_set']))
+			@foreach ($datatable_config['datatable_set'] as $key=>$vo)
+			@if (isset($vo['event'])?$vo['event']:false)
+			case '{{$vo['field']}}Event':
+			@if ($vo['event_type'] == 'new_window')
+				@if (strstr($vo['event_behavior'], '://'))
+				window.open("{{$vo['event_behavior']}}");
+				@elseif (isset($vo['event_route'])?$vo['event_route']:false)
+				window.open("{{$vo['event_route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id']);
+				@else
+				window.open(base_url+"do={{$vo['field']}}Event&from=cell&{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id']);
+				@endif
+			@elseif ($vo['event_type'] == 'window')
+				layer.open({
+					type: 2
+					,title: '单元格：'+data['{{$vo['field']}}']
+					,area: ['100%', '100%']
+					,shade: 0.3
+					,maxmin: false
+					,offset: 'auto'
+					@if (isset($vo['event_route'])?$vo['event_route']:false)
+					,content: "{{$vo['event_route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id']
+					@else
+					,content: base_url+"do={{$vo['field']}}Event&from=cell&{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
+					@endif
+				});
+			@elseif ($vo['event_type'] == 'ajax')
+				layer.confirm("请确认当前操作?", {icon:3, title:'温馨提示'}, function() {
+					$.ajax({
+						@if (isset($vo['event_route'])?$vo['event_route']:false)
+						url: "{{$vo['event_route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
+						@else
+						url: base_url+"do={{$vo['field']}}Event&from=cell&{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
+						@endif
+						type: "post",
+						dataType: 'json',
+						success: function(res) {
+							if (res.code == 0) {
+								//alert(res.refresh);
+								layer.msg(res.msg);
+								if (res.refresh == 'yes'){
+									tools.reload();
+								}
+							} else {
+								layer.msg(res.msg);
+							}
+						}
+					});
+				});
+			@endif
+			break;
+			@endif
 			@endforeach
 			@endif
 		};
