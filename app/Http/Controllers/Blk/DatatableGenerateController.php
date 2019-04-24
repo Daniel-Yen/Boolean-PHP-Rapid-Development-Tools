@@ -189,23 +189,37 @@ class DatatableGenerateController extends Controller
 					$conditions = array_merge($conditions, $additional_config['conditions']);
 				}
 				//dd($conditions);
-				DB::connection()->enableQueryLog();
+				//DB::connection()->enableQueryLog();
+				
 				//获得要查询的字段
 				$read = $this->getDataFieldSet($datatable_config, 'read');
 				//dd($read);
-				$fields_arr = [];
+				$fields_arr['id'] = 'id';
+				if(isset($datatable_config['other_set']['is_tree'])){
+					$fields_arr['pid'] = 'pid';
+					$fields_arr['title'] = 'title';
+				}
 				foreach($read as $k=>$v){
-					$fields_arr[] = $k;
+					$fields_arr[$k] = $k;
 				}
 				$fields = join(',', $fields_arr);
 				//dd($fields);
 				$data = $datatable_config['modelClass']::select($fields_arr);
-				$search = $request->post();
+				
 				//绑定查询条件
+				$search = $request->post();
+				//dd($search);
 				foreach($search as $k=>$v){
+					//$search = $read[$k]['search'];
 					if(!in_array($k,['do', 'rand', 'page', 'limit', 'lazykit_rules'])){
-						if($read[$k]['field_type'] == ''){
+						//print_r($read[$k]); die();
+						$search = $read[$k]['search'];
+						if($read[$k]['search'] == 'between'){
 							
+						}else{
+							$data->when($v, function ($query) use ($k, $search, $v) {
+								return $query->where($k, $search, $v);
+							});
 						}
 					}
 				}
@@ -246,7 +260,7 @@ class DatatableGenerateController extends Controller
 						$data = [];
 					}
 					//dd($data);
-					dd(DB::getQueryLog());
+					//print_r(DB::getQueryLog());
 					return datatable_callback_json(0, '数据读取成功', count($data), $data);
 				}
 			}
@@ -572,10 +586,8 @@ class DatatableGenerateController extends Controller
 		//获得数据表字段
 		foreach($datatable_config['datatable_set'] as $k=>$v){
 			//如果字段指定type属性有值为on则继续
-			if(isset($v[$type])){
-				if($v[$type] == 'on'){
-					$dom_arr[$v['field']] = $v;
-				}
+			if(isset($v[$type])?$v[$type]:false){
+				$dom_arr[$v['field']] = $v;
 			}
 			
 			//新增修改时如果字段不在数据库表中则跳过

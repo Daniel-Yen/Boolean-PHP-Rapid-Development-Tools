@@ -105,8 +105,8 @@
 							<th style="width:39px;">新增</th>
 							<th style="width:39px;">修改</th>
 							<th style="width:39px;">查看</th>
-							<th style="width:39px;">搜索</th>
-							<th style="width:39px;">方式</th>
+							<!-- <th style="width:39px;">搜索</th> -->
+							<th style="width:65px;">搜索条件</th>
 							<th style="width:39px;">导入</th>
 							<th style="width:39px;">导出</th>
 							<th style="width:70px;"></th>
@@ -149,12 +149,12 @@
 								@endif
 							</td>
 							<td class="switch_area"><input name="datatable_set[{{$vo['Field']}}][read]"   @if (isset($vo['read'])) @if ($vo['read'] == 'on') checked="checked" @endif @endif type="checkbox" lay-skin="switch" lay-text="是|否"></td>
-							<td class="switch_area"><input name="datatable_set[{{$vo['Field']}}][search]" @if (isset($vo['search'])) @if ($vo['search'] == 'on') checked="checked" @endif @endif type="checkbox" lay-skin="switch" lay-text="是|否"></td>
+							<!-- <td class="switch_area"><input name="datatable_set[{{$vo['Field']}}][search]" @if (isset($vo['search'])) @if ($vo['search'] == 'on') checked="checked" @endif @endif type="checkbox" lay-skin="switch" lay-text="是|否"></td> -->
 							<td>
-								<select name="datatable_set[{{$vo['Field']}}][fixed]">
+								<select name="datatable_set[{{$vo['Field']}}][search]">
 									<option value=""></option>
 									@foreach ($search_conditions_dic_arr as $k=>$ko)
-									<option @if (isset($vo['fixed'])) @if ($vo['fixed'] == $k) selected="selected" @endif  @endif value="{{$k}}">{{$ko}}</option>
+									<option @if (isset($vo['search'])) @if ($vo['search'] == $k) selected="selected" @endif  @endif value="{{$k}}">{{$ko}}</option>
 									@endforeach
 								</select>
 							</td>
