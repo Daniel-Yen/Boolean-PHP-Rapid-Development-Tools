@@ -15,7 +15,7 @@
 <div class="layui-fluid">
 	<div class="layui-row layui-col-space15">
 		<div class="layui-col-md12">
-			<form class="layui-form" method="post" action="">
+			<form class="layui-form" method="post" enctype="multipart/form-data" action="">
 				@csrf
 				@foreach ($dom as $key=>$vo)
 				@switch($vo['data_input_form'])
@@ -91,37 +91,94 @@
 					</div>
 				</div>	
 				@break
-				@case('layui_editer')
+				@case('year')
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-block">
-						<textarea class="layui-textarea" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" style="display: none">
-							{{$data_arr[$vo['field']]}}
-						</textarea>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy">
 					</div>
 				</div>
 				@break
-				@case('layui_editer_simple')
+				@case('year_mouth')
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-block">
-						<textarea class="layui-textarea" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" style="display: none">
-							{{$data_arr[$vo['field']]}}
-						</textarea>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy-MM">
 					</div>
 				</div>
 				@break
-				@case('editormd')
+				@case('date')
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-block">
-						<div id="layout">
-							<div id="editormd">
-								<textarea name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" style="display:none;">
-									{{$data_arr[$vo['field']]}}
-								</textarea>
-							</div>
-						</div>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy-MM-dd">
+					</div>
+				</div>
+				@break
+				@case('time')
+				<div class="layui-form-item">
+					<label class="layui-form-label">{{$vo['title']}}</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="HH:mm:ss">
+					</div>
+				</div>
+				@break
+				@case('datetime')
+				<div class="layui-form-item">
+					<label class="layui-form-label">{{$vo['title']}}</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy-MM-dd HH:mm:ss">
+					</div>
+				</div>
+				@break
+				@case('date_scope')
+				<div class="layui-form-item">
+					<label class="layui-form-label">{{$vo['title']}}</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
+					</div>
+				</div>
+				@break
+				@case('year_scope')
+				<div class="layui-form-item">
+					<label class="layui-form-label">{{$vo['title']}}</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
+					</div>
+				</div>
+				@break
+				@case('year_mouth_scope')
+				<div class="layui-form-item">
+					<label class="layui-form-label">{{$vo['title']}}</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
+					</div>
+				</div>
+				@break
+				@case('time_scope')
+				<div class="layui-form-item">
+					<label class="layui-form-label">{{$vo['title']}}</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
+					</div>
+				</div>
+				@break
+				@case('datetime_scope')
+				<div class="layui-form-item">
+					<label class="layui-form-label">{{$vo['title']}}</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - " style="width:380px;">
+					</div>
+				</div>
+				@break
+				@case('color_choices')
+				<div class="layui-form-item">
+					<label class="layui-form-label">{{$vo['title']}}</label>
+					<div class="layui-input-inline" style="width: 120px;">
+						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}-input" value="{{$data_arr[$vo['field']]}}" placeholder="请选择颜色">
+					</div>
+					<div class="layui-inline" style="left: -11px;">
+						<div id="{{$vo['field']}}"></div>
 					</div>
 				</div>
 				@break
@@ -215,94 +272,37 @@
 					</div>
 				</div>
 				@break
-				@case('year')
+				@case('layui_editer')
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy">
+					<div class="layui-input-block">
+						<textarea class="layui-textarea" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" style="display: none">
+							{{$data_arr[$vo['field']]}}
+						</textarea>
 					</div>
 				</div>
 				@break
-				@case('year_mouth')
+				@case('layui_editer_simple')
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy-MM">
+					<div class="layui-input-block">
+						<textarea class="layui-textarea" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" style="display: none">
+							{{$data_arr[$vo['field']]}}
+						</textarea>
 					</div>
 				</div>
 				@break
-				@case('date')
+				@case('editormd')
 				<div class="layui-form-item">
 					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy-MM-dd">
-					</div>
-				</div>
-				@break
-				@case('time')
-				<div class="layui-form-item">
-					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="HH:mm:ss">
-					</div>
-				</div>
-				@break
-				@case('datetime')
-				<div class="layui-form-item">
-					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder="yyyy-MM-dd HH:mm:ss">
-					</div>
-				</div>
-				@break
-				@case('date_scope')
-				<div class="layui-form-item">
-					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
-					</div>
-				</div>
-				@break
-				@case('year_scope')
-				<div class="layui-form-item">
-					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
-					</div>
-				</div>
-				@break
-				@case('year_mouth_scope')
-				<div class="layui-form-item">
-					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
-					</div>
-				</div>
-				@break
-				@case('time_scope')
-				<div class="layui-form-item">
-					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - ">
-					</div>
-				</div>
-				@break
-				@case('datetime_scope')
-				<div class="layui-form-item">
-					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" value="{{$data_arr[$vo['field']]}}" placeholder=" - " style="width:380px;">
-					</div>
-				</div>
-				@break
-				@case('color_choices')
-				<div class="layui-form-item">
-					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline" style="width: 120px;">
-						<input type="text" class="layui-input" name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}-input" value="{{$data_arr[$vo['field']]}}" placeholder="请选择颜色">
-					</div>
-					<div class="layui-inline" style="left: -11px;">
-						<div id="{{$vo['field']}}"></div>
+					<div class="layui-input-block">
+						<div id="layout">
+							<div id="editormd">
+								<textarea name="{{$vo['field']}}" lay-verify="lazykit_{{$vo['field']}}" lay-verType="tips" id="{{$vo['field']}}" style="display:none;">
+									{{$data_arr[$vo['field']]}}
+								</textarea>
+							</div>
+						</div>
 					</div>
 				</div>
 				@break

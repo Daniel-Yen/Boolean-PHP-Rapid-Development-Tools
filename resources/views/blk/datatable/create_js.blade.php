@@ -39,19 +39,89 @@
 			formSelects.value('{{$vo['field']}}', ['{{$data_arr[$vo['field']]}}']);
 			@endif
 		@break
-		@case ('layui_editer')
-			{{-- layui编辑器 --}}
-			var {{$vo['field']}} = layedit.build('{{$vo['field']}}');
-		@break
-		@case ('layui_editer_simple')
-			{{-- layui精简版编辑器 --}}
-			var {{$vo['field']}} = layedit.build('{{$vo['field']}}', {
-				tool: ['face', 'link', 'unlink', '|', 'left', 'center', 'right'],
-				height: 100
+		@case ('year')
+			{{-- 年选择器 --}}
+			laydate.render({
+				elem: '#{{$vo['field']}}',
+				type: 'year'
 			});
 		@break
-		@case ('editormd')
-			
+		@case ('year_mouth')
+			{{-- 年月选择器 --}}
+			laydate.render({
+				elem: '#{{$vo['field']}}',
+				type: 'month'
+			});
+		@break
+		@case ('date')
+			{{-- 日期选择器 --}}
+			laydate.render({
+				elem: '#{{$vo['field']}}'
+			});
+		@break
+		@case ('time')
+			{{-- 时间选择器 --}}
+			laydate.render({
+				elem: '#{{$vo['field']}}',
+				type: 'time'
+			});
+		@break
+		@case ('datetime')
+			{{-- 日期时间选择器 --}}
+			laydate.render({
+				elem: '#{{$vo['field']}}',
+				type: 'datetime'
+			});
+		@break
+		@case ('date_scope')
+			{{-- 日期范围 --}}
+			laydate.render({
+				elem: '#{{$vo['field']}}',
+				range: true
+			});
+		@break
+		@case ('year_scope')
+			{{-- 年范围 --}}
+			laydate.render({
+				elem: '#{{$vo['field']}}',
+				type: 'year',
+				range: true
+			});
+		@break
+		@case ('year_mouth_scope')
+			{{-- 年月范围 --}}
+			laydate.render({
+				elem: '#{{$vo['field']}}',
+				type: 'month',
+				range: true
+			});
+		@break
+		@case ('time_scope')
+			{{-- 时间范围 --}}
+			laydate.render({
+				elem: '#{{$vo['field']}}',
+				type: 'time',
+				range: true
+			});
+		@break
+		@case ('datetime_scope')
+			{{-- 日期时间范围 --}}
+			laydate.render({
+				elem: '#{{$vo['field']}}',
+				type: 'datetime',
+				range: true
+			});
+		@break
+		@case ('color_choices')
+			{{-- 颜色选择 start --}}
+			colorpicker.render({
+				elem: '#{{$vo['field']}}',
+				color: '#1c97f5',
+				done: function(color) {
+					$('#{{$vo['field']}}-input').val(color);
+				}
+			});
+			{{-- 颜色选择 end --}}
 		@break
 		@case ('single_file_upload')
 			{{-- 单个文件上传 --}}
@@ -177,89 +247,19 @@
 					}
 				});
 		@break
-		@case ('year')
-			{{-- 年选择器 --}}
-			laydate.render({
-				elem: '#{{$vo['field']}}',
-				type: 'year'
+		@case ('layui_editer')
+			{{-- layui编辑器 --}}
+			var {{$vo['field']}} = layedit.build('{{$vo['field']}}');
+		@break
+		@case ('layui_editer_simple')
+			{{-- layui精简版编辑器 --}}
+			var {{$vo['field']}} = layedit.build('{{$vo['field']}}', {
+				tool: ['face', 'link', 'unlink', '|', 'left', 'center', 'right'],
+				height: 100
 			});
 		@break
-		@case ('year_mouth')
-			{{-- 年月选择器 --}}
-			laydate.render({
-				elem: '#{{$vo['field']}}',
-				type: 'month'
-			});
-		@break
-		@case ('date')
-			{{-- 日期选择器 --}}
-			laydate.render({
-				elem: '#{{$vo['field']}}'
-			});
-		@break
-		@case ('time')
-			{{-- 时间选择器 --}}
-			laydate.render({
-				elem: '#{{$vo['field']}}',
-				type: 'time'
-			});
-		@break
-		@case ('datetime')
-			{{-- 日期时间选择器 --}}
-			laydate.render({
-				elem: '#{{$vo['field']}}',
-				type: 'datetime'
-			});
-		@break
-		@case ('date_scope')
-			{{-- 日期范围 --}}
-			laydate.render({
-				elem: '#{{$vo['field']}}',
-				range: true
-			});
-		@break
-		@case ('year_scope')
-			{{-- 年范围 --}}
-			laydate.render({
-				elem: '#{{$vo['field']}}',
-				type: 'year',
-				range: true
-			});
-		@break
-		@case ('year_mouth_scope')
-			{{-- 年月范围 --}}
-			laydate.render({
-				elem: '#{{$vo['field']}}',
-				type: 'month',
-				range: true
-			});
-		@break
-		@case ('time_scope')
-			{{-- 时间范围 --}}
-			laydate.render({
-				elem: '#{{$vo['field']}}',
-				type: 'time',
-				range: true
-			});
-		@break
-		@case ('datetime_scope')
-			{{-- 日期时间范围 --}}
-			laydate.render({
-				elem: '#{{$vo['field']}}',
-				type: 'datetime',
-				range: true
-			});
-		@break
-		@case ('color_choices')
-			{{-- 颜色选择 start --}}
-			colorpicker.render({
-				elem: '#{{$vo['field']}}',
-				color: '#1c97f5',
-				done: function(color) {
-					$('#{{$vo['field']}}-input').val(color);
-				}
-			});
-			{{-- 颜色选择 end --}}
+		@case ('editormd')
+			
 		@break
 		@endswitch
 		@endforeach
