@@ -316,10 +316,14 @@ class DatatableGenerateController extends Controller
 			}
 		}else{
 			//行内按钮与头部按钮处理
-			if(isset($request->from)?$request->from == 'line':false){
-				$button_menu_config = $datatable_config['line_button'][$request->do]['method'];
-			}else{
-				$button_menu_config = $datatable_config['new_head_menu'][$request->do]['method'];
+			if(isset($request->from)){
+				if($request->from == 'line'){
+					$button_menu_config = $datatable_config['line_button'][$request->do]['method'];
+				}elseif($request->from == 'cell'){
+					$button_menu_config = $datatable_config['datatable_set'][$request->field]['method'];
+				}else{
+					$button_menu_config = $datatable_config['new_head_menu'][$request->do]['method'];
+				}
 			}
 			
 			//执行按钮绑定的方法
@@ -480,7 +484,7 @@ class DatatableGenerateController extends Controller
 				$datatable_config['modelClass'] = 'App\Repositories\\'.$class_name;
 			}
 			
-			//获得路由命名
+			//获得当前数据表格的路由命名
 			$datatable_config['route_name'] = '/'.request()->path();
 			
 			//判断有权限的按钮
@@ -780,6 +784,7 @@ class DatatableGenerateController extends Controller
 		if($datatable_config['data_source_method'] == '' && ( $isupdate || $isdelete ) ){
 			$cols_arr[] = array('type' => 'checkbox', 'fixed' => 'left');
 		}
+		//dd($datatable_config);
 		foreach($dom as $k=>$v){
 			if(isset($v['read'])){
 				if($v['read'] == 'on'){
@@ -815,6 +820,12 @@ class DatatableGenerateController extends Controller
 					if(isset($v['cell_style_template'])){
 						if(!empty($v['cell_style_template'])){
 							$line_arr['templet'] ='#'. $v['field'].'Tpl';
+						}
+					}
+					if(isset($v['event'])){
+						if(!empty($v['event'])){
+							$line_arr['event'] = $v['field'].'Event';
+							$line_arr['style'] = 'cursor: pointer; color:#129cf7;';
 						}
 					}
 					$cols_arr[] = $line_arr;

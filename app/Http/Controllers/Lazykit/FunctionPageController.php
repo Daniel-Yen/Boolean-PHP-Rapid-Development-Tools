@@ -615,6 +615,12 @@ class FunctionPageController extends Controller
 			$data = $request->post();
 			unset($data['_token']);
 			//dd($data);
+
+			//单元格事件对应的行为是否为路由,如果是,生成路由键值
+			if(Str::contains($data['event_behavior'], '@')){
+				$arr = explode('@',$data['event_behavior']);
+				$data['event_route'] = '/'.$arr['1'];
+			}
 			
 			$conditions = [
 				'design_id' => $request->design_id,
@@ -700,8 +706,8 @@ class FunctionPageController extends Controller
 			'attribute_arr' 			=> $attribute,						//字段属性
 			'validate_dic_arr' 			=> $this->validateDic(),			//字典：验证规则
 			'data_input_form_dic_arr' 	=> $this->dataInputFormDic(),		//字典：数据输入方式选择
-			'url_type_dic_arr' 			=> $this->urlTypeDic(),				//字典：行内链接类型
-			//'dic_type_dic_arr' 			=> $this->dicTypeDic(),				//字典：数据字典类型
+			'event_type_dic_arr' 		=> $this->eventTypeDic(),			//字典：事件类型
+			//'dic_type_dic_arr' 			=> $this->dicTypeDic(),			//字典：数据字典类型
 			'verify_dic_arr' 			=> $this->verifyDic(),				//字典：数据字典类型
 			'align_dic_arr' 			=> $this->alignDic(),				//字典：单元格排列方式
 			'data_source_dic_arr' 		=> $this->dataSourceDic(),			//字典：单元格排列方式
