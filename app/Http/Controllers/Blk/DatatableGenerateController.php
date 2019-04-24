@@ -229,7 +229,7 @@ class DatatableGenerateController extends Controller
 				}
 			}
 		}elseif( $request->do == "open" || $request->do == "recycle" ) {     //open参数是在Permission中间件中赋的值
-			//回收站删除行内按钮
+			//回收站不可进行基于数据的任何操作，删除行内按钮
 			if($request->do == "recycle" && isset($datatable_config['line_button'])){
 				unset($datatable_config['line_button']);
 			}
@@ -238,10 +238,10 @@ class DatatableGenerateController extends Controller
 			if($template && 0){
 				echo $template;
 			}else{
-				$dom = $this->getDataFieldSet($datatable_config, 'read');
+				$read = $this->getDataFieldSet($datatable_config, 'read');
 				//只有回收站才显示删除时间字段
 				if( $request->do  != 'recycle'){
-					unset($dom['deleted_at']['read']);
+					unset($read['deleted_at']['read']);
 				}
 				
 				//print_r($cols_arr);
@@ -265,9 +265,9 @@ class DatatableGenerateController extends Controller
 				//http_build_query();
 				
 				view()->share([
-					'search' => $this->getDataFieldSet($datatable_config, 'search'), 		//搜索字段
-					'cols' => $this->cols($dom, $datatable_config),							//表头
-					'dom' => $dom,															//字段
+					'dom' => $this->getDataFieldSet($datatable_config, 'search'), 		//搜索字段
+					'cols' => $this->cols($read, $datatable_config),							//表头
+					'read' => $read,															//字段
 					'datatable_config' => $datatable_config,								//数据表格配置
 					'do' => $request->do,
 					'parse_url_query' => $parse_url_query,
@@ -326,12 +326,12 @@ class DatatableGenerateController extends Controller
 	 *		'data_source_method' => url('data_source_method'),
 	 *		8、【已实现】自定义删除页面，遵循tp5 的url生成规则，操作成功返回：json_encode(['code' => 0, 'msg' => "删除成功"])
 	 *		'delete_page' => url('data_source_method'),
-	 *		9、【已实现】自定义新增页面，应用示例：$this->fetch('common@datatable/create');
-	 *		'create_page' => 'common@datatable/create',  
+	 *		9、【已实现】自定义新增页面，应用示例：$this->fetch('blk.datatable.form');
+	 *		'create_page' => 'blk.datatable.form',  
 	 *		10、【已实现】自定义修改页面，
-	 *		'update_page' => 'common@datatable/create',
-	 *		11、【已实现】自定义搜索页面，应用示例：$this->fetch('common@datatable/create');
-	 *		'search_page' => 'common@datatable/search',  
+	 *		'update_page' => 'blk.datatable.form',
+	 *		11、【已实现】自定义搜索页面，应用示例：$this->fetch('blk.datatable.form');
+	 *		'search_page' => 'blk.datatable.form',  
 	 *		
 	 *	];
 	 * @return 		array       返回处理后的Datatable数据表格的配置文件
@@ -388,10 +388,10 @@ class DatatableGenerateController extends Controller
 			}
 			
 			//9、自定义新增页面
-			$datatable_config['create_page'] = isset($additional_config['create_page'])?$additional_config['create_page']:'blk.datatable.create';
+			$datatable_config['create_page'] = isset($additional_config['create_page'])?$additional_config['create_page']:'blk.datatable.form';
 			
 			//10、自定义修改页面
-			$datatable_config['update_page'] = isset($additional_config['update_page'])?$additional_config['update_page']:'blk.datatable.create';
+			$datatable_config['update_page'] = isset($additional_config['update_page'])?$additional_config['update_page']:'blk.datatable.form';
 			//dd($datatable_config);
 			
 			//获取字段属性设置

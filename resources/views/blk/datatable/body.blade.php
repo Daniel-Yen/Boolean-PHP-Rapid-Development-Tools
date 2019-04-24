@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('blk.datatable.base')
 
 @section('title', isset($datatable_config['title'])?$datatable_config['title']:'数据表格')
 
@@ -66,33 +66,8 @@
 		<div class="layui-fluid">
 			<div class="layui-row layui-col-space15">
 				<div class="layui-col-md12">
-				@if (isset($search))
-				@foreach ($search as $key=>$vo)
-				@switch($vo['data_input_form'])
-				@case('select')
-				<div class="layui-form-item">
-					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-inline" style="width:400px;">
-						<select name="{{$vo['field']}}">
-							<option value="">请选择{{$vo['title']}}</option>
-							@if (isset($vo['data_arr']))
-							@foreach ($vo['data_arr'] as $v)
-							<option value="{{$v['id']}}">{!! $v['title'] !!}</option>
-							@endforeach
-							@endif
-						</select>
-					</div>
-				</div>
-				@break
-				@default
-				<div class="layui-form-item">
-					<label class="layui-form-label">{{$vo['title']}}</label>
-					<div class="layui-input-block">
-						<input type="text" name="{{$vo['field']}}" value="" autocomplete="off" placeholder="请输入{{$vo['title']}}" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				@endswitch
-				@endforeach
+				@if (isset($dom))
+				@include ('blk.datatable.form_input')
 				@endif
 				</div>
 			</div>
@@ -100,7 +75,7 @@
 	</div>
 </form>
 
-@foreach ($dom as $vo)
+@foreach ($read as $vo)
 @if (!empty($vo['cell_style_template']))
 <script type="text/html" id="{{$vo['field']}}Tpl">
 {!! $vo['cell_style_template'] !!}
@@ -431,6 +406,11 @@ layui.config({
 		$("#left_directory").html('');
 		tools.reload();
 	});
+	@endif
+	
+	//搜索表单
+	@if (isset($dom))
+	@include ('blk.datatable.form_js')
 	@endif
 	
 	var _tools = {

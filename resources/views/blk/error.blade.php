@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('blk.datatable.base')
 
 @section('title', $message)
 

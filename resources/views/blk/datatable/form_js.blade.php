@@ -11,7 +11,7 @@
 			formSelects.data('{{$vo['field']}}', 'local', {
 				arr: @json($vo['dic_data']['data'])
 			});
-			formSelects.value('{{$vo['field']}}', [{{$data_arr[$vo['field']]}}]);
+			formSelects.value('{{$vo['field']}}', [{{isset($data_arr[$vo['field']])?$data_arr[$vo['field']]:''}}]);
 			@endif
 		@break
 		@case ('tree_select')
@@ -19,7 +19,7 @@
 			formSelects.data('{{$vo['field']}}', 'local', {
 				arr: @json($vo['dic_data']['data'])
 			});
-			formSelects.value('{{$vo['field']}}', [{{$data_arr[$vo['field']]}}]);
+			formSelects.value('{{$vo['field']}}', [{{isset($data_arr[$vo['field']])?$data_arr[$vo['field']]:''}}]);
 			@endif
 		@break
 		@case ('multiple_select')
@@ -27,7 +27,7 @@
 			formSelects.data('{{$vo['field']}}', 'local', {
 				arr: @json($vo['dic_data']['data'])
 			});
-			formSelects.value('{{$vo['field']}}', [{{$data_arr[$vo['field']]}}]);
+			formSelects.value('{{$vo['field']}}', [{{isset($data_arr[$vo['field']])?$data_arr[$vo['field']]:''}}]);
 			@endif
 		@break
 		@case ('cascade_select')
@@ -36,7 +36,7 @@
 				arr: @json($vo['dic_data']['data']),
 				linkage: true	//开启联动模式
 			});
-			formSelects.value('{{$vo['field']}}', ['{{$data_arr[$vo['field']]}}']);
+			formSelects.value('{{$vo['field']}}', ['{{isset($data_arr[$vo['field']])?$data_arr[$vo['field']]:''}}']);
 			@endif
 		@break
 		@case ('year')

@@ -72,19 +72,19 @@ class DemoController extends Controller
 		create_datatable('datatable_24', [], $request);
 	}
 	
-	//classification
-	public function attributeClassification(){
+	//select
+	public function attributeSelect(){
 		$data = [
-			[ 'value' => '1', 'name' => '暂未定成熟度' ],
-			[ 'value' => '2', 'name' => 'KP有兴趣，当月可办款' ],
-			[ 'value' => '3', 'name' => 'KP，对服务兴趣不明确' ],
+			[ 'value' => '1', 'name' => '灞桥区' ],
+			[ 'value' => '2', 'name' => '长安区' ],
+			[ 'value' => '3', 'name' => '未央区' ],
 		];
 		
 		return $data;
 	}
 	
 	//下拉多项选择
-	public function attribute_tree_select(){
+	public function attributeTreeSelect(){
 		$data = [
 			['name' => '陕西', 'value' => '1', 'children' => [
 					['name' => '西安', 'value' => '2', 'children' => [
