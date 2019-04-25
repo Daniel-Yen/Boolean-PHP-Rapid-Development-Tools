@@ -17,7 +17,9 @@
 		<div class="layui-col-md12">
 			<form class="layui-form" method="post" enctype="multipart/form-data" action="">
 				@csrf
-				@include ('blk.datatable.form_input')
+				@foreach ($dom as $key=>$vo)
+				@include ('blk.datatable.form.'.$vo['data_input_form'])
+				@endforeach
 				<div class="layui-form-item">
 					<label class="layui-form-label">&nbsp;</label>
 					<div class="layui-input-block">

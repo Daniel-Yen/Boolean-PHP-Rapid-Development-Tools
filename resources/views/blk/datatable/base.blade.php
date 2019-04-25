@@ -11,11 +11,21 @@
   <link rel="stylesheet" href="{{file_path('/include/style/admin.css')}}" media="all">
   <link rel="stylesheet" href="{{file_path('/include/eleTree.css')}}" media="all">
   <link rel="stylesheet" href="{{file_path('/include/cascader.css')}}" media="all">
-  @stack('css')
+  
+	@stack('css')
+	
+	@if (isset($search_conditions_dic_arr))
+	<style type="text/css">
+		.search-type{width:100px; padding:0; height:auto; text-align:center;}
+		.layui-input-block{margin-left:220px; width:300px;}
+		.layui-input-inline{padding-left:10px;}
+	</style>
+	@endif
+	
   <!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
-  <![endif]--> 
+  <![endif]-->
 </head>
 <body>
 	@yield('content')

@@ -115,7 +115,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => 'like',
       'attribute' => 
       array (
         'data_input_form' => 'textarea',
@@ -278,7 +278,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => 'like',
       'attribute' => 
       array (
         'align' => 'left',
@@ -309,7 +309,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => 'between',
       'attribute' => 
       array (
         'data_input_form' => 'editormd',
@@ -338,7 +338,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => '=',
       'attribute' => 
       array (
         'data_input_form' => 'layui_editer',
@@ -367,7 +367,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => 'like',
       'attribute' => 
       array (
         'data_input_form' => 'layui_editer_simple',
@@ -396,7 +396,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => 'between',
       'attribute' => 
       array (
         'data_input_form' => 'single_photo_upload',
@@ -427,7 +427,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => '>',
       'attribute' => 
       array (
         'data_input_form' => 'photos_upload',
@@ -458,7 +458,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => '=',
       'attribute' => 
       array (
         'data_input_form' => 'single_file_upload',
@@ -494,7 +494,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => '<',
       'attribute' => 
       array (
         'data_input_form' => 'files_upload',
@@ -530,7 +530,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => '>',
       'attribute' => 
       array (
         'data_input_form' => 'year',
@@ -559,7 +559,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => '<',
       'attribute' => 
       array (
         'data_input_form' => 'year_mouth',
@@ -588,7 +588,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => '<',
       'attribute' => 
       array (
         'data_input_form' => 'date',
@@ -616,7 +616,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => 'like',
       'attribute' => 
       array (
         'data_input_form' => 'time',
@@ -645,7 +645,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => NULL,
+      'search' => '=',
       'attribute' => 
       array (
         'data_input_form' => 'datetime',
@@ -883,8 +883,8 @@
       'text' => '搜索',
       'icon' => 'layui-icon-search',
       'must' => 'on',
-      'width' => '800px',
-      'height' => '90%',
+      'width' => '100%',
+      'height' => '100%',
       'method' => NULL,
     ),
     'create' => 

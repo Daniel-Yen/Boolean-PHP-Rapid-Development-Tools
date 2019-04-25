@@ -307,6 +307,7 @@ class DatatableGenerateController extends Controller
 					'datatable_config' => $datatable_config,								//数据表格配置
 					'do' => $request->do,
 					'parse_url_query' => $parse_url_query,
+					'search_conditions_dic_arr' => $this->searchConditionsDic(),								//字典：按钮打开方式
 				]);
 				
 				$content = view('blk.datatable.body');
@@ -577,6 +578,32 @@ class DatatableGenerateController extends Controller
 	}
 	
 	/**
+	 * data_input_form 在搜索时需要改变为input的
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	private function dataInputFormToInputDic(){
+		return [
+			'textarea',
+			'single_photo_upload',
+			'photos_upload',
+			'single_file_upload',
+			'files_upload',
+			'date_scope',
+			'year_scope',
+			'year_mouth_scope',
+			'time_scope',
+			'datetime_scope',
+			'textarea',
+			'layui_editer',
+			'layui_editer_simple',
+			'editormd',
+		];
+	}
+	
+	/**
 	 * 获得增、删、改、查、导入、导出需要的字段及字段属性
 	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
@@ -591,6 +618,12 @@ class DatatableGenerateController extends Controller
 		foreach($datatable_config['datatable_set'] as $k=>$v){
 			//如果字段指定type属性有值为on则继续
 			if(isset($v[$type])?$v[$type]:false){
+				//如果是搜索,需要将部分字段处理成input类型
+				if($type == 'search'){
+					if(in_array($v['data_input_form'],$this->dataInputFormToInputDic())){
+						$v['data_input_form'] = 'input';
+					}
+				}
 				$dom_arr[$v['field']] = $v;
 			}
 			
@@ -616,6 +649,7 @@ class DatatableGenerateController extends Controller
 			}
 		}
 		$dom_arr = array_merge($fields_left_arr, $fields_arr, $fields_right_arr);
+		//dd($dom_arr);
 		
 		return $dom_arr?$dom_arr:[];
 	}
@@ -868,6 +902,23 @@ class DatatableGenerateController extends Controller
 			'ipv6' 			=> '必须是 IPv6 地址',
 			'json' 			=> '必须是有效的 JSON 字符串',
 			'url' 			=> '必须是有效的 URL',
+		];
+	}
+	
+	/**
+	 * 搜索条件字段
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	private function searchConditionsDic(){
+		return [
+			'=' 	=> '等于',
+			'>' 	=> '大于',
+			'<' 	=> '小于',
+			'like' 	=> '模糊匹配',
+			'between' 	=> '区间',
 		];
 	}
 }

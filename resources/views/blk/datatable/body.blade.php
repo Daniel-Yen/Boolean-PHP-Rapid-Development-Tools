@@ -93,10 +93,11 @@ layui.config({
 }).extend({
     index: 'lib/index',
 	formSelects: 'formSelects-v4'
-}).use(['tree', 'index', 'layer', 'table', 'laydate', 'formSelects'], function(){
+}).use(['tree', 'index', 'form', 'layer', 'table', 'laydate', 'formSelects'], function(){
     var admin = layui.admin
 		table = layui.table,
 		$ = layui.jquery,
+		form = layui.form,
 		layer = layui.layer,
 		laydate = layui.laydate,
 		formSelects = layui.formSelects;
@@ -463,13 +464,21 @@ layui.config({
 	$("#buer-all").html('<i class="layui-icon layui-icon-template-1"></i> 全部');
 	
 	$(document).on('click','#buer-all',function(){
-		layer.msg('hello');
+		//layer.msg('hello');
 		$("#left_directory").html('');
 		tools.reload();
 	});
 	@endif
 	
-	//搜索表单
+	//搜索条件
+	@foreach ($dom as $key=>$vo)
+	form.on('select({{$vo['field']}}_search_type)', function(data){
+		//alert($this.value);
+		//alert(JSON.stringify(data));
+	});	
+	@endforeach
+	
+	//搜索表单控件初始化
 	@if (isset($dom))
 	@include ('blk.datatable.form_js')
 	@endif

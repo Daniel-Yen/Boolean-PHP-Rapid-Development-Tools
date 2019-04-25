@@ -87,7 +87,7 @@
 			<div class="layui-side-scroll">
 				<div class="layui-logo" lay-href="{{url('/welcome')}}">
 					<span>
-						<h3>Boolean Lazy Kit</h3>
+						<h3>Boolean Lazyer Kit</h3>
 					</span>
 				</div>
 
