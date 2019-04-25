@@ -138,17 +138,17 @@ trait SetDic
     }
     
     /**
-     * 数据字典：事件类型
+     * 数据字典：链接类型
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
      * @return 		array                       
      */
-    private function eventTypeDic(){
+    private function urlTypeDic(){
     	return [
     		'new_window' 	=> '新窗口打开',
     		'window' 		=> '弹出窗口',
-    		'ajax' 			=> '异步请求',
+    		'redirect' 		=> '链接触发',
     	];
     }
     
