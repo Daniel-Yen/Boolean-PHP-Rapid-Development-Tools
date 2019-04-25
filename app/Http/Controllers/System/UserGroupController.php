@@ -52,7 +52,7 @@ class UserGroupController extends Controller
 		
 		foreach($data as $k=>$v){
 			//增加一个命名为open的授权
-			$permission['open'] = [
+			$view['open'] = [
 				'text' => '查看'
 			];
 			
@@ -64,25 +64,51 @@ class UserGroupController extends Controller
 					//dd($datatable_config);
 					//头部菜单按钮
 					if(isset($datatable_config['head_menu'])){
-						$button = $datatable_config['head_menu'];
+						$head_menu = $datatable_config['head_menu'];
+					}else{
+						$head_menu = [];
 					}
 					//unset($button['search']);
 					
 					//头部附加菜单按钮
 					if(isset($datatable_config['new_head_menu'])){
-						$button = array_merge($button, $datatable_config['new_head_menu']);
+						$head_menu = array_merge($head_menu, $datatable_config['new_head_menu']);
 					}
+					
+					$data[$k]['nodes']['head_menu'] = [
+						'title' => '头部菜单',
+						'node'  => $head_menu
+					];
 					
 					//行内按钮
 					if(isset($datatable_config['line_button'])){
-						$button = array_merge($button, $datatable_config['line_button']);
+						$data[$k]['nodes']['line_button'] = [
+							'title' => '行内按钮',
+							'node'  => $datatable_config['line_button']
+						];	
+					}
+					
+					//单元格事件
+					if(isset($datatable_config['datatable_set'])){
+						foreach($datatable_config['datatable_set'] as $k1=>$v1){
+							if(isset($v1['attribute']['event'])?$v1['attribute']['event'] == 'on':false){
+								$event[$v1['field'].'Event']['text'] = $v1['title'];
+							}
+						}
+						
+						if(!empty($event)){
+							$data[$k]['nodes']['cell_event'] = [
+								'title' => '单元格事件',
+								'node'  => $event
+							];
+						}
 					}
 				}
 			}
 			
-			$button = array_merge($permission, $button);
+			//$button = array_merge($permission, $button);
 			
-			$data[$k]['button'] = $button;	
+			//$data[$k]['button'] = $button;	
 		}
 		//dd($data);
 		
@@ -95,6 +121,7 @@ class UserGroupController extends Controller
 		}
 		
 		return view('system.permissions', [
+			'view' => $view,
 			'data' => $data,
 			'rules' => $rules
 		]);

@@ -23,9 +23,9 @@
 					<thead>
 						<tr style="background-color:#fff;">
 							<!-- <th width='20'></th> -->
-							<th width='200'>菜单名称</th>
-							<!-- <th width='200'>规则名称</th> -->
-							<th>操作节点</th>
+							<th width='230'>菜单</th>
+							<th width='100'>权限</th>
+							<th>节点操作权限</th>
 						</tr> 
 					</thead>
 					<tbody>
@@ -36,13 +36,29 @@
 								<input type="checkbox" name="rules[{{$v['url']}}]" value="on" lay-skin="primary" checked="">
 								@endif
 							</td> -->
-							<td>{!!$v['title']!!}</td>
+							<td>
+							
+							{!!$v['title']!!}
+							</td>
 							<!-- <td>{!!$v['url']!!}</td> -->
 							<td>
 								@if ($v['url'])
-								@if (isset($v['button'])?!empty($v['button']):false)
-								@foreach ($v['button'] as $key=>$value)
+								@if (isset($v['nodes'])?!empty($v['nodes']):false)
+								@foreach ($v['nodes'] as $y)
+								{{$y['title']}}
+								@endforeach
+								@endif
+								@endif
+							</td>
+							<td>
+								@if ($v['url'])
+								@if (isset($v['nodes'])?!empty($v['nodes']):false)
+								@foreach ($v['nodes'] as $y)
+								@if (isset($y['node'])?!empty($y['node']):false)
+								@foreach ($y['node'] as $key=>$value)
 								<input type="checkbox" name="rules[{{$v['url']}}][{{$key}}]" @if (isset($rules[$v['url']]['button']['value'])?in_array($key, $rules[$v['url']]['button']['value']):false) checked="" @endif value="on" title="{{$value['text']}}">
+								@endforeach
+								@endif
 								@endforeach
 								@endif
 								@endif
