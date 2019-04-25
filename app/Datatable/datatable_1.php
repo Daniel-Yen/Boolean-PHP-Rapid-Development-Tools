@@ -25,6 +25,7 @@
       'field' => 'inheritance_note',
       'field_from' => 'main_table',
       'width' => NULL,
+      'search' => NULL,
       'attribute' => NULL,
     ),
     'main_table' => 
@@ -37,6 +38,7 @@
       'field' => 'main_table',
       'field_from' => 'main_table',
       'width' => NULL,
+      'search' => NULL,
       'attribute' => NULL,
     ),
     'external_field' => 
@@ -49,6 +51,7 @@
       'field' => 'external_field',
       'field_from' => 'main_table',
       'width' => NULL,
+      'search' => NULL,
       'attribute' => NULL,
     ),
     'associated_table' => 
@@ -61,6 +64,7 @@
       'field' => 'associated_table',
       'field_from' => 'main_table',
       'width' => NULL,
+      'search' => NULL,
       'attribute' => NULL,
     ),
     'associated_type' => 
@@ -73,6 +77,7 @@
       'field' => 'associated_type',
       'field_from' => 'main_table',
       'width' => NULL,
+      'search' => NULL,
       'attribute' => NULL,
     ),
     'id' => 
@@ -86,6 +91,7 @@
       'field_from' => 'main_table',
       'width' => '80',
       'read' => 'on',
+      'search' => NULL,
       'attribute' => NULL,
     ),
     'title' => 
@@ -101,7 +107,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => 'on',
+      'search' => 'like',
       'attribute' => 
       array (
         'align' => 'left',
@@ -133,6 +139,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'search' => NULL,
       'attribute' => NULL,
     ),
     'pid' => 
@@ -147,6 +154,7 @@
       'width' => NULL,
       'create' => 'on',
       'update' => 'on',
+      'search' => '=',
       'attribute' => 
       array (
         'align' => 'left',
@@ -177,7 +185,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => 'on',
+      'search' => NULL,
       'attribute' => 
       array (
         'align' => 'left',
@@ -206,6 +214,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'search' => NULL,
       'attribute' => 
       array (
         'align' => 'left',
@@ -236,7 +245,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => 'on',
+      'search' => NULL,
       'attribute' => 
       array (
         'align' => 'left',
@@ -267,6 +276,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
+      'search' => NULL,
       'attribute' => NULL,
     ),
     'method' => 
@@ -282,7 +292,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => 'on',
+      'search' => NULL,
       'attribute' => NULL,
     ),
     'system_id' => 
@@ -296,6 +306,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'search' => NULL,
       'attribute' => 
       array (
         'align' => 'left',
@@ -326,7 +337,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => 'on',
+      'search' => NULL,
       'attribute' => 
       array (
         'align' => 'left',
@@ -355,6 +366,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'search' => NULL,
       'attribute' => NULL,
     ),
     'updated_at' => 
@@ -368,6 +380,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'search' => NULL,
       'attribute' => NULL,
     ),
     'deleted_at' => 
@@ -381,6 +394,7 @@
       'field_from' => 'main_table',
       'width' => NULL,
       'read' => 'on',
+      'search' => NULL,
       'attribute' => NULL,
     ),
   ),

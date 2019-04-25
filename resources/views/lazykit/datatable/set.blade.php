@@ -122,7 +122,7 @@
 							</td>
 							<td>
 								<select name="datatable_set[{{$vo['Field']}}][fixed]">
-									<option value=""></option>
+									<option value=""> </option>
 									@foreach ($fixed_column_dic_arr as $k=>$ko)
 									<option @if (isset($vo['fixed'])) @if ($vo['fixed'] == $k) selected="selected" @endif  @endif value="{{$k}}">{{$ko}}</option>
 									@endforeach
@@ -152,7 +152,7 @@
 							<!-- <td class="switch_area"><input name="datatable_set[{{$vo['Field']}}][search]" @if (isset($vo['search'])) @if ($vo['search'] == 'on') checked="checked" @endif @endif type="checkbox" lay-skin="switch" lay-text="是|否"></td> -->
 							<td>
 								<select name="datatable_set[{{$vo['Field']}}][search]">
-									<option value=""></option>
+									<option value=""> </option>
 									@foreach ($search_conditions_dic_arr as $k=>$ko)
 									<option @if (isset($vo['search'])) @if ($vo['search'] == $k) selected="selected" @endif  @endif value="{{$k}}">{{$ko}}</option>
 									@endforeach
