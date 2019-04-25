@@ -100,7 +100,7 @@ layui.config({
 		layer = layui.layer,
 		laydate = layui.laydate,
 		formSelects = layui.formSelects;
-	
+		
 	var rand = Math.floor(Math.random()*10000+1);
 	@if ($do == "recycle")
 	var ac = '&rand='+rand+'&ac=recycle';
