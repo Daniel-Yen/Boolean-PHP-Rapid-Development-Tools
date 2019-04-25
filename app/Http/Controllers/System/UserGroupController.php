@@ -110,7 +110,7 @@ class UserGroupController extends Controller
 			
 			//$data[$k]['button'] = $button;	
 		}
-		//dd($data);
+		dd($data);
 		
 		$user_group = BlkUserGroupRepository::where('id', request()->user_group_id)->first();
 		//dd(json_decode($user_group->rules, true));

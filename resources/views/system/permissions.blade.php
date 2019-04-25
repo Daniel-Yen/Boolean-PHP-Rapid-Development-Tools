@@ -8,8 +8,11 @@
 	.create td{padding: 0;}
 	.create td input{border: 0;}
 	.create .switch_area{padding-bottom:8px; text-align: center;}
-	.layui-form-checkbox{ height:25px; line-height:25px; padding-right:0;}
+	.layui-form-checkbox{ height:20px; line-height:20px; padding-right:0; padding-left:0; margin:2px 0;}
+	.layui-form-checkbox span{ font-size:12px;}
 	.layui-form-checkbox i{display:none;}
+	.roles{border:0; width:100%;}
+	.roles tr,td{border:0;}
 </style>
 @endpush
 
@@ -24,7 +27,7 @@
 						<tr style="background-color:#fff;">
 							<!-- <th width='20'></th> -->
 							<th width='230'>菜单</th>
-							<th width='100'>权限</th>
+							<th width='60'>菜单权限</th>
 							<th>节点操作权限</th>
 						</tr> 
 					</thead>
@@ -44,8 +47,8 @@
 							<td>
 								@if ($v['url'])
 								@if (isset($v['nodes'])?!empty($v['nodes']):false)
-								@foreach ($v['nodes'] as $y)
-								{{$y['title']}}
+								@foreach ($view as $t=>$y)
+								<div><input type="checkbox" name="rules[{{$v['url']}}][{{$t}}]" @if (isset($rules[$v['url']]['button']['value'])?in_array($t, $rules[$v['url']]['button']['value']):false) checked="" @endif value="on" title="{{$y['text']}}"></div>
 								@endforeach
 								@endif
 								@endif
@@ -53,13 +56,20 @@
 							<td>
 								@if ($v['url'])
 								@if (isset($v['nodes'])?!empty($v['nodes']):false)
+								<table class="roles">
 								@foreach ($v['nodes'] as $y)
 								@if (isset($y['node'])?!empty($y['node']):false)
-								@foreach ($y['node'] as $key=>$value)
-								<input type="checkbox" name="rules[{{$v['url']}}][{{$key}}]" @if (isset($rules[$v['url']]['button']['value'])?in_array($key, $rules[$v['url']]['button']['value']):false) checked="" @endif value="on" title="{{$value['text']}}">
-								@endforeach
+									<tr>
+										<td style="border:0; width:60px; padding:2px;">{{$y['title']}}</td>
+										<td style="border:0; padding:2px;">
+										@foreach ($y['node'] as $key=>$value)
+										<input type="checkbox" name="rules[{{$v['url']}}][{{$key}}]" @if (isset($rules[$v['url']]['button']['value'])?in_array($key, $rules[$v['url']]['button']['value']):false) checked="" @endif value="on" title="{{$value['text']}}">
+										@endforeach
+										</td>
+									</tr>
 								@endif
 								@endforeach
+								</table>
 								@endif
 								@endif
 							</td>
