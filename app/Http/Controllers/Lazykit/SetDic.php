@@ -389,10 +389,11 @@ trait SetDic
      */
     private function searchConditionsDic(){
     	return [
-    		'=' 	=> '等于',
-    		'>' 	=> '大于',
-    		'<' 	=> '小于',
-    		'like' 	=> '模糊查询',
+    		'=' 		=> '等于',
+    		'<>' 		=> '不等于',
+    		'>' 		=> '大于',
+    		'<' 		=> '小于',
+    		'like' 		=> '模糊匹配',
     		'between' 	=> '区间',
     	];
     }
