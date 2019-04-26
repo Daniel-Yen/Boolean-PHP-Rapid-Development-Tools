@@ -1008,7 +1008,6 @@ class DatatableGenerateController extends Controller
 			'<' 		=> '小于',
 			'like' 		=> '模糊匹配',
 			'between' 	=> '区间',
-			'<>' 		=> '不等于',
 		];
 	}
 }
