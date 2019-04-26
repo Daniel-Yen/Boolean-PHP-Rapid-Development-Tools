@@ -311,13 +311,6 @@ class FunctionPageController extends Controller
 			
 			return success("操作成功");
 		}else{
-			//根据datatable名称获得模型配置
-// 			if(file_exists($datatable_config_path)){
-// 				$datatable_config = require($datatable_config_path);
-// 			}else{
-// 				$datatable_config = [];
-// 			}
-			
 			if(file_exists($datatable_config_path)){
 				$datatable_config = require($datatable_config_path);
 			}else{
@@ -360,18 +353,16 @@ class FunctionPageController extends Controller
 				]);
 			}
 			return view('lazykit.datatable.set', [
-				'button_style_type_arr' => $this->buttonStyleTypeDic(),								//字典：行按钮样式
-				'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),								//字典：按钮打开方式
-				'search_conditions_dic_arr' => $this->searchConditionsDic(),								//字典：按钮打开方式
-				'head_menu_arr' 		=> $this->headMenu($datatable_config, $datatable_arr),		//datatable 头部工具菜单
-				'datatable_arr' 		=> $datatable_arr,											//datatable 记录
-				'datatable_config' 		=> $datatable_config,										//datatable 配置
-				'design_id' 			=> $request->design_id,										//页面设计ID
-				'system_id' 			=> $request->system_id,										//系统ID
-				'route_message' 		=> $route_message, 											//获得路由信息
-			]);	
-			
-			return view('lazykit.datatable.set');
+				'button_style_type_arr' => $this->buttonStyleTypeDic(),							//字典：行按钮样式
+				'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),							//字典：按钮打开方式
+				'search_conditions_dic_arr' => $this->searchConditionsDic(),					//字典：按钮打开方式
+				'head_menu_arr' 		=> $this->headMenu($datatable_config, $datatable_arr),	//datatable 头部工具菜单
+				'datatable_arr' 		=> $datatable_arr,										//datatable 记录
+				'datatable_config' 		=> $datatable_config,									//datatable 配置
+				'design_id' 			=> $request->design_id,									//页面设计ID
+				'system_id' 			=> $request->system_id,									//系统ID
+				'route_message' 		=> $route_message, 										//获得路由信息
+			]);
 		}
 	}
 	
@@ -384,7 +375,6 @@ class FunctionPageController extends Controller
 	 * @return 		array          	返回可继承的数据表格
 	 */
 	public function getInheritanceDatatable($system){
-		//dd($system);
 		$data = BlkFunctionPageRepository::where('system_id', $system->id)
 					->where('model', 2)
 					->get();
@@ -394,7 +384,6 @@ class FunctionPageController extends Controller
 			$data = [];
 		}
 		
-		//dd($data);
 		return $data;
 	}
 	
@@ -524,7 +513,6 @@ class FunctionPageController extends Controller
 	 */
 	public function mergeAttribute($datatable_config, $result, $field_from)
 	{
-		//dd($result);
 		foreach($result as $k=>$v){
 			$v = object_array($v);
 			
@@ -539,10 +527,9 @@ class FunctionPageController extends Controller
 					$v['field_length'] = 'no_limit';	//不限长度
 				}
 			}
-			//dd($type);
 			
 			//如果数据库中已有改字段的配置记录，则将当前记录$v与配置数组合并
-			$v['field_from'] = $field_from;		//字段来自主表
+			$v['field_from'] = $field_from;
 			if( isset($datatable_config['datatable_set']) ){
 				$datatable_set = $datatable_config['datatable_set'];
 				if(isset($v['Field'])?isset($datatable_set[$v['Field']]):false){
@@ -563,7 +550,7 @@ class FunctionPageController extends Controller
 				$result[$k] = $v;
 			}
 		}
-		//dd($result);
+		
 		return $result;
 	}
 	
@@ -589,14 +576,12 @@ class FunctionPageController extends Controller
 		$this->reconnectBlkDB();
 		
 		$tables_arr = [];
-		//dd($result);
+		
 		foreach($result as $k=>$v){
 			$v = object_array($v);
-			//dd($v);
 			$table_name = $v['Tables_in_'.$database];
 			$tables_arr[] = str_replace($prefix, '', $table_name);
 		}
-		//dd($tables_arr);
 		
 		return $tables_arr;
 	}
@@ -614,8 +599,7 @@ class FunctionPageController extends Controller
 		if($request->isMethod('post')){
 			$data = $request->post();
 			unset($data['_token']);
-			//dd($data);
-
+			
 			//单元格事件对应的行为是否为路由,如果是,生成路由键值
 			if(Str::contains($data['event_behavior'], '@')){
 				$arr = explode('@',$data['event_behavior']);
@@ -633,18 +617,16 @@ class FunctionPageController extends Controller
 			];
 			
 			//新增字段属性设置记录，如果已存在，则修改
-			//DB::connection()->enableQueryLog();
 			$result = BlkAttributeRepository::updateOrInsert($conditions, $param);
-			//dd(DB::getQueryLog());
 			if($result){
 				//获得当前页面信息
 				$datatable_arr = BlkFunctionPageRepository::where('id', $request->design_id)->first();
+				
 				//将字段属性设置写入Datatable配置文件
 				$system = BlkSystemRepository::where('id', $request->system_id)->first();
-				//dd($system);
+				
 				if($system){
 					$path = $this->getPath($system);
-					//dd($path);
 					
 					$model = [
 						2 => 'datatable',
