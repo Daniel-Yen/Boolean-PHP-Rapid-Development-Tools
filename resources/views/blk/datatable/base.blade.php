@@ -17,8 +17,14 @@
 	@if (isset($search_conditions_dic_arr))
 	<style type="text/css">
 		.search-type{width:100px; padding:0; height:auto; text-align:center;}
-		.layui-input-block{margin-left:220px; width:300px;}
+		.layui-form-item .layui-input-inline{width:274px;}
+		.layui-input-block{width:274px; margin-left:10px; float:left; display:inline-block; vertical-align:middle;}
 		.layui-input-inline{padding-left:10px;}
+		.layui-input-search{float:left;}
+		.layui-unselect{text-align:center;}
+		.search-type input{text-align:center; padding-left:0;}
+		.padding-left-0{padding-left:0;}
+		.search-block{width:555px}
 	</style>
 	@endif
 	

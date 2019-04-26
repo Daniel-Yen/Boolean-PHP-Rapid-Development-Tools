@@ -301,13 +301,18 @@ class DatatableGenerateController extends Controller
 				//http_build_query();
 				
 				view()->share([
-					'dom' => $this->getDataFieldSet($datatable_config, 'search'), 		//搜索字段
-					'cols' => $this->cols($read, $datatable_config),							//表头
-					'read' => $read,															//字段
+					'dom' => $this->getDataFieldSet($datatable_config, 'search'), 			//搜索字段
+					'cols' => $this->cols($read, $datatable_config),						//表头
+					'read' => $read,														//字段
 					'datatable_config' => $datatable_config,								//数据表格配置
 					'do' => $request->do,
 					'parse_url_query' => $parse_url_query,
-					'search_conditions_dic_arr' => $this->searchConditionsDic(),								//字典：按钮打开方式
+					'search_conditions_dic_arr' => $this->searchConditionsDic(),			//字典：按钮打开方式
+					'data_input_form_to_input_dic_arr' => $this->dataInputFormToInputDic(),	//字典：按钮打开方式
+					'data_input_form_between_dic_arr' => $this->dataInputFormBetweenDic(),	//字典：支持区间搜索的字段
+					'data_input_form_like_dic_arr' => $this->dataInputFormLikeDic(),			//字典：支持模糊匹配的字段
+					'data_input_form_only_like_dic_arr' => $this->dataInputFormOnlyLikeDic(),	//字典：支持模糊匹配的字段
+					'data_input_form_only_equal_dic_arr' => $this->dataInputFormOnlyEqualDic(),	//字典：支持模糊匹配的字段
 				]);
 				
 				$content = view('blk.datatable.body');
@@ -578,11 +583,11 @@ class DatatableGenerateController extends Controller
 	}
 	
 	/**
-	 * data_input_form 在搜索时需要改变为input的
+	 * data_input_form 在搜索时需要改变为input的字段
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
-	 * @return 		array                       
+	 * @return 		array
 	 */
 	private function dataInputFormToInputDic(){
 		return [
@@ -596,10 +601,81 @@ class DatatableGenerateController extends Controller
 			'year_mouth_scope',
 			'time_scope',
 			'datetime_scope',
+			'layui_editer',
+			'layui_editer_simple',
+			'editormd',
+			'color_choices'
+		];
+	}
+	
+	/**
+	 * data_input_form 支持区间搜索的字段
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	private function dataInputFormBetweenDic(){
+		return [
+			'input',
+			'year',
+			'year_mouth',
+			'date',
+			'time',
+			'datetime'
+		];
+	}
+	
+	/**
+	 * data_input_form 支持模糊匹配的字段
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	private function dataInputFormLikeDic(){
+		return [
+			'input',
 			'textarea',
 			'layui_editer',
 			'layui_editer_simple',
 			'editormd',
+		];
+	}
+	
+	/**
+	 * data_input_form 仅支持模糊匹配的字段
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	private function dataInputFormOnlyLikeDic(){
+		return [
+			'textarea',
+			'layui_editer',
+			'layui_editer_simple',
+			'editormd',
+			'single_photo_upload',
+			'photos_upload',
+			'single_file_upload',
+			'files_upload',
+		];
+	}
+	
+	/**
+	 * data_input_form 仅支持等于
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	private function dataInputFormOnlyEqualDic(){
+		return [
+			'select',
+			'multiple_select',
+			'tree_select',
+			'cascade_select',
 		];
 	}
 	
@@ -619,11 +695,11 @@ class DatatableGenerateController extends Controller
 			//如果字段指定type属性有值为on则继续
 			if(isset($v[$type])?$v[$type]:false){
 				//如果是搜索,需要将部分字段处理成input类型
-				if($type == 'search'){
-					if(in_array($v['data_input_form'],$this->dataInputFormToInputDic())){
-						$v['data_input_form'] = 'input';
-					}
-				}
+// 				if($type == 'search'){
+// 					if(in_array($v['data_input_form'],$this->dataInputFormToInputDic())){
+// 						$v['data_input_form'] = 'input';
+// 					}
+// 				}
 				$dom_arr[$v['field']] = $v;
 			}
 			

@@ -80,8 +80,10 @@
 				colorpicker = layui.colorpicker,
 				formSelects = layui.formSelects;
 				
-			@include ('blk.datatable.form_js')
-			
+			{{-- 表单控件初始化 --}}
+			@foreach ($dom as $key=>$vo)
+			@include ('blk.datatable.form_js.'.$vo['data_input_form'])
+			@endforeach
 			
 		});
 </script>

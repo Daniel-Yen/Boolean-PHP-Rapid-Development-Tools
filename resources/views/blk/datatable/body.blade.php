@@ -68,7 +68,13 @@
 			<div class="layui-row layui-col-space15">
 				<div class="layui-col-md11">
 				@if (isset($dom))
-				@include ('blk.datatable.form_input')
+				@foreach ($dom as $key=>$vo)
+				@if (in_array($vo['data_input_form'], $data_input_form_to_input_dic_arr))
+					@include ('blk.datatable.form.input')
+				@else
+					@include ('blk.datatable.form.'.$vo['data_input_form'])
+				@endif
+				@endforeach
 				@endif
 				</div>
 			</div>
@@ -111,7 +117,7 @@ layui.config({
 	
 	var base_url = '{{$datatable_config['route_name']}}?{!!$parse_url_query!!}';
 	
-	//获取查询条件
+	{{-- 获取查询条件 --}}
 	$.fn.serializeObject = function() {
 		var o = {};
 		var a = this.serializeArray();
@@ -159,7 +165,7 @@ layui.config({
         ,id: 'buerTableReload'
     });
     
-    //头工具栏事件
+    {{-- 头工具栏事件 --}}
     table.on('toolbar(buer-table)', function(obj){
         var checkStatus = table.checkStatus(obj.config.id);
 		switch(obj.event){
@@ -293,7 +299,7 @@ layui.config({
 			@endforeach
 			@endif
 			
-			//附加头部工具菜单
+			{{-- 附加头部工具菜单 --}}
 			@if (isset($datatable_config['new_head_menu']))
 			@foreach ($datatable_config['new_head_menu'] as $key=>$vo)
 			//{{$vo['text']}}
@@ -333,7 +339,7 @@ layui.config({
         };
     });
 		
-    //监听行工具事件
+    {{-- 监听行工具事件 --}}
     table.on('tool(buer-table)', function(obj){
         var data = obj.data;
 		//alert(data['id']);
@@ -384,7 +390,7 @@ layui.config({
 			@endforeach
 			@endif
 			
-			//添加单元格事件
+			{{-- 添加单元格事件 --}}
 			@if (isset($datatable_config['datatable_set']))
 			@foreach ($datatable_config['datatable_set'] as $key=>$vo)
 			@if (isset($vo['event'])?$vo['event']:false)
@@ -446,7 +452,7 @@ layui.config({
 	layui.tree({
 		elem: '#directory'
 		,target: '_blank'
-		,click: function(item){ //点击节点回调
+		,click: function(item){ 		{{-- 点击节点回调 --}}
 			var associated_field = '{{$datatable_config['directory']['associated_field']}}';
 			if(associated_field == "" || associated_field == null || associated_field == undefined){
 				layer.msg('没有指定关联字段');
@@ -470,17 +476,30 @@ layui.config({
 	});
 	@endif
 	
-	//搜索条件
+	{{-- 搜索条件 --}}
 	@foreach ($dom as $key=>$vo)
+	@if (in_array($vo['data_input_form'], $data_input_form_between_dic_arr))
 	form.on('select({{$vo['field']}}_search_type)', function(data){
-		//alert($this.value);
-		//alert(JSON.stringify(data));
+		if(data.value == 'between'){
+			$('#between_{{$vo['field']}}_end').removeClass('layui-hide');
+		}else{
+			$('#between_{{$vo['field']}}_end').removeClass('layui-hide');
+			$('#between_{{$vo['field']}}_end').addClass('layui-hide');
+		}
+		layui.form.render(); 	//重置表单
 	});	
+	@endif
 	@endforeach
 	
-	//搜索表单控件初始化
+	{{-- 搜索表单控件初始化 --}}
 	@if (isset($dom))
-	@include ('blk.datatable.form_js')
+	@foreach ($dom as $key=>$vo)
+	@if (in_array($vo['data_input_form'], $data_input_form_to_input_dic_arr))
+		@include ('blk.datatable.form_js.input')
+	@else
+		@include ('blk.datatable.form_js.'.$vo['data_input_form'])
+	@endif
+	@endforeach
 	@endif
 	
 	var _tools = {
@@ -488,12 +507,11 @@ layui.config({
 			layer.closeAll();
 		},
 		reload: function(){
-			//执行重载
-			//alert($('#where').serializeObject());
+			{{-- 执行重载 --}}
 			layer.closeAll();
 			tableIns.reload({
 				page: {
-					curr: 1 //重新从第 1 页开始
+					curr: 1 {{-- 重新从第 1 页开始 --}}
 				}
 				,where: $('#where').serializeObject()
 			});
