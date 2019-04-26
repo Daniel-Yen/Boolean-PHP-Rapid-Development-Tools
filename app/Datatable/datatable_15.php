@@ -55,7 +55,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => 'like',
+      'search' => 'between',
       'attribute' => 
       array (
         'align' => 'left',
@@ -559,7 +559,7 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => '<',
+      'search' => 'between',
       'attribute' => 
       array (
         'data_input_form' => 'year_mouth',

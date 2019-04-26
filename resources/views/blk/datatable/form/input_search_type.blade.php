@@ -39,7 +39,7 @@
 						@if(count($conditions_dic_arr) > 1)
 						<select name="{{$vo['field']}}_search_type" lay-filter="{{$vo['field']}}_search_type">
 							@foreach ($conditions_dic_arr as $k=>$ko)
-							<option value="{!! $k !!}">{{$ko}}</option>
+							<option @if (isset($vo['search'])?$vo['search'] == $k:false) selected="selected" @endif value="{!! $k !!}">{{$ko}}</option>
 							@endforeach
 						</select>
 						@else

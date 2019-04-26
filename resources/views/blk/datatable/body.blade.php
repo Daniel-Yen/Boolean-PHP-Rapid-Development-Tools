@@ -490,7 +490,6 @@ layui.config({
 		if(data.value == 'between'){
 			$('#between_{{$vo['field']}}_end').removeClass('layui-hide');
 		}else{
-			$('#between_{{$vo['field']}}_end').removeClass('layui-hide');
 			$('#between_{{$vo['field']}}_end').addClass('layui-hide');
 		}
 		layui.form.render(); 	//重置表单
