@@ -31,7 +31,8 @@
 						@if (in_array($vo['data_input_form'], $data_input_form_only_equal_dic_arr))
 							@php
 							$conditions_dic_arr = [
-								'=' 	=> '等于'
+								'=' 	=> '等于',
+								'<>' 	=> '不等于'
 							];
 							@endphp
 						@endif

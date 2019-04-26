@@ -61,12 +61,13 @@
 	</script>
 </div>
 
-<form class="layui-form layui-hide" id="where" style="width:95%" lay-filter="where">
+<form action="/lazykit/demo/index?do=data" method="post" class="layui-form layui-hide" id="where" style="width:95%" lay-filter="where">
 	<div id="left_directory"></div>
 	<div id="search">
 		<div class="layui-fluid">
 			<div class="layui-row layui-col-space15">
 				<div class="layui-col-md11">
+				@csrf
 				@if (isset($dom))
 				@foreach ($dom as $key=>$vo)
 				@if (in_array($vo['data_input_form'], $data_input_form_to_input_dic_arr))
@@ -76,6 +77,12 @@
 				@endif
 				@endforeach
 				@endif
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">&nbsp;</label>
+				<div class="layui-input-block">
+					<button class="layui-btn" lay-submit="" lay-filter="demo2">提交</button>
 				</div>
 			</div>
 		</div>

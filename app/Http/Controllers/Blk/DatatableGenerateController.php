@@ -208,21 +208,33 @@ class DatatableGenerateController extends Controller
 				
 				//绑定查询条件
 				$search = $request->post();
-				//dd($search);
-				foreach($search as $k=>$v){
-					//$search = $read[$k]['search'];
-					if(!in_array($k,['do', 'rand', 'page', 'limit', 'lazykit_rules'])){
-						//print_r($read[$k]); die();
-						$search = $read[$k]['search'];
-						if($read[$k]['search'] == 'between'){
-							
+				foreach($datatable_config['datatable_set'] as $k=>$v){
+					if(isset($search[$k])?$search[$k]:false){
+						$field = $k;
+						$value = $search[$k];
+						if(isset($search[$k.'_end'])){
+							$value_end = $search[$k.'_end'];
+						}
+						$search_type = $search[$k.'_search_type'];
+						if($search_type == 'like'){
+							$data = $data->when($value, function ($query) use ($k, $search_type, $value) {
+										return $query->where($k, $search_type, "'%".$value."%'");
+									});
+						}elseif($search_type == 'between'){
+							if($value && $value_end){
+								$data = $data->when($value, function ($query) use ($k, $value, $value_end) {
+											return $query->whereBetween($k, [$value, $value_end]);
+										});
+							}
 						}else{
-							$data->when($v, function ($query) use ($k, $search, $v) {
-								return $query->where($k, $search, $v);
-							});
+							$data = $data->when($value, function ($query) use ($k, $search_type, $value) {
+										return $query->where($k, $search_type, $value);
+									});
 						}
 					}
 				}
+				//dd($data->toSql());
+				
 				//print_r($search);die();
 				//加入查询条件
 				if(isset($datatable_config['other_set']['is_tree'])){
@@ -260,7 +272,7 @@ class DatatableGenerateController extends Controller
 						$data = [];
 					}
 					//dd($data);
-					//print_r(DB::getQueryLog());
+					//print_r(DB::getQueryLog());die();
 					return datatable_callback_json(0, '数据读取成功', count($data), $data);
 				}
 			}
@@ -990,11 +1002,13 @@ class DatatableGenerateController extends Controller
 	 */
 	private function searchConditionsDic(){
 		return [
-			'=' 	=> '等于',
-			'>' 	=> '大于',
-			'<' 	=> '小于',
-			'like' 	=> '模糊匹配',
+			'=' 		=> '等于',
+			'<>' 		=> '不等于',
+			'>' 		=> '大于',
+			'<' 		=> '小于',
+			'like' 		=> '模糊匹配',
 			'between' 	=> '区间',
+			'<>' 		=> '不等于',
 		];
 	}
 }

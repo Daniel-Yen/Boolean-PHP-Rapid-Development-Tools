@@ -22,7 +22,7 @@
 		.layui-input-inline{padding-left:10px;}
 		.layui-input-search{float:left;}
 		.layui-unselect{text-align:center;}
-		.search-type input{text-align:center; padding-left:0;}
+		.search-type input{text-align:center; color:#c2c2c2; padding-left:0;}
 		.padding-left-0{padding-left:0;}
 		.search-block{width:555px}
 	</style>
