@@ -333,19 +333,20 @@ class DatatableGenerateController extends Controller
 				echo $template;
 			}
 		}else{
-			//行内按钮与头部按钮处理
+			//获得当前url对应按钮的操作方法
+			$method = '';
 			if(isset($request->from)){
 				if($request->from == 'line'){
-					$button_menu_config = $datatable_config['line_button'][$request->do]['method'];
+					$method = $datatable_config['line_button'][$request->do]['method'];
 				}elseif($request->from == 'cell'){
-					$button_menu_config = $datatable_config['datatable_set'][$request->field]['method'];
-				}else{
-					$button_menu_config = $datatable_config['new_head_menu'][$request->do]['method'];
+					$method = $datatable_config['datatable_set'][$request->field]['method'];
 				}
+			}else{
+				$method = $datatable_config['new_head_menu'][$request->do]['method'];
 			}
 			
-			//执行按钮绑定的方法
-			$result = $this->getDataByMethod($button_menu_config, $datatable_config);
+			//执行按钮关联的方法
+			$result = $this->getDataByMethod($method, $datatable_config);
 			//dd($result);
 			if($result['code'] == 0){
 				echo $result['data'];

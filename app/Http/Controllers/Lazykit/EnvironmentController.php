@@ -25,7 +25,7 @@ class EnvironmentController extends Controller
     public function server(Request $request)
     {
     	$additional_config = [
-    		'data_source_method' => 'dataDource',		//控制器类的方法:获得表格数据
+    		'data_source_method' => 'dataSource',		//控制器类的方法:获得表格数据
     	];
 		
 		create_datatable('datatable_41', $additional_config, $request);
@@ -35,7 +35,7 @@ class EnvironmentController extends Controller
 	 * 系统信息数据源
 	 * @access    	public
 	 */
-    public function dataDource()
+    public function dataSource()
     {
        $sql_ver = DB::select('select version() as ver');
 	   return $sys_info_arr = [

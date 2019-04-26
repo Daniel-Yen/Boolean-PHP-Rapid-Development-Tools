@@ -362,6 +362,8 @@ class FunctionPageController extends Controller
 				'design_id' 			=> $request->design_id,									//页面设计ID
 				'system_id' 			=> $request->system_id,									//系统ID
 				'route_message' 		=> $route_message, 										//获得路由信息
+				'module' 				=> $module, 											//当前配置所在模型
+				'system' 				=> $system, 											//当前配置所在系统
 			]);
 		}
 	}
@@ -869,5 +871,14 @@ class FunctionPageController extends Controller
 		
 		//dd($data);
 		return $data;
+	}
+	
+	public function preview(Request $request){
+		$datatable_config = get_datatable_config('datatable_'.$request->design_id);
+		echo "<style>
+				body{margin:0;}
+				.sf-dump{min-height:100%;}
+			 </style>";
+		dd($datatable_config);
 	}
 }

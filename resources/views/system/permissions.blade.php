@@ -46,11 +46,9 @@
 							<!-- <td>{!!$v['url']!!}</td> -->
 							<td>
 								@if ($v['url'])
-								@if (isset($v['nodes'])?!empty($v['nodes']):false)
 								@foreach ($view as $t=>$y)
 								<div><input type="checkbox" name="rules[{{$v['url']}}][{{$t}}]" @if (isset($rules[$v['url']]['button']['value'])?in_array($t, $rules[$v['url']]['button']['value']):false) checked="" @endif value="on" title="{{$y['text']}}"></div>
 								@endforeach
-								@endif
 								@endif
 							</td>
 							<td>
@@ -60,7 +58,7 @@
 								@foreach ($v['nodes'] as $y)
 								@if (isset($y['node'])?!empty($y['node']):false)
 									<tr>
-										<td style="border:0; width:60px; padding:2px;">{{$y['title']}}</td>
+										<td style="border:0; width:70px; padding:2px; padding-right:5px; text-align:right;">{{$y['title']}}</td>
 										<td style="border:0; padding:2px;">
 										@foreach ($y['node'] as $key=>$value)
 										<input type="checkbox" name="rules[{{$v['url']}}][{{$key}}]" @if (isset($rules[$v['url']]['button']['value'])?in_array($key, $rules[$v['url']]['button']['value']):false) checked="" @endif value="on" title="{{$value['text']}}">

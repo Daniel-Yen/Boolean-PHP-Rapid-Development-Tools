@@ -89,6 +89,7 @@ class UserGroupController extends Controller
 					}
 					
 					//单元格事件
+					$event = [];
 					if(isset($datatable_config['datatable_set'])){
 						foreach($datatable_config['datatable_set'] as $k1=>$v1){
 							if(isset($v1['attribute']['event'])?$v1['attribute']['event'] == 'on':false){
@@ -110,7 +111,7 @@ class UserGroupController extends Controller
 			
 			//$data[$k]['button'] = $button;	
 		}
-		dd($data);
+		//dd($data);
 		
 		$user_group = BlkUserGroupRepository::where('id', request()->user_group_id)->first();
 		//dd(json_decode($user_group->rules, true));
