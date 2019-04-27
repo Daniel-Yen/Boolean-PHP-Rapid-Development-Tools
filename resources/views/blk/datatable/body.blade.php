@@ -50,6 +50,7 @@
 		@endforeach
 		@endif
 		@endif
+		<button id="search" class="layui-btn layui-btn-danger layui-hide layui-btn-sm" lay-event="exit_search"><i class="layui-icon layui-icon-close"></i> 退出搜索</button>
 		</div>
 	</script>
 	<script type="text/html" id="buer-table-bar">
@@ -68,8 +69,8 @@
 			<div class="layui-row layui-col-space15">
 				<div class="layui-col-md11">
 				@csrf
-				@if (isset($dom))
-				@foreach ($dom as $key=>$vo)
+				@if (isset($search))
+				@foreach ($search as $key=>$vo)
 				@if (in_array($vo['data_input_form'], $data_input_form_to_input_dic_arr))
 					@include ('blk.datatable.form.input')
 				@else
@@ -79,12 +80,12 @@
 				@endif
 				</div>
 			</div>
-			<div class="layui-form-item">
+			<!-- <div class="layui-form-item">
 				<label class="layui-form-label">&nbsp;</label>
 				<div class="layui-input-block">
 					<button class="layui-btn" lay-submit="" lay-filter="demo2">提交</button>
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </form>
@@ -237,11 +238,12 @@ layui.config({
 					,maxmin: false
 					,offset: 'auto' 
 					,content: $('#where')
-					,btn: ['提交', '重置']
+					,btn: ['提交', '退出搜索']
 					,yes: function(index){
 						$("#where").addClass('layui-hide');
 						layer.close(index);
 						tools.reload();
+						$("#search").removeClass('layui-hide');
 						return false;
 					}
 					,btn2: function(index, layero){
@@ -305,7 +307,12 @@ layui.config({
 			break;
 			@endforeach
 			@endif
-			
+			case 'exit_search':
+				$("#where")[0].reset();
+				layui.form.render();
+				tools.reload();
+				$("#search").addClass('layui-hide');
+			break;
 			{{-- 附加头部工具菜单 --}}
 			@if (isset($datatable_config['new_head_menu']))
 			@foreach ($datatable_config['new_head_menu'] as $key=>$vo)
@@ -489,7 +496,8 @@ layui.config({
 	@endif
 	
 	{{-- 搜索条件 --}}
-	@foreach ($dom as $key=>$vo)
+	@if (isset($search)?$search:false)
+	@foreach ($search as $key=>$vo)
 	@if (in_array($vo['data_input_form'], $data_input_form_between_dic_arr))
 	form.on('select({{$vo['field']}}_search_type)', function(data){
 		if(data.value == 'between'){
@@ -501,10 +509,11 @@ layui.config({
 	});	
 	@endif
 	@endforeach
+	@endif
 	
 	{{-- 搜索表单控件初始化 --}}
-	@if (isset($dom))
-	@foreach ($dom as $key=>$vo)
+	@if (isset($search)?$search:false)
+	@foreach ($search as $key=>$vo)
 	@if (in_array($vo['data_input_form'], $data_input_form_to_input_dic_arr))
 		@include ('blk.datatable.form_js.input')
 	@else

@@ -313,7 +313,7 @@ class DatatableGenerateController extends Controller
 				//http_build_query();
 				
 				view()->share([
-					'dom' => $this->getDataFieldSet($datatable_config, 'search'), 			//搜索字段
+					'search' => $this->getDataFieldSet($datatable_config, 'search'), 			//搜索字段
 					'cols' => $this->cols($read, $datatable_config),						//表头
 					'read' => $read,														//字段
 					'datatable_config' => $datatable_config,								//数据表格配置
