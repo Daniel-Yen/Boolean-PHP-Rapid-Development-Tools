@@ -351,7 +351,7 @@ layui.config({
         var data = obj.data;
 		var additional_window_title = '';
 		@foreach ($datatable_config['additional_window_title'] as $v)
-		additional_window_title = additional_window_title+data['{{$v}}']+'<i class="layui-icon layui-icon-triangle-r"></i>';
+		additional_window_title = additional_window_title+data['{{$v}}']+' / ';
 		@endforeach
 		//alert(data['id']);
 		

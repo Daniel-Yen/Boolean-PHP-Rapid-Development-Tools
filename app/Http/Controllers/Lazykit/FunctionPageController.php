@@ -206,12 +206,26 @@ class FunctionPageController extends Controller
 		//$datatable_config_name = $this->getDatatableFielName($datatable_arr);
 		if($request->isMethod('post')){
 			//数据源设置
-			$param = [
-				'main_table' 		=> $request->main_table,
-				'associated_type' 	=> $request->associated_type,
-				'associated_table' 	=> $request->associated_table,
-				'external_field' 	=> $request->external_field,
-			];
+			if(isset($request->main_table)?$request->main_table:false){
+				$param = [
+					'main_table' 		=> $request->main_table,
+					'associated_type' 	=> $request->associated_type,
+					'associated_table' 	=> $request->associated_table,
+					'external_field' 	=> $request->external_field,
+				];
+			}else{
+				$param = [
+					'inheritance' 		=> $request->inheritance,
+					'inheritance_note' 	=> $request->inheritance_note,
+				];
+				
+				unset($datatable_arr['main_table']);
+				unset($datatable_arr['associated_type']);
+				unset($datatable_arr['associated_table']);
+				unset($datatable_arr['external_field']);
+				unset($datatable_arr['datatable_set']);
+			}
+			
 			BlkFunctionPageRepository::where('id', '=', $request->design_id)->update($param);
 			
 			//datatable 字段配置:排序
@@ -310,7 +324,7 @@ class FunctionPageController extends Controller
 			file_put_contents($datatable_config_path,$datatable_config);
 			
 			//生成主表对应的模型类及验证器类
-			if($datatable_arr['main_table']){
+			if(isset($datatable_arr['main_table'])?$datatable_arr['main_table']:false){
 				$this->createRepository($datatable_arr['main_table'], $path);
 			}
 			//生成关联表对应的模型类及验证器类
