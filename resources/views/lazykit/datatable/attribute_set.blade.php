@@ -106,7 +106,7 @@
 					<div class="layui-form-mid layui-word-aux">选择是，该字段在前端可排序</div>
 				</div>
 				<div class="layui-form-item">
-					<label class="layui-form-label">窗口标题</label>
+					<label class="layui-form-label">窗口附加标题</label>
 					<div class="layui-input-inline" style="width: 70px;">
 						<input type="checkbox" name="window_title" lay-skin="switch" @if (isset($attribute_arr['window_title'])) @if ($attribute_arr['window_title'] == 'on') checked="checked" @endif  @endif lay-text="是|否">
 					</div>

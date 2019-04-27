@@ -206,7 +206,13 @@ class FunctionPageController extends Controller
 		//$datatable_config_name = $this->getDatatableFielName($datatable_arr);
 		if($request->isMethod('post')){
 			//数据源设置
-			BlkFunctionPageRepository::where('id', '=', $request->id)->update($param);
+			$param = [
+				'main_table' 		=> $request->main_table,
+				'associated_type' 	=> $request->associated_type,
+				'associated_table' 	=> $request->associated_table,
+				'external_field' 	=> $request->external_field,
+			];
+			BlkFunctionPageRepository::where('id', '=', $request->design_id)->update($param);
 			
 			//datatable 字段配置:排序
 			$datatable_arr['datatable_set'] = array_sort($request->datatable_set,'sorting');

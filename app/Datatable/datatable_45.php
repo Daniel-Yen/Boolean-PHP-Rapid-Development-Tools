@@ -40,7 +40,20 @@
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'attribute' => NULL,
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'data_source_type' => 'method',
+        'data_source' => NULL,
+        'validate' => NULL,
+        'dic_static' => NULL,
+        'method' => NULL,
+        'window_title' => 'on',
+        'event_type' => 'window',
+        'event_behavior' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'file_path' => 
     array (

@@ -349,8 +349,13 @@ layui.config({
     {{-- 监听行工具事件 --}}
     table.on('tool(buer-table)', function(obj){
         var data = obj.data;
+		var additional_window_title = '';
+		@foreach ($datatable_config['additional_window_title'] as $v)
+		additional_window_title = additional_window_title+data['{{$v}}']+'<i class="layui-icon layui-icon-triangle-r"></i>';
+		@endforeach
 		//alert(data['id']);
-        switch(obj.event){
+		
+		switch(obj.event){
 			@if (isset($datatable_config['line_button']))
 			@foreach ($datatable_config['line_button'] as $key=>$vo)
 			//{{$vo['text']}}
@@ -358,7 +363,7 @@ layui.config({
 			@if ($vo['open_tepe'] == 'window')
 				layer.open({
 					type: 2
-					,title: '{{$vo['text']}}'
+					,title: additional_window_title+'{{$vo['text']}}'
 					,area: ['{{$vo['width']}}', '{{$vo['height']}}']
 					,shade: 0.3
 					,maxmin: false

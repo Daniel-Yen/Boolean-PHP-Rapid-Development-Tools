@@ -36,7 +36,7 @@
 						<table class='layui-table'>
 							<tbody>
 								<tr>
-									<td width="85">菜单名称：</td>
+									<td width="85">页面名称：</td>
 									<td>{{!empty($datatable_arr['title'])?$datatable_arr['title']:''}}</td>
 								</tr>
 								<tr>

@@ -453,6 +453,9 @@ class DatatableGenerateController extends Controller
 			$datatable_config['update_page'] = isset($additional_config['update_page'])?$additional_config['update_page']:'blk.datatable.form';
 			//dd($datatable_config);
 			
+			//附加标题
+			$additional_window_title = [];
+			
 			//获取字段属性设置
 			foreach($datatable_config['datatable_set'] as $k=>$v){
 				//取设置的字段属性,用于表单生成
@@ -492,9 +495,17 @@ class DatatableGenerateController extends Controller
 					];
 				}
 				
+				//附加标题
+				if(isset($v['attribute']['window_title'])?$v['attribute']['window_title']:false){
+					$additional_window_title[] = $v['field'];
+				}
+				
 				$datatable_config['datatable_set'][$k] = array_merge($v,$attribute);
-				//dd($datatable_config);
 			}
+				
+			//附加标题
+			$datatable_config['additional_window_title'] = $additional_window_title;
+			//dd($datatable_config);
 			
 			//获得数据模型
 			if(isset($datatable_config['main_table'])){

@@ -3,9 +3,9 @@
 			</fieldset>
 			<table class="layui-table create">
 				<tbody>
-					<tr>
-						<td style="width:150px;">&nbsp; 主表</td>
-						<td class="main_table">
+					<tr class="main_table">
+						<td style="width:110px;"> &nbsp; &nbsp; 主表：</td>
+						<td>
 						<select name="main_table">
 							<option value=""></option>
 							@foreach ($tables as $vo)
@@ -15,7 +15,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td>&nbsp; 关联类型</td>
+						<td> &nbsp; &nbsp; 关联类型：</td>
 						<td>
 						<select name="associated_type" style="width:120px;">
 							<option value=""></option>
@@ -25,9 +25,9 @@
 						</select>
 						</td>
 					</tr>
-					<tr>
-						<td style="width:150px;">&nbsp; 关联表</td>
-						<td class="associated_table">
+					<tr class="associated_table">
+						<td> &nbsp; &nbsp; 关联表：</td>
+						<td>
 						<select name="associated_table" style="width:150px;">
 							<option value=""></option>
 							@foreach ($tables as $vo)
@@ -36,9 +36,9 @@
 						</select>
 						</td>
 					</tr>
-					<tr>
-						<td style="width:150px;">&nbsp; 自定义字段</td>
-						<td class="external_field">
+					<tr class="external_field">
+						<td> &nbsp; &nbsp; 自定义字段：</td>
+						<td>
 						<input type="text" name="external_field" value="{{$datatable_arr['external_field']}}" placeholder="请输入用逗号隔开的字段" autocomplete="off" class="layui-input">
 						</td>
 					</tr>
