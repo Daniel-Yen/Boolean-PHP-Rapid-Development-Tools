@@ -1,4 +1,4 @@
-<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
 				<legend>数据表格继承设置</legend>
 			</fieldset>
 			<form class="layui-form" action="{{url('/lazykit/functionpage/add_model?id='.$datatable_arr['id'])}}" method="post">

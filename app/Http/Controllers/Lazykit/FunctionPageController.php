@@ -205,6 +205,9 @@ class FunctionPageController extends Controller
 		//获得datatable配置名称
 		//$datatable_config_name = $this->getDatatableFielName($datatable_arr);
 		if($request->isMethod('post')){
+			//数据源设置
+			BlkFunctionPageRepository::where('id', '=', $request->id)->update($param);
+			
 			//datatable 字段配置:排序
 			$datatable_arr['datatable_set'] = array_sort($request->datatable_set,'sorting');
 			foreach($datatable_arr['datatable_set'] as $k=>$v){
@@ -404,16 +407,16 @@ class FunctionPageController extends Controller
 	 * @param  		\Illuminate\Http\Request  $request
 	 * @return  	\Illuminate\Http\Response
 	 */
-	public function addModel(Request $request)
-	{
-		//dd($request->id);
-		$param = $request->post();
-		unset($param['_token']);
-		//DB::connection()->enableQueryLog();
-		BlkFunctionPageRepository::where('id', '=', $request->id)->update($param);
-		//dd(DB::getQueryLog());
-		return success("数据源设置成功");
-	}
+	// public function addModel(Request $request)
+	// {
+	// 	//dd($request->id);
+	// 	$param = $request->post();
+	// 	unset($param['_token']);
+	// 	//DB::connection()->enableQueryLog();
+	// 	BlkFunctionPageRepository::where('id', '=', $request->id)->update($param);
+	// 	//dd(DB::getQueryLog());
+	// 	return success("数据源设置成功");
+	// }
 	
 	/**
 	 * 根据表配置获得字段属性
