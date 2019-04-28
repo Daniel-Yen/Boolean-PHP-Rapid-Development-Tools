@@ -32,7 +32,7 @@ trait SetDic
      */
     private function buttonStyleTypeDic(){
     	return [
-    		'layui-btn-0' 	=> '绿色',
+    		'layui-btn-0' 			=> '绿色',
     		'layui-btn-primary' 	=> '无背景',
     		'layui-btn-normal' 		=> '蓝色',
     		'layui-btn-warm' 		=> '黄色',

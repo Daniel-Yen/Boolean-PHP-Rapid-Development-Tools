@@ -201,7 +201,7 @@ class DatatableGenerateController extends Controller
 				//dd($fields);
 				$data = $datatable_config['modelClass']::select($fields_arr);
 				
-				//绑定查询条件
+				//获得post查询条件
 				if($request->isMethod('post')){
 					$search = $request->post();
 					foreach($datatable_config['datatable_set'] as $k=>$v){
@@ -215,41 +215,93 @@ class DatatableGenerateController extends Controller
 								$value_end = '';
 							}
 							
-							$conditions[] = [$field, $search_type, $value, $value_end];
-							if($search_type == 'like'){
-								$data = $data->when($value, function ($query) use ($k, $search_type, $value) {
-											return $query->where($k, $search_type, '%'.$value.'%');
-										});
-							}elseif($search_type == 'between'){
-								if($value && $value_end){
-									$data = $data->when($value, function ($query) use ($k, $value, $value_end) {
-												return $query->whereBetween($k, [$value, $value_end]);
-											});
+							if($field && $search_type && $value){
+								if($value_end){
+									$conditions[] = [$field, $search_type, $value, $value_end];
+								}else{
+									$conditions[] = [$field, $search_type, $value];
 								}
-							}else{
-								$data = $data->when($value, function ($query) use ($k, $search_type, $value) {
-											return $query->where($k, $search_type, $value);
-										});
 							}
+							
 						}
 					}
+					//4、附加查询条件
+					if(isset($additional_config['conditions'])){
+						$conditions = array_merge($conditions, $additional_config['conditions']);
+					}
+				}else{
+					$conditions = $additional_config['conditions'];
 				}
 				
-				//4、附加查询条件
-				if(isset($additional_config['conditions'])){
-					$conditions = array_merge($conditions, $additional_config['conditions']);
+				//绑定查询条件
+				foreach($conditions as $k=>$v){
+					if(isset($v['0'])){ $field = $v['0']; }else{ $field = ''; }
+					if(isset($v['1'])){ $search_type = $v['1']; }else{ $search_type = ''; }
+					if(isset($v['2'])){ $value = $v['2']; }else{ $value = ''; }
+					if(isset($v['3'])){ $value_end = $v['3']; }else{ $value_end = ''; }
+					if($search_type == 'like'){
+						$data = $data->when($field, function ($query) use ($field, $search_type, $value) {
+									return $query->where($field, $search_type, '%'.$value.'%');
+								});
+					}else if($search_type == 'between'){
+						if($value && $value_end){
+							$data = $data->when($field, function ($query) use ($field, $value, $value_end) {
+									return $query->whereBetween($field, [$value, $value_end]);
+								});
+						}
+					}else if(in_array($search_type, ['=', '<>', '>', '<'])){
+						$data = $data->when($field, function ($query) use ($field, $search_type, $value) {
+									return $query->where($field, $search_type, $value);
+								});
+					}else if($search_type == 'in'){
+						$data = $data->when($field, function ($query) use ($field, $value) {
+									return $query->whereIn($field, $value);
+								});
+					}else if($search_type == 'null'){
+						$data = $data->when($field, function ($query) use ($field) {
+									return $query->whereNull($field);
+								});
+					}else if($search_type == 'notnull'){
+						$data = $data->when($field, function ($query) use ($field) {
+									return $query->whereNotNull($field);
+								});
+					}else if($search_type == 'date'){
+						$data = $data->when($field, function ($query) use ($field, $value) {
+									return $query->whereDate($field, $value);
+								});
+					}else if($search_type == 'date'){
+						$data = $data->when($field, function ($query) use ($field, $value) {
+									return $query->whereDate($field, $value);
+								});
+					}else if($search_type == 'mouth'){
+						$data = $data->when($field, function ($query) use ($field, $value) {
+									return $query->whereMonth($field, $value);
+								});
+					}else if($search_type == 'day'){
+						$data = $data->when($field, function ($query) use ($field, $value) {
+									return $query->whereDay($field, $value);
+								});
+					}else if($search_type == 'year'){
+						$data = $data->when($field, function ($query) use ($field, $value) {
+									return $query->whereYear($field, $value);
+								});
+					}else if($search_type == 'time'){
+						$data = $data->when($field, function ($query) use ($field, $search_type, $value) {
+									return $query->whereTime($field, $search_type, $value);
+								});
+					}
 				}
-				//
 				//dd($data->toSql());
 				
-				//print_r($search);die();
-				//加入查询条件
+				//处理回收站查询已删除记录
+				if($request->ac == "recycle"){
+					$data = $data->onlyTrashed();
+				}
+				
+				//如果为树结构则不分页查询
 				if(isset($datatable_config['other_set']['is_tree'])){
-					if($request->ac == "recycle"){
-						$data = $data->onlyTrashed()->get();
-					}else{
-						$data = $data->get();
-					}
+					$data = $data->get();
+					//如果是回收站则不输出树结构
 					if($data->first()){
 						$data = $data->toArray();
 						//如果是回收站则不输出树结构
@@ -261,27 +313,19 @@ class DatatableGenerateController extends Controller
 					}else{
 						$data = [];
 					}
-					//dd(DB::getQueryLog());
-					
-					//dd($data);
-					return datatable_callback_json(0, '数据读取成功', count($data), $data); 
+					$data = $this->dicToChar($data, $datatable_config);
 				}else{
-					if($request->ac == "recycle"){
-						$data = $data->onlyTrashed()->paginate(30);
-					}else{
-						$data = $data;
-						$data = $data->paginate(30);
-					}
+					$data = $data->paginate(30);
+					//如果查询到数据则输出数组
 					if($data->first()){
 						$data = $data->toArray();
 						$data = $this->dicToChar($data['data'], $datatable_config);
 					}else{
 						$data = [];
 					}
-					//dd($data);
-					//print_r(DB::getQueryLog());die();
-					return datatable_callback_json(0, '数据读取成功', count($data), $data);
 				}
+				
+				return datatable_callback_json(0, '数据读取成功', count($data), $data);
 			}
 		}elseif( $request->do == "open" || $request->do == "recycle" ) {     //open参数是在Permission中间件中赋的值
 			//回收站不可进行基于数据的任何操作，删除行内按钮
