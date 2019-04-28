@@ -1,5 +1,5 @@
 				<div class="layui-form-item">
-					<label class="layui-form-label">{{$vo['title']}}</label>
+					<label class="layui-form-label title">{{$vo['title']}}</label>
 					<div class="layui-input-block">
 						<div class="layui-upload">
 							<button type="button" class="layui-btn" id="photos_upload_{{$vo['field']}}">多图片上传</button>

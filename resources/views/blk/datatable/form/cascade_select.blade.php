@@ -1,5 +1,5 @@
 				<div class="layui-form-item">
-					<label class="layui-form-label">{{$vo['title']}}</label>
+					<label class="layui-form-label title">{{$vo['title']}}</label>
 					@include ('blk.datatable.form.input_search_type')
 					<div class="layui-input-block search-block">
 						@if ( isset($vo['dic_data']['code'])?$vo['dic_data']['code'] == 0:false )

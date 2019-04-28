@@ -14,19 +14,20 @@
   
 	@stack('css')
 	
-	@if (isset($search_conditions_dic_arr))
 	<style type="text/css">
+		.title{width:130px; height:20px; line-height:25px;}
+		.layui-input-block{margin-left:160px;}
+		@if (isset($search_conditions_dic_arr))
 		.search-type{width:100px; padding:0; height:auto; text-align:center;}
 		.layui-form-item .layui-input-inline{width:274px;}
 		.layui-input-block{width:274px; margin-left:10px; float:left; display:inline-block; vertical-align:middle;}
 		.layui-input-inline{padding-left:10px;}
 		.layui-input-search{float:left;}
-		.layui-unselect{text-align:center;}
 		.search-type input{text-align:center; padding-left:0;}
 		.padding-left-0{padding-left:0;}
 		.search-block{width:555px}
+		@endif
 	</style>
-	@endif
 	
   <!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>

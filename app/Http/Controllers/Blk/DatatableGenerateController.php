@@ -182,14 +182,9 @@ class DatatableGenerateController extends Controller
 				}
 			}else{
 				$conditions = [];
-				//dd($request->post());
 				
-				//4、查询条件
-				if(isset($additional_config['conditions'])){
-					$conditions = array_merge($conditions, $additional_config['conditions']);
-				}
 				//dd($conditions);
-				//DB::connection()->enableQueryLog();
+				DB::connection()->enableQueryLog();
 				
 				//获得要查询的字段
 				$read = $this->getDataFieldSet($datatable_config, 'read');
@@ -207,32 +202,44 @@ class DatatableGenerateController extends Controller
 				$data = $datatable_config['modelClass']::select($fields_arr);
 				
 				//绑定查询条件
-				$search = $request->post();
-				foreach($datatable_config['datatable_set'] as $k=>$v){
-					if(isset($search[$k])?$search[$k]:false){
-						$field = $k;
-						$value = $search[$k];
-						if(isset($search[$k.'_end'])){
-							$value_end = $search[$k.'_end'];
-						}
-						$search_type = $search[$k.'_search_type'];
-						if($search_type == 'like'){
-							$data = $data->when($value, function ($query) use ($k, $search_type, $value) {
-										return $query->where($k, $search_type, "'%".$value."%'");
-									});
-						}elseif($search_type == 'between'){
-							if($value && $value_end){
-								$data = $data->when($value, function ($query) use ($k, $value, $value_end) {
-											return $query->whereBetween($k, [$value, $value_end]);
+				if($request->isMethod('post')){
+					$search = $request->post();
+					foreach($datatable_config['datatable_set'] as $k=>$v){
+						if(isset($search[$k])?$search[$k]:false){
+							$field = $k;
+							$search_type = $search[$k.'_search_type'];
+							$value = $search[$k];
+							if(isset($search[$k.'_end'])){
+								$value_end = $search[$k.'_end'];
+							}else{
+								$value_end = '';
+							}
+							
+							$conditions[] = [$field, $search_type, $value, $value_end];
+							if($search_type == 'like'){
+								$data = $data->when($value, function ($query) use ($k, $search_type, $value) {
+											return $query->where($k, $search_type, '%'.$value.'%');
+										});
+							}elseif($search_type == 'between'){
+								if($value && $value_end){
+									$data = $data->when($value, function ($query) use ($k, $value, $value_end) {
+												return $query->whereBetween($k, [$value, $value_end]);
+											});
+								}
+							}else{
+								$data = $data->when($value, function ($query) use ($k, $search_type, $value) {
+											return $query->where($k, $search_type, $value);
 										});
 							}
-						}else{
-							$data = $data->when($value, function ($query) use ($k, $search_type, $value) {
-										return $query->where($k, $search_type, $value);
-									});
 						}
 					}
 				}
+				
+				//4、附加查询条件
+				if(isset($additional_config['conditions'])){
+					$conditions = array_merge($conditions, $additional_config['conditions']);
+				}
+				//
 				//dd($data->toSql());
 				
 				//print_r($search);die();
@@ -371,7 +378,7 @@ class DatatableGenerateController extends Controller
 	 *		'fields' => ['field1', 'field2', 'field3'],
 	 *		4、【已实现】查询条件
 	 *		'conditions' => [
-	 *			['module', '=', request()->module()],
+	 *			[$field, $search_type, $value, [$value_end]],
 	 *		],
 	 *		5、【已实现】附加的新增数据,会被合并到表单提交的数据中，相同key的数据会覆盖表单提交的数据
 	 *		'create_param' => [
