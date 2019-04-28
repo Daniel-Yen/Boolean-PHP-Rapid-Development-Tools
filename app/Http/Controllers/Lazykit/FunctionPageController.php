@@ -74,7 +74,6 @@ class FunctionPageController extends Controller
 				//附加的新增数据
 				$additional_config['create_param'] = [
 					'url' 		=> $route_message['route_path'].$route_message['route_name'],
-					'system_id' => $request->system_id
 				];
 				
 				//附加的修改数据
@@ -83,6 +82,7 @@ class FunctionPageController extends Controller
 				];
 			}
 		}
+		$additional_config['create_param']['system_id'] = $request->system_id;
 		
 		create_datatable('datatable_1', $additional_config, $request);
 	}
@@ -152,186 +152,69 @@ class FunctionPageController extends Controller
 	public function set()
 	{
 		$request = request();
-		$datatable_arr = BlkFunctionPageRepository::where('id', $request->design_id)->first();
+		$function_page = BlkFunctionPageRepository::where('id', $request->design_id)->first();
 		
-		if($datatable_arr){
-			$datatable_arr = $datatable_arr->toArray();
+		if($function_page){
+			$function_page = $function_page->toArray();
 			
 			//判断当前页面是存在对应的模型
-			$module = BlkModuleRepository::where('id', $datatable_arr['module_id'])->first();
+			$module = BlkModuleRepository::where('id', $function_page['module_id'])->first();
 			if($module){
 				//判断当前页面是存在对应的系统
-				$system = BlkSystemRepository::where('id', $datatable_arr['system_id'])->first();
+				$system = BlkSystemRepository::where('id', $function_page['system_id'])->first();
 				if($system){
 					$path = $this->getPath($system);
 					
 					//去除不需要记录在配置中的页面设计中的字段
-					unset($datatable_arr['created_at']);
-					unset($datatable_arr['updated_at']);
-					unset($datatable_arr['deleted_at']);
+					unset($function_page['created_at']);
+					unset($function_page['updated_at']);
+					unset($function_page['deleted_at']);
 				}else{
-					die("当前页面没有对应的系统模块！");
+					return view('datatable.msg', [
+						'msg' => "当前页面没有对应的系统！"
+					]);
 				}
 			}else{
-				die("当前页面没有对应的系统模块！");
+				return view('datatable.msg', [
+					'msg' => "当前页面没有对应的系统模块！"
+				]);
 			}
 		}else{
-			$datatable_arr = [];
+			$function_page = [];
 		}
 		
 		//配置在对应系统中的文件路径
-		if($datatable_arr['model']){
+		if($function_page['model']){
 			$model = [
 				2 => 'datatable',
 				3 => 'chart',
 				4 => 'config',
 				5 => 'datatable',
 			];
-			$datatable_config_path = $path['datatable'].$model[$datatable_arr['model']].'_'.$datatable_arr['id'].'.php';
+			$config_path = $path['datatable'].$model[$function_page['model']].'_'.$function_page['id'].'.php';
 		}else{
-			die("当前记录功能模型不存在！");
+			return view('datatable.msg', [
+				'msg' => "当前记录功能模型不存在"
+			]);
 		}
 		
 		//获得当前页面设计的路由信息
-		$route_message = $this->getRouteMessage($datatable_arr, $path);
+		$route_message = $this->getRouteMessage($function_page, $path);
 				
 		//获得datatable配置名称
-		//$datatable_config_name = $this->getDatatableFielName($datatable_arr);
+		//$datatable_config_name = $this->getDatatableFielName($function_page);
 		if($request->isMethod('post')){
-			//数据源设置
-			if(isset($request->main_table)?$request->main_table:false){
-				$param = [
-					'main_table' 		=> $request->main_table,
-					'associated_type' 	=> $request->associated_type,
-					'associated_table' 	=> $request->associated_table,
-					'external_field' 	=> $request->external_field,
-				];
-			}else{
-				$param = [
-					'inheritance' 		=> $request->inheritance,
-					'inheritance_note' 	=> $request->inheritance_note,
-				];
-				
-				unset($datatable_arr['main_table']);
-				unset($datatable_arr['associated_type']);
-				unset($datatable_arr['associated_table']);
-				unset($datatable_arr['external_field']);
-				unset($datatable_arr['datatable_set']);
+			if(in_array($function_page['model'], [2, 5])){
+				$this->datatable_set($function_page, $request, $route_message, $path, $config_path);
 			}
-			
-			BlkFunctionPageRepository::where('id', '=', $request->design_id)->update($param);
-			
-			//datatable 字段配置:排序
-			$datatable_arr['datatable_set'] = array_sort($request->datatable_set,'sorting');
-			foreach($datatable_arr['datatable_set'] as $k=>$v){
-				//取设置的字段属性,用于表单生成
-				$conditions = [
-					['design_id', '=', $datatable_arr['id']],
-					['field', '=', $v['field']],
-				];
-				$attribute_arr = BlkAttributeRepository::where($conditions)->first();
-				if($attribute_arr){
-					$datatable_arr['datatable_set'][$k]['attribute'] = json_decode($attribute_arr['attribute'], true);
-				}else{
-					$datatable_arr['datatable_set'][$k]['attribute'] = NULL;
-				}
-			}
-			
-			//datatable 头部工具菜单:内置(不可更改)
-			$datatable_arr['head_menu'] = $request->head_menu;
-			//datatable 其他设置
-			$datatable_arr['other_set'] = $request->other_set;
-			
-			$datatable_arr['route'] = [
-				'route_path' 	=> $route_message['route_path'],
-				'route_name' 	=> $route_message['route_name'],
-				'controller' 	=> $route_message['namespace'].'\\'.$route_message['controller'],
-				'method' 		=> $route_message['method'],
-			];
-			//datatable 左侧目录树
-			if(isset($request->directory['has'])){
-				$datatable_arr['directory'] = $request->directory;
-			}
-			
-			//datatable 附加工具菜单
-			$datatable_arr['new_head_menu'] = $request->new_head_menu_list;
-			if(isset($request->new_head_menu['type'])){
-				//dd($request->new_head_menu_list);
-				foreach($request->new_head_menu['type'] as $k=>$v){
-					if($v){
-						$datatable_arr['new_head_menu'][$v] = [
-							'text' 		=> $request->new_head_menu['text'][$k],
-							'icon' 		=> $request->new_head_menu['icon'][$k],
-							'open_tepe' => $request->new_head_menu['open_tepe'][$k],
-							'must' 		=> isset($request->new_head_menu['must'][$k])?$request->new_head_menu['must'][$k]:'',
-							'width' 	=> $request->new_head_menu['width'][$k],
-							'height' 	=> $request->new_head_menu['height'][$k],
-							'method' 	=> $request->new_head_menu['method'][$k],
-							//'route' 	=> \Illuminate\Support\Str::snake($request->new_head_menu['method'][$k]),
-						];
-					}
-				}
-			}
-			
-			//创建按钮的控制器方法[未实现]
-			if(isset($datatable_arr['new_head_menu'])){
-				$this->createMethod($datatable_arr['new_head_menu']);
-			}
-			//dd($datatable_arr['new_head_menu']);
-			
-			//datatable 附加工具菜单
-			$datatable_arr['line_button'] = $request->line_button_list;
-			if(isset($request->line_button['type'])){
-				foreach($request->line_button['type'] as $k=>$v){
-					if($v){
-						$datatable_arr['line_button'][$v] = [
-							'text' 		=> $request->line_button['text'][$k],
-							'style' 	=> $request->line_button['style'][$k],
-							'open_tepe' => $request->line_button['open_tepe'][$k],
-							'must' 		=> isset($request->line_button['must'][$k])?$request->line_button['must'][$k]:'',
-							'width' 	=> $request->line_button['width'][$k],
-							'height' 	=> $request->line_button['height'][$k],
-							'method' 	=> $request->line_button['method'][$k],
-							//'route' 	=> \Illuminate\Support\Str::snake($request->line_button['method'][$k]),
-						];
-					}
-				}
-			}
-			
-			//创建按钮的控制器方法
-// 			if(isset($datatable_arr['line_button'])){
-// 				$this->createMethod($datatable_arr['line_button']);
-// 			}
-			//dd($method_arr);
-			
-			//将页面设计对应的datatable 配置文件保存到数据库
-			BlkAutoGenerateRepository::updateOrInsert(
-					['function_page_id' => $datatable_arr['id']],
-					['config' => json_encode($datatable_arr)]
-				);
-			
-			//生成对应系统的改页面设计对应的datatable 配置文件
-			unset($datatable_arr['module_id']);
-			unset($datatable_arr['system_id']);
-			$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';
-			file_put_contents($datatable_config_path,$datatable_config);
-			
-			//生成主表对应的模型类及验证器类
-			if(isset($datatable_arr['main_table'])?$datatable_arr['main_table']:false){
-				$this->createRepository($datatable_arr['main_table'], $path);
-			}
-			//生成关联表对应的模型类及验证器类
-// 			if($datatable_arr['associated_table']){
-// 				$this->createRequest($datatable_arr['associated_table']);
-// 			}
 			
 			return success("操作成功");
 		}else{
-			if(file_exists($datatable_config_path)){
-				$datatable_config = require($datatable_config_path);
+			if(file_exists($config_path)){
+				$datatable_config = require($config_path);
 			}else{
-				$auto_generate = BlkAutoGenerateRepository::where('function_page_id', $datatable_arr['id'])->first();
-				//dd($datatable_config_path);
+				$auto_generate = BlkAutoGenerateRepository::where('function_page_id', $function_page['id'])->first();
+				//dd($config_path);
 				if($auto_generate){
 					$datatable_config = json_decode($auto_generate['config'], true);
 				}else{
@@ -349,38 +232,167 @@ class FunctionPageController extends Controller
 					
 					return success('控制器及方法生成成功', '控制器：'.$route_message['controller'].'已生成，控制器方法：'.$route_message['method'].'已生成', url()->full() );
 				}
-			}else{
-				return view('datatable.msg', [
-					'msg' => "没有指定的控制器及方法"
-				]);
 			}
 			
-			//dd($datatable_arr);
-			if($datatable_arr['model'] == 2){
-				view()->share([
-					'join_type_arr' 		=> $this->joinTypeDic(),								//字典：数据库表连接方式
-					'tables' 				=> $this->getTables($system),
-					'fixed_column_dic_arr' 	=> $this->fixedColumnDic(),								//字典：固定列的类型
-					'field_row_arr' 		=> $this->getFieldRow($datatable_arr, $datatable_config, $system),	//根据表配置获得字段属
-				]);
-			}else if($datatable_arr['model'] == 5){
-				view()->share([
-					'inheritance_datatable_arr' 	=> $this->getInheritanceDatatable($system),		//可继承的数据表格
+			//dd($function_page);
+			if(in_array($function_page['model'], [2, 5])){
+				if($function_page['model'] == 2){
+					view()->share([
+						'join_type_arr' 		=> $this->joinTypeDic(),								//字典：数据库表连接方式
+						'tables' 				=> $this->getTables($system),
+						'fixed_column_dic_arr' 	=> $this->fixedColumnDic(),								//字典：固定列的类型
+						'field_row_arr' 		=> $this->getFieldRow($function_page, $datatable_config, $system),	//根据表配置获得字段属
+					]);
+				}else if($function_page['model'] == 5){
+					view()->share([
+						'inheritance_datatable_arr' 	=> $this->getInheritanceDatatable($system),		//可继承的数据表格
+					]);
+				}
+				return view('lazykit.datatable.set', [
+					'button_style_type_arr' => $this->buttonStyleTypeDic(),							//字典：行按钮样式
+					'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),							//字典：按钮打开方式
+					'search_conditions_dic_arr' => $this->searchConditionsDic(),					//字典：按钮打开方式
+					'head_menu_arr' 		=> $this->headMenu($datatable_config, $function_page),	//datatable 头部工具菜单
+					'datatable_arr' 		=> $function_page,										//datatable 记录
+					'datatable_config' 		=> $datatable_config,									//datatable 配置
+					'design_id' 			=> $request->design_id,									//页面设计ID
+					'system_id' 			=> $request->system_id,									//系统ID
+					'route_message' 		=> $route_message, 										//获得路由信息
+					'module' 				=> $module, 											//当前配置所在模型
+					'system' 				=> $system, 											//当前配置所在系统
 				]);
 			}
-			return view('lazykit.datatable.set', [
-				'button_style_type_arr' => $this->buttonStyleTypeDic(),							//字典：行按钮样式
-				'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),							//字典：按钮打开方式
-				'search_conditions_dic_arr' => $this->searchConditionsDic(),					//字典：按钮打开方式
-				'head_menu_arr' 		=> $this->headMenu($datatable_config, $datatable_arr),	//datatable 头部工具菜单
-				'datatable_arr' 		=> $datatable_arr,										//datatable 记录
-				'datatable_config' 		=> $datatable_config,									//datatable 配置
-				'design_id' 			=> $request->design_id,									//页面设计ID
-				'system_id' 			=> $request->system_id,									//系统ID
-				'route_message' 		=> $route_message, 										//获得路由信息
-				'module' 				=> $module, 											//当前配置所在模型
-				'system' 				=> $system, 											//当前配置所在系统
-			]);
+		}
+	}
+	
+	/**
+	 * 设置菜单模型
+	 *
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		$function_page  			页面设计记录
+	 * @param  		\Illuminate\Http\Request  	$request
+	 * @param 		$route_message 				页面设计路由信息
+	 * @param 		$path 						当前页面设计对应的各类文件路径
+	 * @param 		$config_path 				当前页面设计对应配置文件的路径
+	 * @return  	void
+	 */
+	private function datatable_set($datatable_arr, $request, $route_message, $path, $config_path){
+		//数据源设置
+		if(isset($request->main_table)?$request->main_table:false){
+			$param = [
+				'main_table' 		=> $request->main_table,
+				'associated_type' 	=> $request->associated_type,
+				'associated_table' 	=> $request->associated_table,
+				'external_field' 	=> $request->external_field,
+			];
+		}else{
+			$param = [
+				'inheritance' 		=> $request->inheritance,
+				'inheritance_note' 	=> $request->inheritance_note,
+			];
+			
+			unset($datatable_arr['main_table']);
+			unset($datatable_arr['associated_type']);
+			unset($datatable_arr['associated_table']);
+			unset($datatable_arr['external_field']);
+			unset($datatable_arr['datatable_set']);
+		}
+		
+		BlkFunctionPageRepository::where('id', '=', $request->design_id)->update($param);
+		
+		//datatable 字段配置:排序
+		$datatable_arr['datatable_set'] = array_sort($request->datatable_set,'sorting');
+		foreach($datatable_arr['datatable_set'] as $k=>$v){
+			//取设置的字段属性,用于表单生成
+			$conditions = [
+				['design_id', '=', $datatable_arr['id']],
+				['field', '=', $v['field']],
+			];
+			$attribute_arr = BlkAttributeRepository::where($conditions)->first();
+			if($attribute_arr){
+				$datatable_arr['datatable_set'][$k]['attribute'] = json_decode($attribute_arr['attribute'], true);
+			}else{
+				$datatable_arr['datatable_set'][$k]['attribute'] = NULL;
+			}
+		}
+		
+		//datatable 头部工具菜单:内置(不可更改)
+		$datatable_arr['head_menu'] = $request->head_menu;
+		//datatable 其他设置
+		$datatable_arr['other_set'] = $request->other_set;
+		
+		$datatable_arr['route'] = [
+			'route_path' 	=> $route_message['route_path'],
+			'route_name' 	=> $route_message['route_name'],
+			'controller' 	=> $route_message['namespace'].'\\'.$route_message['controller'],
+			'method' 		=> $route_message['method'],
+		];
+		//datatable 左侧目录树
+		if(isset($request->directory['has'])){
+			$datatable_arr['directory'] = $request->directory;
+		}
+		
+		//datatable 附加工具菜单
+		$datatable_arr['new_head_menu'] = $request->new_head_menu_list;
+		if(isset($request->new_head_menu['type'])){
+			//dd($request->new_head_menu_list);
+			foreach($request->new_head_menu['type'] as $k=>$v){
+				if($v){
+					$datatable_arr['new_head_menu'][$v] = [
+						'text' 		=> $request->new_head_menu['text'][$k],
+						'icon' 		=> $request->new_head_menu['icon'][$k],
+						'open_tepe' => $request->new_head_menu['open_tepe'][$k],
+						'must' 		=> isset($request->new_head_menu['must'][$k])?$request->new_head_menu['must'][$k]:'',
+						'width' 	=> $request->new_head_menu['width'][$k],
+						'height' 	=> $request->new_head_menu['height'][$k],
+						'method' 	=> $request->new_head_menu['method'][$k],
+						//'route' 	=> \Illuminate\Support\Str::snake($request->new_head_menu['method'][$k]),
+					];
+				}
+			}
+		}
+		
+		//创建按钮的控制器方法[未实现]
+		if(isset($datatable_arr['new_head_menu'])){
+			$this->createMethod($datatable_arr['new_head_menu']);
+		}
+		//dd($datatable_arr['new_head_menu']);
+		
+		//datatable 附加工具菜单
+		$datatable_arr['line_button'] = $request->line_button_list;
+		if(isset($request->line_button['type'])){
+			foreach($request->line_button['type'] as $k=>$v){
+				if($v){
+					$datatable_arr['line_button'][$v] = [
+						'text' 		=> $request->line_button['text'][$k],
+						'style' 	=> $request->line_button['style'][$k],
+						'open_tepe' => $request->line_button['open_tepe'][$k],
+						'must' 		=> isset($request->line_button['must'][$k])?$request->line_button['must'][$k]:'',
+						'width' 	=> $request->line_button['width'][$k],
+						'height' 	=> $request->line_button['height'][$k],
+						'method' 	=> $request->line_button['method'][$k],
+						//'route' 	=> \Illuminate\Support\Str::snake($request->line_button['method'][$k]),
+					];
+				}
+			}
+		}
+		
+		//将页面设计对应的datatable 配置文件保存到数据库
+		BlkAutoGenerateRepository::updateOrInsert(
+				['function_page_id' => $datatable_arr['id']],
+				['config' => json_encode($datatable_arr)]
+			);
+		
+		//生成对应系统的改页面设计对应的datatable 配置文件
+		unset($datatable_arr['module_id']);
+		unset($datatable_arr['system_id']);
+		$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';
+		file_put_contents($config_path,$datatable_config);
+		
+		//生成主表对应的模型类及验证器类
+		if(isset($datatable_arr['main_table'])?$datatable_arr['main_table']:false){
+			$this->createRepository($datatable_arr['main_table'], $path);
 		}
 	}
 	
@@ -652,15 +664,15 @@ class FunctionPageController extends Controller
 						4 => 'config',
 						5 => 'datatable',
 					];
-					$datatable_config_path = $path['datatable'].$model[$datatable_arr['model']].'_'.$request->design_id.'.php';
+					$config_path = $path['datatable'].$model[$datatable_arr['model']].'_'.$request->design_id.'.php';
 					
-					if(file_exists($datatable_config_path)){
-						$datatable_arr = require($datatable_config_path);
+					if(file_exists($config_path)){
+						$datatable_arr = require($config_path);
 						$datatable_arr['datatable_set'][$request->field]['attribute'] = $data;
 						//dd($datatable_config);
 						
 						$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';
-						file_put_contents($datatable_config_path,$datatable_config);
+						file_put_contents($config_path,$datatable_config);
 					}
 					
 					//将页面设计对应的datatable 配置文件保存到数据库

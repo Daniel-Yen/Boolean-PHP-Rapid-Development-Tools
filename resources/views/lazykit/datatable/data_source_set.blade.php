@@ -25,7 +25,7 @@
 								<input name="directory[has]" @if (isset($datatable_config['directory']['has'])) @if ($datatable_config['directory']['has'] == 'on') checked="checked" @endif @endif type="checkbox" lay-skin="switch" lay-text="是|否">
 							</div>
 							<label class="layui-form-label" style="width:45px;">数据源</label>
-							<div class="layui-input-inline" style="width:450px;">
+							<div class="layui-input-inline" style="width:250px;">
 								<input type="text" name="directory[method]" value="{{isset($datatable_config['directory']['method'])?$datatable_config['directory']['method']:''}}"  placeholder="控制器方法" autocomplete="off"  class="layui-input">
 							</div>
 							<label class="layui-form-label">关联字段</label>
@@ -125,8 +125,17 @@
 								@endforeach
 							</tbody>
 						</table>
+						<blockquote class="layui-elem-quote">
+							操作提示：1、不同颜色的字段属性代表不同的字段来源；2、更多针对字段的设置请在 <button type="button" class="layui-btn layui-btn-sm layui-btn-xs layui-btn-danger">附加属性</button> 中操作
+						</blockquote>
+						<fieldset class="layui-elem-field layui-field-title">
+							<legend>Sql查询高级设置</legend>
+						</fieldset>
 						<div class="layui-form-item">
-							操作提示：1、不同颜色的字段属性代表不同的字段来源。
+							<label class="layui-form-label">Order By</label>
+							<div class="layui-input-inline" style="width:250px;">
+								<input type="text" name="sql[sorted]" value="{{isset($datatable_config['sql']['sorted'])?$datatable_config['sql']['sorted']:''}}"  placeholder="排序:id@asc" autocomplete="off"  class="layui-input">
+							</div>
 						</div>
 						<div class="layui-form-item">
 							<button class="layui-btn"  lay-submit="" lay-filter="demo2">提交</button>

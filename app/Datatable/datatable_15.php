@@ -1,8 +1,9 @@
 <?php return array (
   'id' => 15,
   'title' => 'Datatable完整演示',
+  'sorted' => 0,
   'id_prefix' => 'demo_',
-  'pid' => 31,
+  'pid' => 72,
   'model' => '2',
   'function_type' => '1',
   'url' => 'lazykit/demo/index',

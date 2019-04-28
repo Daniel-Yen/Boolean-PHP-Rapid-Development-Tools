@@ -44,11 +44,10 @@ class DatatableGenerateController extends Controller
 				$param = $this->getAllowField($dom, $request->post());
 				//dump($param); die();
 				//5、附加的新增数据
-				if(isset($additional_config['create_param'])){
-					if($additional_config['create_param']){
-						foreach($additional_config['create_param'] as $k=>$v){
-							$param[$k] = $v;
-						}
+				
+				if(isset($additional_config['create_param'])?$additional_config['create_param']:false){
+					foreach($additional_config['create_param'] as $k=>$v){
+						$param[$k] = $v;
 					}
 				}
 				
