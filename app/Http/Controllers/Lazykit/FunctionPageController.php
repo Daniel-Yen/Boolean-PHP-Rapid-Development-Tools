@@ -73,7 +73,8 @@ class FunctionPageController extends Controller
 				
 				//附加的新增数据
 				$additional_config['create_param'] = [
-					'url' => $route_message['route_path'].$route_message['route_name'],
+					'url' 		=> $route_message['route_path'].$route_message['route_name'],
+					'system_id' => $request->system_id
 				];
 				
 				//附加的修改数据
@@ -81,7 +82,6 @@ class FunctionPageController extends Controller
 					'url' => $route_message['route_path'].$route_message['route_name'],
 				];
 			}
-			$additional_config['create_param']['system_id'] = $request->system_id;
 		}
 		
 		create_datatable('datatable_1', $additional_config, $request);
@@ -97,11 +97,9 @@ class FunctionPageController extends Controller
 	 */
 	public function getRouteMessage($datatable_arr, $path)
 	{
-		//dd($datatable_arr);
 		//获得控制器及方法名称
 		$module_path = BlkModuleRepository::where('id', $datatable_arr['module_id'])->first(['module']);
-		//dd($datatable_arr);
-		//dd($module_path);
+		
 		//只有当控制器方法存在且不为空才能进行以下路由信息的计算并判断控制器是否存在,方法是否存在
 		if($datatable_arr['method']){
 			$method_arr = explode('@', $datatable_arr['method']);
@@ -122,7 +120,6 @@ class FunctionPageController extends Controller
 			if($path){
 				$class_path = $path['controller'].$module_path['module'].'\\'.$route_arr['controller'].'.php';
 				$class = $route_arr['namespace'].'\\'.$route_arr['controller'];
-				//dd($class_path, $class);
 				
 				$route_arr['controller_exists'] = false;
 				$route_arr['method_exists'] = false;
@@ -155,10 +152,8 @@ class FunctionPageController extends Controller
 	public function set()
 	{
 		$request = request();
-		
-		//dd($request->id);
 		$datatable_arr = BlkFunctionPageRepository::where('id', $request->design_id)->first();
-		//dd($datatable_arr);
+		
 		if($datatable_arr){
 			$datatable_arr = $datatable_arr->toArray();
 			
@@ -183,7 +178,6 @@ class FunctionPageController extends Controller
 		}else{
 			$datatable_arr = [];
 		}
-		//dd($path);
 		
 		//配置在对应系统中的文件路径
 		if($datatable_arr['model']){
@@ -197,7 +191,6 @@ class FunctionPageController extends Controller
 		}else{
 			die("当前记录功能模型不存在！");
 		}
-		//dd($datatable_config_path);
 		
 		//获得当前页面设计的路由信息
 		$route_message = $this->getRouteMessage($datatable_arr, $path);

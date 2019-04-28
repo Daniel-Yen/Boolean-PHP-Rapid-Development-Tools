@@ -181,9 +181,6 @@ class DatatableGenerateController extends Controller
 					echo json_encode($result);
 				}
 			}else{
-				$conditions = [];
-				
-				//dd($conditions);
 				DB::connection()->enableQueryLog();
 				
 				//获得要查询的字段
@@ -203,6 +200,8 @@ class DatatableGenerateController extends Controller
 				
 				//获得post查询条件
 				if($request->isMethod('post')){
+					$conditions = [];
+					
 					$search = $request->post();
 					foreach($datatable_config['datatable_set'] as $k=>$v){
 						if(isset($search[$k])?$search[$k]:false){
@@ -226,12 +225,13 @@ class DatatableGenerateController extends Controller
 						}
 					}
 					//4、附加查询条件
-					if(isset($additional_config['conditions']) && $conditions){
+					if(isset($additional_config['conditions'])?$additional_config['conditions']:false && $conditions){
 						$conditions = array_merge($conditions, $additional_config['conditions']);
 					}
 				}else{
-					$conditions = isset($additional_config['conditions'])?$additional_config['conditions']:[];
+					$conditions = $additional_config['conditions'];
 				}
+				//print_r($conditions);
 				
 				//绑定查询条件
 				foreach($conditions as $k=>$v){
@@ -323,6 +323,7 @@ class DatatableGenerateController extends Controller
 						$data = [];
 					}
 				}
+				//print_r(DB::getQueryLog());die();
 				
 				return datatable_callback_json(0, '数据读取成功', count($data), $data);
 			}
