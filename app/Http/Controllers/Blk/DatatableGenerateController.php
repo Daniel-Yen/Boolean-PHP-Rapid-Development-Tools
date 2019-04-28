@@ -226,11 +226,11 @@ class DatatableGenerateController extends Controller
 						}
 					}
 					//4、附加查询条件
-					if(isset($additional_config['conditions'])){
+					if(isset($additional_config['conditions']) && $conditions){
 						$conditions = array_merge($conditions, $additional_config['conditions']);
 					}
 				}else{
-					$conditions = $additional_config['conditions'];
+					$conditions = isset($additional_config['conditions'])?$additional_config['conditions']:[];
 				}
 				
 				//绑定查询条件
@@ -286,8 +286,8 @@ class DatatableGenerateController extends Controller
 									return $query->whereYear($field, $value);
 								});
 					}else if($search_type == 'time'){
-						$data = $data->when($field, function ($query) use ($field, $search_type, $value) {
-									return $query->whereTime($field, $search_type, $value);
+						$data = $data->when($field, function ($query) use ($field, $value) {
+									return $query->whereTime($field, '=', $value);
 								});
 					}
 				}
@@ -313,7 +313,6 @@ class DatatableGenerateController extends Controller
 					}else{
 						$data = [];
 					}
-					$data = $this->dicToChar($data, $datatable_config);
 				}else{
 					$data = $data->paginate(30);
 					//如果查询到数据则输出数组

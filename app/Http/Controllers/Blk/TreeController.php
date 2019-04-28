@@ -84,6 +84,7 @@ class TreeController extends Controller
 				$row['title'] = '<i class="layui-icon layui-icon-file"></i> '.$row['title'];
 			}
 			$data_arr[] = $row;
+			$row = [];
 			if(@is_array($v[$child])){
 				foreach($v[$child] as $k1=>$v1){
 					$row = $v1;
@@ -95,6 +96,7 @@ class TreeController extends Controller
 					}
 					$row['title'] = '&nbsp; &nbsp; '.$row['title'];
 					$data_arr[] = $row;
+					$row = [];
 					if(@is_array($v1[$child])){
 						foreach($v1[$child] as $k2=>$v2){
 							$row = $v2;
@@ -106,6 +108,7 @@ class TreeController extends Controller
 							}
 							$row['title'] = '&nbsp; &nbsp; &nbsp; &nbsp; '.$row['title'];
 							$data_arr[] = $row;
+							$row = [];
 							if(@is_array($v2[$child])){
 								foreach($v2[$child] as $k3=>$v3){
 									$row = $v3;
@@ -117,10 +120,11 @@ class TreeController extends Controller
 									}
 									$row['title'] = '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '.$row['title'];
 									$data_arr[] = $row;
-									if(@is_array($v2[$child])){
-										foreach($v2[$child] as $k3=>$v3){
-											$row = $v3;
-											if(@is_array($v3[$child])){
+									$row = [];
+									if(@is_array($v3[$child])){
+										foreach($v3[$child] as $k4=>$v4){
+											$row = $v4;
+											if(@is_array($v4[$child])){
 												$row['title'] = '<i class="layui-icon layui-icon-triangle-r"></i>'.$row['title'];
 												unset($row[$child]);
 											}else{
@@ -128,10 +132,11 @@ class TreeController extends Controller
 											}
 											$row['title'] = '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '.$row['title'];
 											$data_arr[] = $row;
-											if(@is_array($v3[$child])){
-												foreach($v3[$child] as $k4=>$v4){
-													$row = $v4;
-													if(@is_array($v4[$child])){
+											$row = [];
+											if(@is_array($v4[$child])){
+												foreach($v4[$child] as $k5=>$v5){
+													$row = $v5;
+													if(@is_array($v5[$child])){
 														$row['title'] = '<i class="layui-icon layui-icon-triangle-r"></i>'.$row['title'];
 														unset($row[$child]);
 													}else{
@@ -139,6 +144,7 @@ class TreeController extends Controller
 													}
 													$row['title'] = '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; '.$row['title'];
 													$data_arr[] = $row;
+													$row = [];
 												}
 											}
 										}

@@ -7,7 +7,7 @@
   'function_type' => '1',
   'url' => 'lazykit/function_page/index',
   'method' => 'FunctionPageController@index',
-  'inheritance' => '22',
+  'inheritance' => '45',
   'inheritance_note' => '继承系统管理的列表显示，增加功能按钮',
   'datatable_set' => 
   array (

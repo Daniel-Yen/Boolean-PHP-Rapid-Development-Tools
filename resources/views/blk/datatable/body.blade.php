@@ -112,9 +112,9 @@ layui.config({
 		
 	var rand = Math.floor(Math.random()*10000+1);
 	@if ($do == "recycle")
-	var ac = '&rand='+rand+'&ac=recycle';
+	var ac = '&ac=recycle';
 	@else
-	var ac = '&rand='+rand;
+	var ac = '';
 	@endif
 	
 	var base_url = '{{$datatable_config['route_name']}}?{!!$parse_url_query!!}';

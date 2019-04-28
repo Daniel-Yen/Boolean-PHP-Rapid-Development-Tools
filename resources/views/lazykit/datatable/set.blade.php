@@ -28,7 +28,7 @@
 					<li> @if ($datatable_arr['model'] == 2) 数据源设置 @elseif ($datatable_arr['model'] == 5) 数据表格继承设置 @endif</li>
 					@if (in_array($datatable_arr['model'], [2, 5]) && ($datatable_arr['main_table'] != '' || $datatable_arr['external_field'] != '' || $datatable_arr['inheritance'] != ''))
 					@if ($datatable_arr['model'] == 2)
-					<li class="layui-this">数据表格设置</li>
+					<li>数据表格设置</li>
 					@endif
 					<li>头部内置工具菜单</li>
 					<li>头部附加工具菜单</li>
