@@ -67,6 +67,7 @@
 	<div id="search">
 		<div class="layui-fluid">
 			<div class="layui-row layui-col-space15">
+				<br/>
 				<div class="layui-col-md11">
 				@csrf
 				@if (isset($search))
