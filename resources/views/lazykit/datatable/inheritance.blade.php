@@ -8,17 +8,17 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>&nbsp; {{!empty($datatable_arr['title'])?$datatable_arr['title']:''}}</td>
+						<td>&nbsp; {{!empty($function_page['title'])?$function_page['title']:''}}</td>
 						<td>
 						<select name="inheritance" lay-verify="required" style="width:150px;">
 							<option value=""></option>
-							@foreach ($inheritance_datatable_arr as $vo)
-							<option @if ($datatable_arr['inheritance'] == $vo['id']) selected="selected" @endif value="{{$vo['id']}}">{{$vo['title']}}</option>
+							@foreach ($inheritance_function_page as $vo)
+							<option @if ($function_page['inheritance'] == $vo['id']) selected="selected" @endif value="{{$vo['id']}}">{{$vo['title']}}</option>
 							@endforeach
 						</select>
 						</td>
 						<td>
-							<input type="text" name="inheritance_note" value="{{$datatable_arr['inheritance_note']}}" autocomplete="off"  class="layui-input">
+							<input type="text" name="inheritance_note" value="{{$function_page['inheritance_note']}}" autocomplete="off"  class="layui-input">
 						</td>
 					</tr>
 				</tbody>

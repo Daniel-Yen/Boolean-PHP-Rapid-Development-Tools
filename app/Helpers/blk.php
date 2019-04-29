@@ -1,16 +1,39 @@
 <?php
+/**
+ |------------------------------------------------------------
+ | [Boolean Lazyer Kit]布尔懒人工具包·PHP快速开发平台
+ |------------------------------------------------------------
+ | 作者：倒车的螃蟹<yh15229262120@qq.com>
+ | 官网：http://blk.buersoft.cn
+ | 手册：http://manual.buersoft.cn/blk
+ |------------------------------------------------------------
+ */
 
 if (!function_exists('create_datatable')) {
     /**
-     * datatable生成器
+     * 数据表格生成器
      * @auther 		杨鸿<yh15229262120@qq.com> 
-     * @param 		string     	$datatable_config_name 		配置名称
+     * @param 		string     	$config_name 		配置名称
      * @param 		array   	$additional_config 			调用数据表格生成器自定义的附加配置参数
      */
-    function create_datatable($datatable_config_name, $additional_config = [], $request)
+    function create_datatable($config_name, $additional_config = [], $request)
     {
-        $datatable = new App\Http\Controllers\Blk\DatatableGenerateController();
-		$datatable->createDatatable($datatable_config_name, $additional_config, $request);
+        $datatable = new App\Http\Controllers\Blk\DatatableController();
+		$datatable->createDatatable($config_name, $additional_config, $request);
+    }
+}
+
+if (!function_exists('create_chart')) {
+    /**
+     * 数据表格生成器
+     * @auther 		杨鸿<yh15229262120@qq.com> 
+     * @param 		string     	$config_name 		配置名称
+     * @param 		array   	$additional_config 			调用数据表格生成器自定义的附加配置参数
+     */
+    function create_chart($config_name, $additional_config = [], $request)
+    {
+        $datatable = new App\Http\Controllers\Blk\ChartController();
+		$datatable->createChart($config_name, $additional_config, $request);
     }
 }
 
@@ -79,20 +102,19 @@ if (!function_exists('get_datatable_config')) {
 	 * 返回
 	 * @auther 		杨鸿<yh15229262120@qq.com> 
 	 * @access 		private
-	 * @param  		string 		$datatable_config_name 			根据datatable配置文件及字段属性表中的的字段属性生成的layui数据表格表头属性的数组
+	 * @param  		string 		$config_name 			根据datatable配置文件及字段属性表中的的字段属性生成的layui数据表格表头属性的数组
 	 * @return 		array                      					返回类似datatable数据表格的配置文件
 	 */
-	function get_datatable_config($datatable_config_name)
+	function get_datatable_config($config_name)
 	{
-		$path = app_path('Datatable'.DIRECTORY_SEPARATOR.$datatable_config_name.'.php');
-		//$path = '..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Datatable'.DIRECTORY_SEPARATOR.$datatable_config_name.'.php';
-		//dd($path);
+		$path = app_path('Blk'.DIRECTORY_SEPARATOR.$config_name.'.php');
+		
 		if(file_exists($path)){
 			$datatable_config = include($path);
 		}else{
 			$datatable_config = [];
 		}
-		//dd($datatable_config);
+		
 		return $datatable_config;
 	}
 }

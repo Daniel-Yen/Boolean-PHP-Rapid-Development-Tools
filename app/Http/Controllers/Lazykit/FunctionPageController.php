@@ -184,14 +184,9 @@ class FunctionPageController extends Controller
 		}
 		
 		//配置在对应系统中的文件路径
-		if($function_page['model']){
-			$model = [
-				2 => 'datatable',
-				3 => 'chart',
-				4 => 'config',
-				5 => 'datatable',
-			];
-			$config_path = $path['datatable'].$model[$function_page['model']].'_'.$function_page['id'].'.php';
+		if(isset($function_page['model'])?$function_page['model']:false){
+			$model = $this->getModel($function_page['model']);
+			$config_path = $path['blk_config'].$model.$function_page['id'].'.php';
 		}else{
 			return view('datatable.msg', [
 				'msg' => "当前记录功能模型不存在"
@@ -202,33 +197,33 @@ class FunctionPageController extends Controller
 		$route_message = $this->getRouteMessage($function_page, $path);
 				
 		//获得datatable配置名称
-		//$datatable_config_name = $this->getDatatableFielName($function_page);
 		if($request->isMethod('post')){
 			if(in_array($function_page['model'], [2, 5])){
 				$this->datatable_set($function_page, $request, $route_message, $path, $config_path);
+			}else if($function_page['model'] == 3){
+				$this->chart_set($function_page, $request, $route_message, $path, $config_path);
 			}
 			
 			return success("操作成功");
 		}else{
 			if(file_exists($config_path)){
-				$datatable_config = require($config_path);
+				$config = require($config_path);
 			}else{
 				$auto_generate = BlkAutoGenerateRepository::where('function_page_id', $function_page['id'])->first();
-				//dd($config_path);
 				if($auto_generate){
-					$datatable_config = json_decode($auto_generate['config'], true);
+					$config = json_decode($auto_generate['config'], true);
 				}else{
-					$datatable_config = [];
+					$config = [];
 				}
 			}
-			//dd($datatable_config);
+			//dd($config);
 			
 			//生成控制器及当前配置对应页面的方法
 			if(!empty($route_message)){
 				//生成控制器及方法
 				if(!$route_message['controller_exists']){
-					//如果控制器不存在则生成当前数据表格的控制器及方法
-					$this->create_controller($route_message, $path);
+					//如果控制器不存在则生成当前配置的控制器及方法
+					$this->create_controller($route_message, $path, $model);
 					
 					return success('控制器及方法生成成功', '控制器：'.$route_message['controller'].'已生成，控制器方法：'.$route_message['method'].'已生成', url()->full() );
 				}
@@ -241,7 +236,7 @@ class FunctionPageController extends Controller
 						'join_type_arr' 		=> $this->joinTypeDic(),								//字典：数据库表连接方式
 						'tables' 				=> $this->getTables($system),
 						'fixed_column_dic_arr' 	=> $this->fixedColumnDic(),								//字典：固定列的类型
-						'field_row_arr' 		=> $this->getFieldRow($function_page, $datatable_config, $system),	//根据表配置获得字段属
+						'field_row_arr' 		=> $this->getFieldRow($function_page, $config, $system),	//根据表配置获得字段属
 					]);
 				}else if($function_page['model'] == 5){
 					view()->share([
@@ -252,9 +247,23 @@ class FunctionPageController extends Controller
 					'button_style_type_arr' => $this->buttonStyleTypeDic(),							//字典：行按钮样式
 					'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),							//字典：按钮打开方式
 					'search_conditions_dic_arr' => $this->searchConditionsDic(),					//字典：按钮打开方式
-					'head_menu_arr' 		=> $this->headMenu($datatable_config, $function_page),	//datatable 头部工具菜单
-					'datatable_arr' 		=> $function_page,										//datatable 记录
-					'datatable_config' 		=> $datatable_config,									//datatable 配置
+					'head_menu_arr' 		=> $this->headMenu($config, $function_page),	//datatable 头部工具菜单
+					'function_page' 		=> $function_page,										//datatable 记录
+					'datatable_config' 		=> $config,									//datatable 配置
+					'design_id' 			=> $request->design_id,									//页面设计ID
+					'system_id' 			=> $request->system_id,									//系统ID
+					'route_message' 		=> $route_message, 										//获得路由信息
+					'module' 				=> $module, 											//当前配置所在模型
+					'system' 				=> $system, 											//当前配置所在系统
+				]);
+			}else{
+				return view('lazykit.chart.set', [
+					'button_style_type_arr' => $this->buttonStyleTypeDic(),							//字典：行按钮样式
+					'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),							//字典：按钮打开方式
+					'search_conditions_dic_arr' => $this->searchConditionsDic(),					//字典：按钮打开方式
+					'head_menu_arr' 		=> $this->headMenu($config, $function_page),	//datatable 头部工具菜单
+					'function_page' 		=> $function_page,										//datatable 记录
+					'datatable_config' 		=> $config,									//datatable 配置
 					'design_id' 			=> $request->design_id,									//页面设计ID
 					'system_id' 			=> $request->system_id,									//系统ID
 					'route_message' 		=> $route_message, 										//获得路由信息
@@ -657,14 +666,7 @@ class FunctionPageController extends Controller
 				
 				if($system){
 					$path = $this->getPath($system);
-					
-					$model = [
-						2 => 'datatable',
-						3 => 'chart',
-						4 => 'config',
-						5 => 'datatable',
-					];
-					$config_path = $path['datatable'].$model[$datatable_arr['model']].'_'.$request->design_id.'.php';
+					$config_path = $path['blk_config'].$this->getModel($datatable_arr['model']).'_'.$request->design_id.'.php';
 					
 					if(file_exists($config_path)){
 						$datatable_arr = require($config_path);
@@ -727,6 +729,26 @@ class FunctionPageController extends Controller
 		]);
 		
 		return view('lazykit.datatable.attribute_set');
+	}
+	
+	/**
+	 * pid字段的下拉选择
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @param 		$model 					页面模型
+	 * @return  	string 					页面模型前缀
+	 */
+	private function getModel($model)
+	{
+		$data = [
+			2 => 'datatable_',
+			3 => 'chart_',
+			4 => 'config_',
+			5 => 'datatable_',
+		];
+		
+		return $model = $data[$model];
 	}
 	
 	/**

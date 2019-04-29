@@ -6,7 +6,7 @@
 						<select name="main_table">
 							<option value=""></option>
 							@foreach ($tables as $vo)
-							<option @if ($datatable_arr['main_table'] == $vo) selected="selected" @endif value="{{$vo}}">{{$vo}}</option>
+							<option @if ($function_page['main_table'] == $vo) selected="selected" @endif value="{{$vo}}">{{$vo}}</option>
 							@endforeach
 						</select>
 						</td>
@@ -17,7 +17,7 @@
 						<select name="associated_type" style="width:120px;">
 							<option value=""></option>
 							@foreach ($join_type_arr as $ko=>$vo)
-							<option @if ($datatable_arr['associated_type'] == $ko) selected="selected" @endif value="{{$ko}}">{{$vo}}</option>
+							<option @if ($function_page['associated_type'] == $ko) selected="selected" @endif value="{{$ko}}">{{$vo}}</option>
 							@endforeach
 						</select>
 						</td>
@@ -28,7 +28,7 @@
 						<select name="associated_table" style="width:150px;">
 							<option value=""></option>
 							@foreach ($tables as $vo)
-							<option @if ($datatable_arr['associated_table'] == $vo) selected="selected" @endif value="{{$vo}}">{{$vo}}</option>
+							<option @if ($function_page['associated_table'] == $vo) selected="selected" @endif value="{{$vo}}">{{$vo}}</option>
 							@endforeach
 						</select>
 						</td>
@@ -36,7 +36,7 @@
 					<tr class="external_field">
 						<td> &nbsp; &nbsp; 自定义字段：</td>
 						<td>
-						<input type="text" name="external_field" value="{{$datatable_arr['external_field']}}" placeholder="请输入用逗号隔开的字段" autocomplete="off" class="layui-input">
+						<input type="text" name="external_field" value="{{$function_page['external_field']}}" placeholder="请输入用逗号隔开的字段" autocomplete="off" class="layui-input">
 						</td>
 					</tr>
 				</tbody>

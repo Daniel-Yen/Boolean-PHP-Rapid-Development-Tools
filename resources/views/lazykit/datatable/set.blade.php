@@ -25,9 +25,9 @@
 			<div class="layui-tab layui-tab-brief">
 				<ul class="layui-tab-title">
 					<li class="layui-this">配置信息</li>
-					<li> @if ($datatable_arr['model'] == 2) 数据源设置 @elseif ($datatable_arr['model'] == 5) 数据表格继承设置 @endif</li>
-					@if (in_array($datatable_arr['model'], [2, 5]) && ($datatable_arr['main_table'] != '' || $datatable_arr['external_field'] != '' || $datatable_arr['inheritance'] != ''))
-					@if ($datatable_arr['model'] == 2)
+					<li> @if ($function_page['model'] == 2) 数据源设置 @elseif ($function_page['model'] == 5) 数据表格继承设置 @endif</li>
+					@if (in_array($function_page['model'], [2, 5]) && ($function_page['main_table'] != '' || $function_page['external_field'] != '' || $function_page['inheritance'] != ''))
+					@if ($function_page['model'] == 2)
 					<li>数据表格设置</li>
 					@endif
 					<li>头部内置工具菜单</li>
@@ -41,7 +41,11 @@
 							<tbody>
 								<tr>
 									<td width="85">页面名称：</td>
-									<td>{{!empty($datatable_arr['title'])?$datatable_arr['title']:''}}</td>
+									<td>{{!empty($function_page['title'])?$function_page['title']:''}}</td>
+								</tr>
+								<tr>
+									<td width="85">页面模型：</td>
+									<td>数据表格（Datatable）</td>
 								</tr>
 								<tr>
 									<td>所属系统：</td>
@@ -73,14 +77,14 @@
 						</table>
 					</div>
 					<div class="layui-tab-item">
-						@if ($datatable_arr['model'] == 2)
+						@if ($function_page['model'] == 2)
 							@include ('lazykit.datatable.data_source')
-						@elseif ($datatable_arr['model'] == 5)
+						@elseif ($function_page['model'] == 5)
 							@include ('lazykit.datatable.inheritance')
 						@endif
 					</div>
-					@if (in_array($datatable_arr['model'], [2, 5]) && ($datatable_arr['main_table'] != '' || $datatable_arr['external_field'] != '' || $datatable_arr['inheritance'] != ''))
-					@if ($datatable_arr['model'] == 2)
+					@if (in_array($function_page['model'], [2, 5]) && ($function_page['main_table'] != '' || $function_page['external_field'] != '' || $function_page['inheritance'] != ''))
+					@if ($function_page['model'] == 2)
 					<div class="layui-tab-item">
 						@include ('lazykit.datatable.data_source_set')
 					</div>

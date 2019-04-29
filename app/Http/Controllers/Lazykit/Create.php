@@ -47,10 +47,11 @@ trait Create
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
      * @param 		array		$route_message 		要处理的二维数组数组
-     * @param 		string		$title 		要作为title的字段
+     * @param 		array		$path 				相关path
+	 * @param 		string 		$model 				页面模型
      * @return 		array
      */
-    private function create_controller($route_message, $path) {
+    private function create_controller($route_message, $path, $model) {
     	//dd($route_message, $path);
 		if(!$route_message['controller_exists']){
     		//$controller_path = app_path('Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.$route_message['module'].DIRECTORY_SEPARATOR);
@@ -59,7 +60,7 @@ trait Create
     		create_dir($controller_path);
     		
  			$file_path = $controller_path.$route_message['controller'].'.php';
-			$file = $path['controller_tpl'];
+			$file = $path['controller_'.$model.'tpl'];
     		//$file = file_get_contents(app_path('Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.'NewController.php'));
     		$file = str_replace('{menu_title}', $route_message['menu_title'], $file);
     		$file = str_replace('{module}', $route_message['module'], $file);

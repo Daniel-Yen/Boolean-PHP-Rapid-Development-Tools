@@ -22,15 +22,14 @@ trait SystemPath
 		//dd($menu_data);routes
 		$path = [
 			'laravel' => [
-				'datatable' => $system->file_path.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Datatable'.DIRECTORY_SEPARATOR,
-				//'datatable_name' => $menu_data['model'].'_'.$menu_data['id'],
+				'blk_config' => $system->file_path.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Blk'.DIRECTORY_SEPARATOR,
 				'repository' => $system->file_path.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Repositories'.DIRECTORY_SEPARATOR,
 				'repository_tpl' => $this->getRepositoryTpl('laravel'),
 				'request' => $system->file_path.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Requests'.DIRECTORY_SEPARATOR,
 				'route' => $system->file_path.DIRECTORY_SEPARATOR.'routes'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR,
-				//'route_name' => 'auto_generate.php'
 				'controller' => $system->file_path.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR,
-				'controller_tpl' => $this->getControllerTpl('laravel'),
+				'controller_datatable_tpl' => $this->getDatatableControllerTpl('laravel'),
+				'controller_chart_tpl' => $this->getChartControllerTpl('laravel'),
 			]
 		];
 		
@@ -45,13 +44,14 @@ trait SystemPath
 	 * @param  		string 		$framework	 	框架名称
 	 * @return 		string                       
 	 */
-	private function getControllerTpl($framework){
+	private function getChartControllerTpl($framework){
 		$tpl['laravel'] = '<?php
 /**
- * 数据表格：{menu_title} 
- * 该控制器类由 Boolean Lazy Kit 页面设计器自动生成
- *
- * @auther 	Blk
+ | 统计图表：{menu_title} 
+ | 该控制器类由 Boolean Lazyer Kit 页面设计器自动生成
+ |
+ | @auther 		BLK
+ | @datetime 	'.date('Y-m-d H:i:s', time()).'
  */
 
 namespace App\Http\Controllers\{module};
@@ -71,7 +71,57 @@ class {NewController} extends Controller
      */
     public function {method}(Request $request)
     {
-    	create_datatable(\'datatable_{id}\', [], $request);
+    	//读取配置统计图表模板
+		$chart_config = chart_strat(\'chart_{id}\');
+		//
+		
+		create_chart(\'chart_{id}\', $chart_config, $request);
+    }
+}';
+		return $tpl[$framework];
+	}
+	
+	/**
+	 * 获得不同框架对应的Controller模板
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @param  		string 		$framework	 	框架名称
+	 * @return 		string                       
+	 */
+	private function getDatatableControllerTpl($framework){
+		$tpl['laravel'] = '<?php
+/**
+ | 数据表格：{menu_title} 
+ | 该控制器类由 Boolean Lazyer Kit 页面设计器自动生成
+ |
+ | @auther 		BLK
+ | @datetime 	'.date('Y-m-d H:i:s', time()).'
+ */
+
+namespace App\Http\Controllers\{module};
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class {NewController} extends Controller
+{
+    /**
+     * {menu_title}
+     *
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+     * @access 		public
+     * @param  		\Illuminate\Http\Request $request
+     * @return  	mixed
+     */
+    public function {method}(Request $request)
+    {
+    	//数据表格附加配置
+		$additional_config = [
+			//
+		];
+		
+		create_datatable(\'datatable_{id}\', $additional_config, $request);
     }
 }';
 		return $tpl[$framework];
@@ -88,9 +138,11 @@ class {NewController} extends Controller
 	private function getRepositoryTpl($framework){
 		$tpl['laravel'] = '<?php
 /**
- * 数据表：{table_name}
- * 该模型类由Datatable生成器自动生成
- * @auther 		杨鸿<yh15229262120@qq.com>
+ | 数据表：{table_name}
+ | 该控制器类由 Boolean Lazyer Kit 页面设计器自动生成
+ |
+ | @auther 		BLK
+ | @datetime 	'.date('Y-m-d H:i:s', time()).'
  */
 
 namespace App\Repositories;

@@ -30,7 +30,7 @@
 							</div>
 							<label class="layui-form-label">关联字段</label>
 							<div class="layui-input-inline" style="width:200px;">
-								@if ($datatable_arr['main_table'] != '')
+								@if ($function_page['main_table'] != '')
 								<select name="directory[associated_field]">
 									<option value="">请选择关联字段</option>
 									@foreach ($field_row_arr as $vo)
