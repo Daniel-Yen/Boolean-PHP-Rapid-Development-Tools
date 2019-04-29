@@ -63,7 +63,7 @@
 	});
 
 	layui.config({
-		base: '{{file_path('/include/')}}',
+		base: '{{file_path('/include/blk/lib/extend/')}}',
 	}).extend({
 		index: 'lib/index',
 		formSelects: 'formSelects-v4'

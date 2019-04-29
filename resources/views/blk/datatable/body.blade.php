@@ -7,7 +7,7 @@
 	.layui-table-view{margin: 0;}
 	.layui-table-tool{background-color: #FFFFFF;}
 </style>
-<link rel="stylesheet" href="{{file_path('/include/formSelects-v4.css')}}" media="all">
+<link rel="stylesheet" href="{{file_path('/include/blk/style/formSelects-v4.css')}}" media="all">
 @endpush
 
 @section('content')
@@ -97,9 +97,9 @@
 @push('scripts')
 <script>
 layui.config({
-    base: '{{file_path('/include/')}}',
+    base: '{{file_path('/include/blk/lib/')}}',
 }).extend({
-    index: 'lib/index',
+    index: 'index',
 	formSelects: 'formSelects-v4'
 }).use(['tree', 'index', 'form', 'layer', 'table', 'laydate', 'formSelects'], function(){
     var admin = layui.admin
