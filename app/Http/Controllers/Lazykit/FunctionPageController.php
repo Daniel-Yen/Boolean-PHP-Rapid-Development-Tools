@@ -17,6 +17,7 @@ use App\Repositories\BlkAttributeRepository;
 use App\Repositories\BlkAutoGenerateRepository;
 use App\Http\Controllers\Lazykit\SetDic;
 use App\Http\Controllers\Lazykit\SystemPath;
+use App\Http\Controllers\Lazykit\ChartDic;
 
 class FunctionPageController extends Controller
 {
@@ -34,6 +35,11 @@ class FunctionPageController extends Controller
 	 * 创建路由、菜单、模型、验证器等
 	 */
 	use Create;
+	
+	/**
+	 * 统计图表
+	 */
+	use ChartDic;
 	
 	/**
 	 * 系统列表

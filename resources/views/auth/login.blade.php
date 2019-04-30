@@ -3,7 +3,7 @@
 @section('title', '登录')
 
 @push('css')
-<link rel="stylesheet" href="{{file_path('/include/style/login.css')}}" media="all">
+<link rel="stylesheet" href="{{file_path('/include/blk/style/login.css')}}" media="all">
 @endpush
 
 @section('content')
@@ -64,9 +64,9 @@
 	}
 
 	layui.config({
-		base: '{{file_path('/include/')}}' //静态资源所在路径
+	    base: '{{file_path('/include/blk/lib/')}}',
 	}).extend({
-		index: 'lib/index' //主入口模块
+	    index: 'index',
 	}).use(['index', 'jquery', 'form', 'element'], function(){
 		var form = layui.form;
         var element = layui.element;
