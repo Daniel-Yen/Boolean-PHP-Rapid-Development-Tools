@@ -126,6 +126,20 @@
 					layer.closeAll();
 				});
 			},
+			add: function(key) {
+				var url = '{{url("lazykit/functionpage/chart_tpl_set")}}?system_id={{$system_id}}&design_id={{$design_id}}&field=' + field + '&field_from=' + field_from;
+				//执行重载
+				layer.open({
+					id: 'layerDemo',
+					type: 2,
+					title: '附加属性设置：' + title + '（' + field + '）',
+					offset: 'lt',
+					area: ['90%', '100%'],
+					content: url,
+					shade: 0.3,
+					scrollbar: false,
+				});
+			},
 		}
 		window.tools = _tools;
 	});

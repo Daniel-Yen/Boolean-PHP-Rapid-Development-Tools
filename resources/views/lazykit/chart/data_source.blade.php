@@ -6,14 +6,16 @@
 						<div class="layui-form-item">
 							<div class="layui-input-inline" style="width:40px;">
 								<input name="chart_set[{{$key}}][tag]" value="{{$value['tag']}}" class="layui-input" style="height:30px;" type="text" placeholder="栅格" autocomplete="off" lay-verify="required">
+								<input name="chart_set[{{$key}}][option]" value="{{$value['option']}}" class="layui-hide">
+								
 							</div>
 							<div class="layui-input-inline" style="width:80px;">
 								<input name="chart_set[{{$key}}][title]" value="{{$value['title']}}" class="layui-input" style="height:30px;" type="text" placeholder="图表标记" autocomplete="off" lay-verify="required">
 							</div>
 							<div class="layui-input-inline" style="width:150px;">
 								<div class="layui-btn-group">
-									<a class="layui-btn layui-btn-sm layui-btn-normal">添加</a>
-									<a class="layui-btn layui-btn-sm layui-btn-normal">编辑</a>
+									<a onclick="tools.add('{{$key}}')" class="layui-btn layui-btn-sm layui-btn-normal">添加</a>
+									<a onclick="tools.edit('{{$key}}')" class="layui-btn layui-btn-sm layui-btn-normal">编辑</a>
 									<a onclick="tools.delete('chart_{{$key}}')" class="layui-btn layui-btn-sm layui-btn-danger">删除</a>
 								</div>
 							</div>
@@ -35,12 +37,6 @@
 							<div class="layui-input-inline" style="width:80px;">
 								<input name="chart_add_set[title]" value="" class="layui-input" style="height:30px;" type="text" placeholder="图表标记" autocomplete="off">
 							</div>
-							<div class="layui-input-inline" style="width:90px;">
-								<div class="layui-btn-group">
-									<a class="layui-btn layui-btn-sm layui-btn-normal">添加</a>
-									<a class="layui-btn layui-btn-sm layui-btn-normal">编辑</a>
-								</div>
-							</div>
 						</div>
 						<div class="main"></div>
 					</div>
@@ -50,5 +46,5 @@
 				</div>
 			</div>
 			<blockquote class="layui-elem-quote">
-				主表（关联表）跟自定义字段可同时设置；
+				帮助手册
 			</blockquote>
