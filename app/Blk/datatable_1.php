@@ -1,6 +1,7 @@
 <?php return array (
   'id' => 1,
   'title' => '页面设计',
+  'sorted' => 0,
   'id_prefix' => 'design_',
   'pid' => 46,
   'model' => '2',
@@ -36,6 +37,19 @@
       'fixed' => '0',
       'title' => '主表',
       'field' => 'main_table',
+      'field_from' => 'main_table',
+      'width' => NULL,
+      'search' => '0',
+      'attribute' => NULL,
+    ),
+    'sorted' => 
+    array (
+      'field_type' => 'int',
+      'field_length' => '11',
+      'sorting' => NULL,
+      'fixed' => '0',
+      'title' => '排序',
+      'field' => 'sorted',
       'field_from' => 'main_table',
       'width' => NULL,
       'search' => '0',
@@ -403,8 +417,8 @@
       'text' => '搜索',
       'icon' => 'layui-icon-search',
       'must' => 'on',
-      'width' => '800px',
-      'height' => '90%',
+      'width' => '100%',
+      'height' => '100%',
       'method' => NULL,
     ),
     'create' => 
