@@ -148,11 +148,11 @@
 @endsection
 
 @push('scripts')
-  <script>
-  layui.config({
-    base: '{{file_path('/include/')}}' //静态资源所在路径
-  }).extend({
-    index: 'lib/index' //主入口模块
-  }).use('index');
-  </script>
+<script>
+layui.config({
+    base: '{{file_path('/include/blk/lib/')}}',
+}).extend({
+    index: 'index',
+}).use('index');
+</script>
 @endpush

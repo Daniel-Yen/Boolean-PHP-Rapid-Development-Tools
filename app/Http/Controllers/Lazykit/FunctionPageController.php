@@ -236,39 +236,35 @@ class FunctionPageController extends Controller
 						'join_type_arr' 		=> $this->joinTypeDic(),								//字典：数据库表连接方式
 						'tables' 				=> $this->getTables($system),
 						'fixed_column_dic_arr' 	=> $this->fixedColumnDic(),								//字典：固定列的类型
-						'field_row_arr' 		=> $this->getFieldRow($function_page, $config, $system),	//根据表配置获得字段属
+						'field_row_arr' 		=> $this->getFieldRow($function_page, $config, $system),//根据表配置获得字段属
 					]);
 				}else if($function_page['model'] == 5){
 					view()->share([
-						'inheritance_datatable_arr' 	=> $this->getInheritanceDatatable($system),		//可继承的数据表格
+						'inheritance_datatable_arr' => $this->getInheritanceDatatable($system),		//可继承的数据表格
 					]);
 				}
 				return view('lazykit.datatable.set', [
-					'button_style_type_arr' => $this->buttonStyleTypeDic(),							//字典：行按钮样式
-					'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),							//字典：按钮打开方式
-					'search_conditions_dic_arr' => $this->searchConditionsDic(),					//字典：按钮打开方式
+					'button_style_type_arr' => $this->buttonStyleTypeDic(),					//字典：行按钮样式
+					'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),					//字典：按钮打开方式
+					'search_conditions_dic_arr' => $this->searchConditionsDic(),			//字典：按钮打开方式
 					'head_menu_arr' 		=> $this->headMenu($config, $function_page),	//datatable 头部工具菜单
-					'function_page' 		=> $function_page,										//datatable 记录
-					'datatable_config' 		=> $config,									//datatable 配置
-					'design_id' 			=> $request->design_id,									//页面设计ID
-					'system_id' 			=> $request->system_id,									//系统ID
-					'route_message' 		=> $route_message, 										//获得路由信息
-					'module' 				=> $module, 											//当前配置所在模型
-					'system' 				=> $system, 											//当前配置所在系统
+					'function_page' 		=> $function_page,								//页面设计 记录
+					'datatable_config' 		=> $config,										//datatable 配置
+					'design_id' 			=> $request->design_id,							//页面设计ID
+					'system_id' 			=> $request->system_id,							//系统ID
+					'route_message' 		=> $route_message, 								//获得路由信息
+					'module' 				=> $module, 									//当前配置所在模型
+					'system' 				=> $system, 									//当前配置所在系统
 				]);
 			}else{
 				return view('lazykit.chart.set', [
-					'button_style_type_arr' => $this->buttonStyleTypeDic(),							//字典：行按钮样式
-					'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),							//字典：按钮打开方式
-					'search_conditions_dic_arr' => $this->searchConditionsDic(),					//字典：按钮打开方式
-					'head_menu_arr' 		=> $this->headMenu($config, $function_page),	//datatable 头部工具菜单
-					'function_page' 		=> $function_page,										//datatable 记录
-					'datatable_config' 		=> $config,									//datatable 配置
-					'design_id' 			=> $request->design_id,									//页面设计ID
-					'system_id' 			=> $request->system_id,									//系统ID
-					'route_message' 		=> $route_message, 										//获得路由信息
-					'module' 				=> $module, 											//当前配置所在模型
-					'system' 				=> $system, 											//当前配置所在系统
+					'function_page' 		=> $function_page,			//页面设计 记录
+					'chart_config' 			=> $config,					//chart 配置
+					'design_id' 			=> $request->design_id,		//页面设计ID
+					'system_id' 			=> $request->system_id,		//系统ID
+					'route_message' 		=> $route_message, 			//获得路由信息
+					'module' 				=> $module, 				//当前配置所在模型
+					'system' 				=> $system, 				//当前配置所在系统
 				]);
 			}
 		}
@@ -279,7 +275,49 @@ class FunctionPageController extends Controller
 	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		public
-	 * @param  		$function_page  			页面设计记录
+	 * @param  		$datatable_arr  			页面设计记录
+	 * @param  		\Illuminate\Http\Request  	$request
+	 * @param 		$route_message 				页面设计路由信息
+	 * @param 		$path 						当前页面设计对应的各类文件路径
+	 * @param 		$config_path 				当前页面设计对应配置文件的路径
+	 * @return  	void
+	 */
+	private function chart_set($function_page, $request, $route_message, $path, $config_path)
+	{
+		$chart_arr['id'] 			= $function_page['id'];
+		$chart_arr['title'] 		= $function_page['title'];
+		$chart_arr['id_prefix'] 	= $function_page['id_prefix'];
+		$chart_arr['pid'] 			= $function_page['pid'];
+		$chart_arr['model'] 		= $function_page['model'];
+		$chart_arr['function_type'] = $function_page['function_type'];
+		$chart_arr['url'] 			= $function_page['url'];
+		$chart_arr['method'] 		= $function_page['method'];
+		
+		$chart_set = [];
+		//新增行
+		if($request->chart_set){
+			$chart_set = $request->chart_set;
+		}
+		//新增行
+		if($request->chart_add_set){
+			$chart_add_set = $request->chart_add_set;
+			if($chart_add_set['tag'] && $chart_add_set['title']){
+				$chart_set[] = $chart_add_set;
+			}
+		}
+		
+		$chart_arr['chart_set'] = $chart_set;
+		
+		$chart_config = '<?php return '.var_export($chart_arr, true).';?>';
+		file_put_contents($config_path, $chart_config);
+	}
+	
+	/**
+	 * 设置菜单模型
+	 *
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		$datatable_arr  			页面设计记录
 	 * @param  		\Illuminate\Http\Request  	$request
 	 * @param 		$route_message 				页面设计路由信息
 	 * @param 		$path 						当前页面设计对应的各类文件路径
@@ -397,7 +435,7 @@ class FunctionPageController extends Controller
 		unset($datatable_arr['module_id']);
 		unset($datatable_arr['system_id']);
 		$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';
-		file_put_contents($config_path,$datatable_config);
+		file_put_contents($config_path, $datatable_config);
 		
 		//生成主表对应的模型类及验证器类
 		if(isset($datatable_arr['main_table'])?$datatable_arr['main_table']:false){

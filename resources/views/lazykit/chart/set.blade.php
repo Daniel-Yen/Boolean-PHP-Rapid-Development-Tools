@@ -1,18 +1,15 @@
 @extends('layouts.base')
 
-@section('title', 'Databale配置生成')
+@section('title', 'Chart配置生成')
 
 @push('css')
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="{{file_path('/include/blk/plugin/jquery.dragsort.js')}}"></script>
 <style>
-	.create td{padding: 0;}
-	.create td input{border: 0;}
-	.create .switch_area{padding-bottom:8px; text-align: center;}
-	.main_table{color: blue;}
-	.main_table input,select{color: blue;}
-	.associated_table{color: green;}
-	.associated_table input,select{color: green;}
-	.external_field{color: red;}
-	.external_field input,select{color: red;}
+	.main{min-height:100px;border:1px solid #e2e2e2; margin:0 10px 20px 0;}
+	.mark{width:120px; float:left; margin-right:10px;}
+	.layui-input-mark{width:120px; height:30px;}
+	.dragsort{cursor: move;}
 </style>
 @endpush
 
@@ -102,9 +99,7 @@
 			});
 		});
 		
-		$(document).on('click','.demo-delete',function(){
-			$(this).parent().parent().remove();
-		});
+		$(".chart_main:first").dragsort();
 		
 		var _tools = {
 			layerCloseAll: function() {
@@ -124,7 +119,13 @@
 					shade: 0.3,
 					scrollbar: false,
 				});
-			}
+			},
+			delete: function(chart_id) {
+				layer.confirm("请确认当前操作?", {icon:3, title:'温馨提示'}, function() {
+					$("#"+chart_id).remove();
+					layer.closeAll();
+				});
+			},
 		}
 		window.tools = _tools;
 	});
