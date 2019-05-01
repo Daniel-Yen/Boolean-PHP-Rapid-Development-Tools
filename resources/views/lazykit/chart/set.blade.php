@@ -5,10 +5,11 @@
 @push('css')
 <link rel="stylesheet" href="{{file_path('/include/blk/style/template.css')}}" media="all">
 <style>
-	.main{min-height:100px;border:1px solid #e2e2e2; margin:0 10px 20px 0;}
+	.main{min-height:350px;border:0px solid #e2e2e2; margin:0 10px 20px 0;}
 	.mark{width:120px; float:left; margin-right:10px;}
 	.layui-input-mark{width:120px; height:30px;}
 	.dragsort{cursor: move;}
+	.info{padding:10px 5px; text-align:center;}
 </style>
 @endpush
 
@@ -20,12 +21,12 @@
 			@csrf
 			<div class="layui-tab layui-tab-brief">
 				<ul class="layui-tab-title">
-					<li class="layui-this">配置信息</li>
-					<li>图表布局</li>
+					<li>配置信息</li>
+					<li class="layui-this">图表布局</li>
 					<li>图表参数设置</li>
 				</ul>
 				<div class="layui-tab-content">
-					<div class="layui-tab-item layui-show">
+					<div class="layui-tab-item">
 						<table class='layui-table'>
 							<tbody>
 								<tr>
@@ -65,7 +66,7 @@
 							</tbody>
 						</table>
 					</div>
-					<div class="layui-tab-item">
+					<div class="layui-tab-item layui-show">
 						@include ('lazykit.chart.data_source')
 					</div>
 					<div class="layui-tab-item">
@@ -80,13 +81,21 @@
 @endsection
 
 @push('scripts')
-<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="{{file_path('/include/blk/plugin/jquery.dragsort.js')}}"></script>
+<script src="{{file_path('/include/blk/plugin/jquery.min.js')}}"></script>
+<script src="{{file_path('/include/blk/plugin/drag-arrange.js')}}"></script>
 <script>
-	layui.use(['jquery', 'form', 'layer', 'element'], function() {
+layui.config({
+    base: '{{file_path('/include/blk/lib/')}}',
+}).extend({
+	echarts: 'extend/echarts',
+	echartsTheme: 'extend/echartsTheme'
+}).use(['jquery', 'form', 'layer', 'element', 'echarts'], function() {
 		var $ = layui.$,
 			form = layui.form,
-			layer = layui.layer;
+			layer = layui.layer,
+			echarts = layui.echarts;
+
+		$('.drag-able').arrangeable({dragSelector: '.dragsort'});
 
 		$(document).on('click','#preview',function(){
 			layer.open({
@@ -100,7 +109,7 @@
 			});
 		});
 		
-		$(".chart_main:first").dragsort();
+		//$(".chart_main:first").dragsort();
 		
 		var _tools = {
 			layerCloseAll: function() {
@@ -128,6 +137,7 @@
 				});
 			},
 			add: function(key) {
+				$("#chart_id").val(key);
 				$("#chart_tpl").removeClass('layui-hide');
 				layer.open({
 					type: 1
@@ -136,12 +146,66 @@
 					,shade: 0.3
 					,maxmin: false
 					,offset: 'auto' 
-					,content: $('#chart_tpl')
+					,content: $("#chart_tpl")
+					,scrollbar: false
+					,cancel: function(index, layero){ 
+					    $("#chart_tpl").addClass('layui-hide');
+					    layer.close(index);
+						return false; 
+					}
 				});
-				alert(456);
+				
 			},
+			edit: function(key) {
+				$("#chart_id").val(key);
+				$("#chart_attribute_set").removeClass('layui-hide');
+				layer.open({
+					type: 2
+					,title: '选择统计图表模板'
+					,area: ['100%', '100%']
+					,shade: 0.3
+					,maxmin: false
+					,offset: 'auto' 
+					,content: '/lazykit/function_page/chart_attribute_set?system_id={{$system_id}}&design_id={{$design_id}}&key='+key
+					,scrollbar: false
+					,cancel: function(index, layero){ 
+					    $("#chart_attribute_set").addClass('layui-hide');
+					    layer.close(index);
+						return false; 
+					}
+				});
+				
+			},
+			select_chart: function(option, key){
+				if(key == ''){
+					var key = $("#chart_id").val();
+				}
+				
+				$("#chart_set_"+key+"_option").val(JSON.stringify(option));
+				
+				var ech = []
+				,myOption = option
+				,myChart = $('#Blk-chart-'+key)
+				,renderchart = function(index){
+				  ech[index] = echarts.init(myChart[index], layui.echartsTheme);
+				  ech[index].setOption(myOption);
+				  window.onresize = ech[index].resize;
+				};
+				if(!myChart[0]) return;
+				renderchart(0);
+				
+				$("#chart_tpl").addClass('layui-hide');
+				
+				layer.closeAll();
+			}
 		}
 		window.tools = _tools;
+		
+		@if (isset($chart_config['chart_set']))
+		@foreach ($chart_config['chart_set'] as $key=>$vo)
+		tools.select_chart({!! $vo['option'] !!}, '{{$key}}');
+		@endforeach
+		@endif
 	});
 </script>
 @endpush

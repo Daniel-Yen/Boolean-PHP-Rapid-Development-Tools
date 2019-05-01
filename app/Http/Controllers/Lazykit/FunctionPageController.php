@@ -331,6 +331,35 @@ class FunctionPageController extends Controller
 	 * @param 		$config_path 				当前页面设计对应配置文件的路径
 	 * @return  	void
 	 */
+	public function chartAttributeSet(Request $request){
+		
+		
+		return view('lazykit.chart.attribute_set', [
+			'function_page' 		=> $function_page,			//页面设计 记录
+			'chart_config' 			=> $config,					//chart 配置
+			'design_id' 			=> $request->design_id,		//页面设计ID
+			'system_id' 			=> $request->system_id,		//系统ID
+			'route_message' 		=> $route_message, 			//获得路由信息
+			'module' 				=> $module, 				//当前配置所在模型
+			'system' 				=> $system, 				//当前配置所在系统
+			'chart_tpl' 			=> $this->chart('all'),		//统计图表模板
+		]);
+	}
+	
+	
+	
+	/**
+	 * 设置菜单模型
+	 *
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		$datatable_arr  			页面设计记录
+	 * @param  		\Illuminate\Http\Request  	$request
+	 * @param 		$route_message 				页面设计路由信息
+	 * @param 		$path 						当前页面设计对应的各类文件路径
+	 * @param 		$config_path 				当前页面设计对应配置文件的路径
+	 * @return  	void
+	 */
 	private function datatable_set($datatable_arr, $request, $route_message, $path, $config_path){
 		//数据源设置
 		if(isset($request->main_table)?$request->main_table:false){
