@@ -64,10 +64,10 @@
 	});
 
 	layui.config({
-		base: '{{file_path('/include/blk/lib/extend/')}}',
+		base: '{{file_path('/include/blk/lib/')}}',
 	}).extend({
-		index: 'lib/index',
-		formSelects: 'formSelects-v4'
+		index: 'index',
+		formSelects: 'modules/formSelects-v4'
 	}).use(['jquery', 'form', 'layer', 'layedit', 'laydate', 'element', 'slider', 'table','colorpicker', 'upload', 'formSelects'], function() {
 			var $ = layui.$,
 				form = layui.form,

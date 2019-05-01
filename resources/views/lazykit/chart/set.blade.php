@@ -3,8 +3,7 @@
 @section('title', 'Chart配置生成')
 
 @push('css')
-<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="{{file_path('/include/blk/plugin/jquery.dragsort.js')}}"></script>
+<link rel="stylesheet" href="{{file_path('/include/blk/style/template.css')}}" media="all">
 <style>
 	.main{min-height:100px;border:1px solid #e2e2e2; margin:0 10px 20px 0;}
 	.mark{width:120px; float:left; margin-right:10px;}
@@ -81,6 +80,8 @@
 @endsection
 
 @push('scripts')
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="{{file_path('/include/blk/plugin/jquery.dragsort.js')}}"></script>
 <script>
 	layui.use(['jquery', 'form', 'layer', 'element'], function() {
 		var $ = layui.$,
@@ -127,18 +128,17 @@
 				});
 			},
 			add: function(key) {
-				var url = '{{url("lazykit/functionpage/chart_tpl_set")}}?system_id={{$system_id}}&design_id={{$design_id}}&field=' + field + '&field_from=' + field_from;
-				//执行重载
+				$("#chart_tpl").removeClass('layui-hide');
 				layer.open({
-					id: 'layerDemo',
-					type: 2,
-					title: '附加属性设置：' + title + '（' + field + '）',
-					offset: 'lt',
-					area: ['90%', '100%'],
-					content: url,
-					shade: 0.3,
-					scrollbar: false,
+					type: 1
+					,title: '选择统计图表模板'
+					,area: ['100%', '100%']
+					,shade: 0.3
+					,maxmin: false
+					,offset: 'auto' 
+					,content: $('#chart_tpl')
 				});
+				alert(456);
 			},
 		}
 		window.tools = _tools;

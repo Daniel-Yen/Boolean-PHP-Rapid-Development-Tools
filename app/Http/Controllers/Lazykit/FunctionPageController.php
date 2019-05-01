@@ -271,6 +271,7 @@ class FunctionPageController extends Controller
 					'route_message' 		=> $route_message, 			//获得路由信息
 					'module' 				=> $module, 				//当前配置所在模型
 					'system' 				=> $system, 				//当前配置所在系统
+					'chart_tpl' 			=> $this->chart('all'),		//统计图表模板
 				]);
 			}
 		}
