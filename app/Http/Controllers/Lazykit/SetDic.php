@@ -397,4 +397,34 @@ trait SetDic
     		'between' 	=> '区间',
     	];
     }
+	
+	/**
+	 * 统计图表元素：X 轴定位
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	private function x(){
+		return [
+			'left' 		=> 'left',
+			'center' 	=> 'center',
+			'right' 	=> 'right',
+		];
+	}
+	
+	/**
+	 * 统计图表元素：Y 轴定位
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	private function y(){
+		return [
+			'top' 		=> 'top',
+			'center' 	=> 'center',
+			'bottom' 	=> 'bottom',
+		];
+	}
 }

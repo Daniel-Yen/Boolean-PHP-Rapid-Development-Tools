@@ -18,15 +18,6 @@
 		line-height: 24px;
 		padding:2px;
 	}
-	@if (isset($attribute_arr['data_input_form']))
-	@if (in_array($attribute_arr['data_input_form'], ['select', 'multiple_select', 'cascade_select', 'tree_select']))
-	.data_source{display:block;}
-	@else
-	.data_source{display:none;}
-	@endif
-	@else
-	.data_source{display:none;}
-	@endif
 </style>
 @endpush
 
@@ -36,112 +27,59 @@
 		<div class="layui-col-md12">
 			<form id="iframeForm" class="layui-form" action="" method="post">
 				@csrf
-				<div class="layui-form-item layui-form-text">
-					<label class="layui-form-label">排列方式</label>
-					<div class="layui-input-inline">
-						<select name="align" lay-filter="" lay-verify="required">
-							<option value="left">默认（居左）</option>
-							@foreach ($align_dic_arr as $k=>$vo)
-							<option @if (isset($attribute_arr['align'])) @if ($attribute_arr['align'] == $k) selected="selected" @endif  @endif value="{{$k}}">{{$vo}}</option>
+				<div class="layui-form-item">
+					<label class="layui-form-label" style="width:60px;">title</label>
+					<div class="layui-input-inline" style="width:65px;">
+						<input name="title[is_title]" @if (isset($attribute['title']['is_title'])) @if ($attribute['title']['is_title'] == 'on') checked="checked" @endif @endif type="checkbox" lay-skin="switch" lay-text="显示|隐藏">
+					</div>
+					<div class="layui-input-inline" style="width:250px;">
+						<input type="text" name="title[text]" value="{{isset($attribute['title']['text'])?$attribute['title']['text']:''}}" autocomplete="off"  class="layui-input">
+					</div>
+					<label class="layui-form-label" style="width:45px;">副标题</label>
+					<div class="layui-input-inline" style="width:200px;">
+						<input type="text" name="title[subtext]" value="{{isset($attribute['title']['subtext'])?$attribute['title']['subtext']:''}}" autocomplete="off"  class="layui-input">
+					</div>
+					<label class="layui-form-label" style="width:70px;">副标题链接</label>
+					<div class="layui-input-inline" style="width:200px;">
+						<input type="text" name="title[sublink]" value="{{isset($attribute['title']['sublink'])?$attribute['title']['sublink']:''}}" autocomplete="off"  class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label" style="width:40px;"></label>
+					<label class="layui-form-label" style="width:20px;">X:</label>
+					<div class="layui-input-inline" style="width:150px;">
+						<select name="x" lay-filter="x">
+							<option value="window">标题 X 轴位置</option>
+							@foreach ($x as $key=>$vo)
+							<option @if (isset($attribute_arr['x'])) @if ($attribute_arr['x'] == $key) selected="selected" @endif  @endif value="{{$key}}">{{$vo}}</option>
+							@endforeach
+						</select>
+					</div>
+					<label class="layui-form-label" style="width:20px;">Y:</label>
+					<div class="layui-input-inline" style="width:150px;">
+						<select name="y" lay-filter="y">
+							<option value="window">标题 Y 轴位置</option>
+							@foreach ($y as $key=>$vo)
+							<option @if (isset($attribute_arr['y'])) @if ($attribute_arr['y'] == $key) selected="selected" @endif  @endif value="{{$key}}">{{$vo}}</option>
 							@endforeach
 						</select>
 					</div>
 				</div>
-				@if ($request->field_from == "main_table")
 				<div class="layui-form-item">
-					<label class="layui-form-label">输入方式</label>
-					<div class="layui-input-inline">
-						<select name="data_input_form" lay-filter="data_input_form" lay-verify="required">
-							<option value="input">默认（单行文本框）</option>
-							@foreach ($data_input_form_dic_arr as $key=>$vo)
-							<optgroup label="{{$key}}">
-								@foreach ($vo as $k=>$ko)
-								<option @if (isset($attribute_arr['data_input_form'])) @if ($attribute_arr['data_input_form'] == $k) selected="selected" @endif  @endif value="{{$k}}" data-width="{{$ko[1]}}">{{$ko[0]}}</option>
-								@endforeach
-							</optgroup>
-							@endforeach
-						</select>
+					<label class="layui-form-label" style="width:60px;">toolbox</label>
+					<div class="layui-input-inline" style="width:65px;">
+						<input name="toolbox[show]" @if (isset($attribute['toolbox']['show'])) @if ($attribute['toolbox']['show'] == 'true') checked="checked" @endif @endif type="checkbox" lay-skin="switch" lay-text="显示|隐藏">
 					</div>
-					<label class="layui-form-label data_source">数据源类型</label>
-					<div class="layui-input-inline data_source">
-						<select name="data_source_type" lay-filter="" lay-verify="required">
-							@foreach ($data_source_dic_arr as $k=>$vo)
-							<option @if (isset($attribute_arr['data_source_type'])) @if ($attribute_arr['data_source_type'] == $k) selected="selected" @endif  @endif value="{{$k}}">{{$vo}}</option>
-							@endforeach
-						</select>
+					<div class="layui-input-inline" style="width:250px;">
+						<input type="text" name="title[text]" value="{{isset($attribute['title']['text'])?$attribute['title']['text']:''}}" autocomplete="off"  class="layui-input">
 					</div>
-				</div>
-				<div class="layui-form-item layui-form-text data_source">
-					<label class="layui-form-label"></label>
-					<div class="layui-input-block">
-						<textarea id="data_source" name="data_source" placeholder="请输入数据源" class="layui-textarea">{{isset($attribute_arr['data_source'])?$attribute_arr['data_source']:''}}</textarea>
+					<label class="layui-form-label" style="width:45px;">副标题</label>
+					<div class="layui-input-inline" style="width:200px;">
+						<input type="text" name="title[subtext]" value="{{isset($attribute['title']['subtext'])?$attribute['title']['subtext']:''}}" autocomplete="off"  class="layui-input">
 					</div>
-				</div>
-				<div class="layui-form-item layui-form-text">
-					<label class="layui-form-label">验证规则</label>
-					<div class="layui-input-block">
-						<select name="validate" lay-filter="" xm-select-skin="normal" xm-select="validate">
-							<option value="">请选择</option>
-						</select>
-					</div>
-				</div>
-				<div class="layui-form-item layui-form-text" style="display: none;" id="static_dic_area">
-					<label class="layui-form-label"></label>
-					<div class="layui-input-block">
-						<textarea id="dic_static" name="dic_static" placeholder="请输入静态数据键值对的JSON格式数据" class="layui-textarea">{{isset($attribute_arr['dic_static'])?$attribute_arr['dic_static']:''}}</textarea>
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">后端方法</label>
-					<div class="layui-input-block">
-						<input type="text" name="method" value="{{isset($attribute_arr['method'])?$attribute_arr['method']:''}}" placeholder="请输入新增修改时针对该字段的操作方法" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				@endif
-				<div class="layui-form-item">
-					<label class="layui-form-label">前端排序</label>
-					<div class="layui-input-inline" style="width: 70px;">
-						<input type="checkbox" name="sort" lay-skin="switch" @if (isset($attribute_arr['sort'])) @if ($attribute_arr['sort'] == 'on') checked="checked" @endif  @endif lay-text="是|否"> 
-					</div>
-					<div class="layui-form-mid layui-word-aux">选择是，该字段在前端可排序</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">窗口附加标题</label>
-					<div class="layui-input-inline" style="width: 70px;">
-						<input type="checkbox" name="window_title" lay-skin="switch" @if (isset($attribute_arr['window_title'])) @if ($attribute_arr['window_title'] == 'on') checked="checked" @endif  @endif lay-text="是|否">
-					</div>
-					<div class="layui-form-mid layui-word-aux">选择是，该字段将出现在相关操作打开的弹窗标题中</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">单元格事件</label>
-					<div class="layui-input-inline" style="width: 40px;">
-						<input type="checkbox" name="event" lay-skin="switch" @if (isset($attribute_arr['event'])) @if ($attribute_arr['event'] == 'on') checked="checked" @endif  @endif lay-text="是|否"> 
-					</div>
-					<label class="layui-form-label" style="width: 60px;">事件类型</label>
-					<div class="layui-input-inline">
-						<select name="event_type" lay-filter="event_type" lay-verify="required">
-							<option value="window">默认（弹出窗口）</option>
-							@foreach ($event_type_dic_arr as $key=>$vo)
-							<option @if (isset($attribute_arr['event_type'])) @if ($attribute_arr['event_type'] == $key) selected="selected" @endif  @endif value="{{$key}}">{{$vo}}</option>
-							@endforeach
-						</select>
-					</div>
-					<label class="layui-form-label" style="width: 30px;">行为</label>
-					<div class="layui-input-inline" style="width: 370px;">
-						<input type="text" name="event_behavior" value="{{isset($attribute_arr['event_behavior'])?$attribute_arr['event_behavior']:''}}" placeholder="请输入点击单元格触发的超链接、路由或者控制器方法" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-form-item layui-form-text">
-					<label class="layui-form-label">单元格样式</label>
-					<div class="layui-input-block">
-						<textarea cols="15" name="cell_style_template" id="cell_style_template" placeholder="" class="layui-textarea">{{isset($attribute_arr['cell_style_template'])?$attribute_arr['cell_style_template']:''}}</textarea>
-					</div>
-				</div>
-				<div class="layui-form-item layui-form-text">
-					<label class="layui-form-label"></label>
-					<div class="layui-input-block">
-						<button class="layui-btn" lay-submit="" lay-filter="submit">立即提交</button>
-						<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+					<label class="layui-form-label" style="width:70px;">副标题链接</label>
+					<div class="layui-input-inline" style="width:200px;">
+						<input type="text" name="title[sublink]" value="{{isset($attribute['title']['sublink'])?$attribute['title']['sublink']:''}}" autocomplete="off"  class="layui-input">
 					</div>
 				</div>
 			</form>
@@ -165,27 +103,6 @@
 			formSelects = layui.formSelects,
 			laydate = layui.laydate;
 
-		form.on('select(data_input_form)', function(data){
-			//alert(data.attr('data-width'));
-			var width = $("[name='data_input_form']").find("option:selected").attr("data-width");
-			//alert(width);
-			$("[name='dom_width']").val(width);
-		});
-		
-		formSelects.data('validate', 'local', {
-			arr: @json($validate_dic_arr)
-		});
-		formSelects.value('validate', {!!$attribute_arr['validate']!!});
-		
-		form.on('select(data_input_form)', function(data){
-			//alert(data.value);
-			if(data.value == 'select'||data.value == 'tree_select'||data.value == 'cascade_select'||data.value == 'multiple_select'){
-				$(".data_source").show();
-			}else{
-				$(".data_source").hide();
-			}
-		});
-		
 		//监听提交
 		form.on('submit(submit)', function(data){
 			return true;

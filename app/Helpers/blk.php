@@ -97,15 +97,15 @@ if (!function_exists('hump_name')) {
 	}
 }
 
-if (!function_exists('get_datatable_config')) {
+if (!function_exists('get_blk_config')) {
 	/**
 	 * 返回
 	 * @auther 		杨鸿<yh15229262120@qq.com> 
 	 * @access 		private
-	 * @param  		string 		$config_name 			根据datatable配置文件及字段属性表中的的字段属性生成的layui数据表格表头属性的数组
-	 * @return 		array                      					返回类似datatable数据表格的配置文件
+	 * @param  		string 		$config_name 			配置文件名
+	 * @return 		array                      			返回配置文件
 	 */
-	function get_datatable_config($config_name)
+	function get_blk_config($config_name)
 	{
 		$path = app_path('Blk'.DIRECTORY_SEPARATOR.$config_name.'.php');
 		

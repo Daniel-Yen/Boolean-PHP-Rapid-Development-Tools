@@ -178,11 +178,70 @@ trait ChartDic
 			// 	'picture' => '.png'
 			// ]
 		];
+		//dd(json_decode($data['scatter-simple']['option'], true));
 		
 		if($key == 'all'){
+			foreach($data as $k=>$v){
+				$option = json_decode($data[$k]['option'], true);
+				$option['toolbox'] = $this->getToolBox();
+				if(isset($option['title']['text'])?$option['title']:false){
+					$option['title'] = $this->getTitle($option['title']['text']);
+				}
+				if(isset($option['legend'])?$option['legend']:false){
+					$option['legend'] = $this->getLegend($option['legend']);
+				}
+				$data[$k]['option'] = json_encode($option);
+			}
+			//dd($data);
 			return $data;
 		}else{
 			return $data[$key];
 		}
+	}
+	
+	//默认添加工具栏
+	private function getToolBox(){
+		$toolbox = '{
+		  "show": "true",
+		  "orient": "horizontal",
+		  "feature": {
+			"dataZoom": {
+			  "yAxisIndex": "none"
+			},
+			"magicType": {
+			  "type": [
+				"line",
+				"bar",
+				"stack"
+			  ]
+			},
+			"restore": {
+			  "show": "true"
+			},
+			"saveAsImage": {
+			  "type": "png"
+			}
+		  }
+		}';
+		
+		return json_decode($toolbox, true);
+	}
+	
+	//默认将标题放到顶部居中
+	private function getTitle($title){
+		$toolbox = '{
+		  "text": "'.$title.'",
+		  "x": "center"
+		}';
+		
+		return json_decode($toolbox, true);
+	}
+	
+	//默认将getLegend放到部居中
+	private function getLegend($legend){
+		$legend['x'] = 'center';
+		$legend['y'] = 'bottom';
+		
+		return $legend;
 	}
 }

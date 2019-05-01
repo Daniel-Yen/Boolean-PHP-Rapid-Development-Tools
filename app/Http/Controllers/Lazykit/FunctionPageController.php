@@ -176,12 +176,12 @@ class FunctionPageController extends Controller
 					unset($function_page['updated_at']);
 					unset($function_page['deleted_at']);
 				}else{
-					return view('datatable.msg', [
+					return view('blk.msg', [
 						'msg' => "当前页面没有对应的系统！"
 					]);
 				}
 			}else{
-				return view('datatable.msg', [
+				return view('blk.msg', [
 					'msg' => "当前页面没有对应的系统模块！"
 				]);
 			}
@@ -194,7 +194,7 @@ class FunctionPageController extends Controller
 			$model = $this->getModel($function_page['model']);
 			$config_path = $path['blk_config'].$model.$function_page['id'].'.php';
 		}else{
-			return view('datatable.msg', [
+			return view('blk.msg', [
 				'msg' => "当前记录功能模型不存在"
 			]);
 		}
@@ -332,18 +332,73 @@ class FunctionPageController extends Controller
 	 * @return  	void
 	 */
 	public function chartAttributeSet(Request $request){
+		$function_page = BlkFunctionPageRepository::where('id', $request->design_id)->first();
 		
+		if($function_page){
+			$function_page = $function_page->toArray();
+			
+			//判断当前页面是存在对应的模型
+			$module = BlkModuleRepository::where('id', $function_page['module_id'])->first();
+			if($module){
+				//判断当前页面是存在对应的系统
+				$system = BlkSystemRepository::where('id', $function_page['system_id'])->first();
+				if($system){
+					$path = $this->getPath($system);
+					
+					//去除不需要记录在配置中的页面设计中的字段
+					unset($function_page['created_at']);
+					unset($function_page['updated_at']);
+					unset($function_page['deleted_at']);
+				}else{
+					return view('blk.msg', [
+						'msg' => "当前页面没有对应的系统！"
+					]);
+				}
+			}else{
+				return view('blk.msg', [
+					'msg' => "当前页面没有对应的系统模块！"
+				]);
+			}
+		}
 		
-		return view('lazykit.chart.attribute_set', [
-			'function_page' 		=> $function_page,			//页面设计 记录
-			'chart_config' 			=> $config,					//chart 配置
-			'design_id' 			=> $request->design_id,		//页面设计ID
-			'system_id' 			=> $request->system_id,		//系统ID
-			'route_message' 		=> $route_message, 			//获得路由信息
-			'module' 				=> $module, 				//当前配置所在模型
-			'system' 				=> $system, 				//当前配置所在系统
-			'chart_tpl' 			=> $this->chart('all'),		//统计图表模板
-		]);
+		//配置在对应系统中的文件路径
+		if(isset($function_page['model'])?$function_page['model']:false){
+			$model = $this->getModel($function_page['model']);
+			$config_path = $path['blk_config'].$model.$function_page['id'].'.php';
+		}else{
+			return view('blk.msg', [
+				'msg' => "当前配置没有对应的页面模型！"
+			]);
+		}
+		
+		if(file_exists($config_path)){
+			$config = include($config_path);
+		}else{
+			return view('blk.msg', [
+				'msg' => "配置文件不存在！"
+			]);
+		}
+		
+		if($request->isMethod('post')){
+			$config['chart_set'][$request->key]['attribute'] = $request->attribute;
+			$chart_config = '<?php return '.var_export($config, true).';?>';
+			file_put_contents($config_path, $chart_config);
+			
+			return success("统计图表属性设置成功");
+		}else{
+			//获得指定图表的attribute设置
+			if(isset($function_page['chart_set'][$request->key]['attribute'])?$function_page['chart_set'][$request->key]['attribute']:false){
+				$attribute = $function_page['chart_set'][$request->key]['attribute'];
+			}else{
+				$attribute = [];
+			}
+			
+			return view('lazykit.chart.attribute_set', [
+				'attribute' => $attribute,			//页面设计 记录
+				'x' 		=> $this->x(), 			//X轴定位
+				'y' 		=> $this->y(), 			//Y轴定位
+			]);
+		}
 	}
 	
 	
@@ -998,7 +1053,7 @@ class FunctionPageController extends Controller
 	}
 	
 	public function preview(Request $request){
-		$datatable_config = get_datatable_config('datatable_'.$request->design_id);
+		$datatable_config = get_blk_config('datatable_'.$request->design_id);
 		echo "<style>
 				body{margin:0;}
 				.sf-dump{min-height:100%;}

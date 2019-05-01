@@ -449,12 +449,12 @@ class DatatableController extends Controller
 	 */
 	private function getDatatableConfig($config_name, $additional_config = [])
 	{
-		$datatable_config = get_datatable_config($config_name);
+		$datatable_config = get_blk_config($config_name);
 		//dd($datatable_config);
 		if(!empty($datatable_config)){
 			//处理模型中的继承关系
 			if(isset($datatable_config['inheritance'])?$datatable_config['inheritance']:false){
-				$inheritance_datatable_config = get_datatable_config('datatable_'.$datatable_config['inheritance']);
+				$inheritance_datatable_config = get_blk_config('datatable_'.$datatable_config['inheritance']);
 				
 				$datatable_config['datatable_set'] = $inheritance_datatable_config['datatable_set'];
 				//$datatable_config['other_set']['line_button_area_width'] = $inheritance_datatable_config['other_set']['line_button_area_width'];
