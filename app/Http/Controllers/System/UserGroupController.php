@@ -59,7 +59,7 @@ class UserGroupController extends Controller
 			$button = [];
 			
 			if($v['model'] == '2' || $v['model'] == '5'){
-				$datatable_config = get_datatable_config('datatable_'.$v['id']);
+				$datatable_config = get_blk_config('datatable_'.$v['id']);
 				if($datatable_config){
 					//dd($datatable_config);
 					//头部菜单按钮

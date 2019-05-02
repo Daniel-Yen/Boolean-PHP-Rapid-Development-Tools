@@ -101,7 +101,18 @@
 						@if (isset($v['children']))
 						<dl class="layui-nav-child">
 							@foreach ($v['children'] as $y)
-							<dd><a lay-href="{{$y['url']}}">{{$y['title']}}</a></dd>
+							<dd data-name="nav{{$y['id']}}">
+								@if (isset($y['children']))
+								<a href="javascript:;">{{$y['title']}}</a>
+								<dl class="layui-nav-child">
+									@foreach ($y['children'] as $h)
+									<dd data-name="nav{{$h['id']}}"><a lay-href="{{$h['url']}}">{{$h['title']}}</a></dd>
+									@endforeach
+								</dl>
+								@else
+								<a lay-href="{{$y['url']}}">{{$y['title']}}</a>
+								@endif
+							</dd>
 							@endforeach
 						</dl>
 						@endif

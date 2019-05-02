@@ -5,7 +5,7 @@
 @push('css')
 <link rel="stylesheet" href="{{file_path('/include/blk/style/template.css')}}" media="all">
 <style>
-	.main{min-height:350px;border:0px solid #e2e2e2; margin:0 10px 20px 0;}
+	.main{min-height:350px;border:1px solid #e2e2e2; margin:0 10px 20px 0;}
 	.mark{width:120px; float:left; margin-right:10px;}
 	.layui-input-mark{width:120px; height:30px;}
 	.dragsort{cursor: move;}
@@ -23,7 +23,6 @@
 				<ul class="layui-tab-title">
 					<li>配置信息</li>
 					<li class="layui-this">图表布局</li>
-					<li>图表参数设置</li>
 				</ul>
 				<div class="layui-tab-content">
 					<div class="layui-tab-item">
@@ -68,9 +67,6 @@
 					</div>
 					<div class="layui-tab-item layui-show">
 						@include ('lazykit.chart.data_source')
-					</div>
-					<div class="layui-tab-item">
-						@include ('lazykit.chart.data_source_set')
 					</div>
 				</div>
 			</div>
@@ -203,7 +199,9 @@ layui.config({
 		
 		@if (isset($chart_config['chart_set']))
 		@foreach ($chart_config['chart_set'] as $key=>$vo)
-		tools.select_chart({!! $vo['option'] !!}, '{{$key}}');
+			@if (isset($vo['option'])?$vo['option']:false)
+				tools.select_chart({!! $vo['option'] !!}, '{{$key}}');
+			@endif
 		@endforeach
 		@endif
 	});

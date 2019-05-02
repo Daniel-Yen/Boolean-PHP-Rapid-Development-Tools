@@ -380,15 +380,20 @@ class FunctionPageController extends Controller
 		}
 		
 		if($request->isMethod('post')){
-			$config['chart_set'][$request->key]['attribute'] = $request->attribute;
+			if(isset($config['chart_set'][$request->key]['attribute'])?$config['chart_set'][$request->key]['attribute']:false){
+				$config['chart_set'][$request->key]['attribute'] = $request->attribute;
+			}else{
+				$config['chart_set'][$request->key]['attribute'] = [];
+			}
+			
 			$chart_config = '<?php return '.var_export($config, true).';?>';
 			file_put_contents($config_path, $chart_config);
 			
 			return success("统计图表属性设置成功");
 		}else{
 			//获得指定图表的attribute设置
-			if(isset($function_page['chart_set'][$request->key]['attribute'])?$function_page['chart_set'][$request->key]['attribute']:false){
-				$attribute = $function_page['chart_set'][$request->key]['attribute'];
+			if(isset($config['chart_set'][$request->key]['attribute'])?$config['chart_set'][$request->key]['attribute']:false){
+				$attribute = $config['chart_set'][$request->key]['attribute'];
 			}else{
 				$attribute = [];
 			}

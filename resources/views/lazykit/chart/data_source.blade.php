@@ -6,8 +6,8 @@
 						<div class="layui-form-item">
 							<div class="layui-input-inline" style="width:40px;">
 								<input name="chart_set[{{$key}}][tag]" value="{!! isset($value['tag'])?$value['tag']:'' !!}" class="layui-input" style="height:30px;" type="text" placeholder="栅格" autocomplete="off" lay-verify="required">
-								<input id="chart_set_{{$key}}_option" name="chart_set[{{$key}}][option]" value='{!! isset($value['option'])?$value['option']:'' !!}' class="layui-hide1">
-								<input name="chart_set[{{$key}}][attribute]" value='{!! isset($value['attribute'])?json_encode($value['attribute']):'{}' !!}' class="layui-hide1">
+								<input id="chart_set_{{$key}}_option" name="chart_set[{{$key}}][option]" value='{!! isset($value['option'])?$value['option']:'' !!}' class="layui-hide">
+								<input name="chart_set[{{$key}}][attribute]" value='{!! isset($value['attribute'])?json_encode($value['attribute']):'' !!}' class="layui-hide">
 							</div>
 							<div class="layui-input-inline" style="width:80px;">
 								<input name="chart_set[{{$key}}][title]" value="{{$value['title']}}" class="layui-input" style="height:30px;" type="text" placeholder="图表标记" autocomplete="off" lay-verify="required">
@@ -28,29 +28,30 @@
 				</div>
 				<input id="chart_id" type="hidden" value=""/>
 				@endif
-				<fieldset class="layui-elem-field layui-field-title">
-					<legend>添加统计图表</legend>
-				</fieldset>
-				<div class="layui-row">
-					<div class="layui-col-sm12">
-						<div class="layui-form-item">
-							<div class="layui-input-inline" style="width:60px;">
-								<input name="chart_add_set[tag]" value="" class="layui-input" style="height:30px;" type="text" placeholder="栅格" autocomplete="off">
-							</div>
-							<div class="layui-input-inline" style="width:80px;">
-								<input name="chart_add_set[title]" value="" class="layui-input" style="height:30px;" type="text" placeholder="图表标记" autocomplete="off">
+				
+				<fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+				    <legend>添加统计图表</legend>
+					<div class="layui-row">
+						<div class="layui-col-sm12" style="padding:25px 25px 10px 25px;">
+							<div class="layui-form-item">
+								<div class="layui-input-inline" style="width:60px;">
+									<input name="chart_add_set[tag]" value="" class="layui-input" style="height:30px;" type="text" placeholder="栅格" autocomplete="off">
+								</div>
+								<div class="layui-input-inline" style="width:80px;">
+									<input name="chart_add_set[title]" value="" class="layui-input" style="height:30px;" type="text" placeholder="图表标记" autocomplete="off">
+								</div>
 							</div>
 						</div>
-						<div class="main" style="min-height:50px;"></div>
 					</div>
-				</div>
+				</fieldset>
+				
 				<div class="layui-form-item">
 					<button class="layui-btn"  lay-submit="" lay-filter="demo2">提交</button>
 				</div>
+				<blockquote class="layui-elem-quote">
+					帮助手册
+				</blockquote>
 			</div>
-			<blockquote class="layui-elem-quote">
-				帮助手册
-			</blockquote>
 			
 			<div class="layui-form layui-hide" id="chart_tpl">
 				<div class="layui-fluid layadmin-cmdlist-fluid">
