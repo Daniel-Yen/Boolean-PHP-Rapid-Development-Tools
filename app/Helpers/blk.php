@@ -13,8 +13,9 @@ if (!function_exists('create_datatable')) {
     /**
      * 数据表格生成器
      * @auther 		杨鸿<yh15229262120@qq.com> 
-     * @param 		string     	$config_name 		配置名称
-     * @param 		array   	$additional_config 			调用数据表格生成器自定义的附加配置参数
+     * @param 		string     					$config_name 		配置名称
+     * @param 		array   					$additional_config 	调用数据表格生成器自定义的附加配置参数
+	 * @param  		\Illuminate\Http\Request  	$request
      */
     function create_datatable($config_name, $additional_config = [], $request)
     {
@@ -23,17 +24,52 @@ if (!function_exists('create_datatable')) {
     }
 }
 
-if (!function_exists('create_chart')) {
+if (!function_exists('chart_strat')) {
     /**
-     * 数据表格生成器
+     * 统计图表生成器：获得统计图表配置
      * @auther 		杨鸿<yh15229262120@qq.com> 
      * @param 		string     	$config_name 		配置名称
-     * @param 		array   	$additional_config 			调用数据表格生成器自定义的附加配置参数
      */
-    function create_chart($config_name, $additional_config = [], $request)
+    function chart_strat($config_name)
     {
-        $datatable = new App\Http\Controllers\Blk\ChartController();
-		$datatable->createChart($config_name, $additional_config, $request);
+        $config = get_blk_config($config_name);
+		
+		$config = $config['chart_set'];
+		//dd($config);
+		$chart_set['config_name'] = $config_name;
+		foreach($config as $k=>$v){
+			$option = json_decode($v['option'], true);
+			$option['tag'] = $v['tag'];
+			$chart_set[$v['title']] = $option;
+		}
+		
+		return $chart_set;
+    }
+}
+
+if (!function_exists('create_chart')) {
+    /**
+     * 统计图表生成器
+     * @auther 		杨鸿<yh15229262120@qq.com> 
+     * @param 		array   	$chart_data 		包含统计图表数据的数组
+     */
+    function create_chart($chart_data)
+    {
+        $chart = new App\Http\Controllers\Blk\ChartController();
+		$chart->createChart($chart_data);
+    }
+}
+
+if (!function_exists('create_config')) {
+    /**
+     * 配置页面生成器
+     * @auther 		杨鸿<yh15229262120@qq.com> 
+     * @param 		string     	$config_name 		配置名称
+     */
+    function create_config($config_name, $request)
+    {
+        $chart = new App\Http\Controllers\Blk\ConfigController();
+		$chart->createConfig($config_name, $request);
     }
 }
 

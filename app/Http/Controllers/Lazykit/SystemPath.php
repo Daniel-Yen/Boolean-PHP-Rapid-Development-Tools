@@ -30,10 +30,52 @@ trait SystemPath
 				'controller' => $system->file_path.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR,
 				'controller_datatable_tpl' => $this->getDatatableControllerTpl('laravel'),
 				'controller_chart_tpl' => $this->getChartControllerTpl('laravel'),
+				'controller_config_tpl' => $this->getConfigControllerTpl('laravel'),
 			]
 		];
 		
 		return $path[$system->framework];
+	}
+	
+	/**
+	 * 获得不同框架对应配置文件的Controller模板
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @param  		string 		$framework	 	框架名称
+	 * @return 		string                       
+	 */
+	private function getConfigControllerTpl($framework){
+		$tpl['laravel'] = '<?php
+/**
+ | 配置文件：{menu_title} 
+ | 该控制器类由 Boolean Lazyer Kit 页面设计器自动生成
+ |
+ | @auther 		BLK
+ | @datetime 	'.date('Y-m-d H:i:s', time()).'
+ */
+
+namespace App\Http\Controllers\{module};
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class {NewController} extends Controller
+{
+    /**
+     * {menu_title}
+     *
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+     * @access 		public
+     * @param  		\Illuminate\Http\Request $request
+     * @return  	void
+     */
+    public function {method}(Request $request)
+    {
+    	create_config(\'config_{id}\', $request);
+    }
+}';
+		return $tpl[$framework];
 	}
 	
 	/**
@@ -71,11 +113,11 @@ class {NewController} extends Controller
      */
     public function {method}(Request $request)
     {
-    	//读取配置统计图表模板
-		$chart_config = chart_strat(\'chart_{id}\');
+    	//读取配置统计图表数据
+    	$chart = chart_strat(\'chart_{id}\');
 		//
 		
-		create_chart(\'chart_{id}\', $chart_config, $request);
+		create_chart($chart);
     }
 }';
 		return $tpl[$framework];

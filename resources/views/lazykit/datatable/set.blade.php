@@ -24,8 +24,8 @@
 			@csrf
 			<div class="layui-tab layui-tab-brief">
 				<ul class="layui-tab-title">
-					<li class="layui-this">配置信息</li>
-					<li> @if ($function_page['model'] == 2) 数据源设置 @elseif ($function_page['model'] == 5) 数据表格继承设置 @endif</li>
+					<li>配置信息</li>
+					<li class="layui-this"> @if ($function_page['model'] == 2) 数据源设置 @elseif ($function_page['model'] == 5) 数据表格继承设置 @endif</li>
 					@if (in_array($function_page['model'], [2, 5]) && ($function_page['main_table'] != '' || $function_page['external_field'] != '' || $function_page['inheritance'] != ''))
 					@if ($function_page['model'] == 2)
 					<li>数据表格设置</li>
@@ -36,7 +36,7 @@
 					@endif
 				</ul>
 				<div class="layui-tab-content">
-					<div class="layui-tab-item layui-show">
+					<div class="layui-tab-item">
 						<table class='layui-table'>
 							<tbody>
 								<tr>
@@ -76,7 +76,7 @@
 							</tbody>
 						</table>
 					</div>
-					<div class="layui-tab-item">
+					<div class="layui-tab-item layui-show">
 						@if ($function_page['model'] == 2)
 							@include ('lazykit.datatable.data_source')
 						@elseif ($function_page['model'] == 5)
@@ -137,7 +137,7 @@
 									<th></th>
 								</tr>
 							</thead>
-							<tbody id="area">
+							<tbody>
 								@if (isset($datatable_config['new_head_menu']))
 								@foreach ($datatable_config['new_head_menu'] as $key=>$vo)
 								<tr>
@@ -160,7 +160,7 @@
 								</tr>
 								@endforeach
 								@endif
-								<tr>
+								<tr id="area">
 									<td colspan="10" style="padding:5px;">
 										<a class="layui-btn layui-btn-normal layui-btn-sm" lay-filter="add" id="add">添加</a>
 									</td>
@@ -193,7 +193,7 @@
 									<th></th>
 								</tr>
 							</thead>
-							<tbody id="button_area">
+							<tbody>
 								@if (isset($datatable_config['line_button']))
 								@foreach ($datatable_config['line_button'] as $key=>$vo)
 								<tr>
@@ -221,7 +221,7 @@
 								</tr>
 								@endforeach
 								@endif
-								<tr>
+								<tr id="button_area">
 									<td colspan="9" style="padding:5px;">
 										<a class="layui-btn layui-btn-normal layui-btn-sm" lay-filter="addButton" id="addButton">添加</a>
 									</td>
@@ -262,7 +262,7 @@
 						+'<td style="text-align:center;"><a class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</a></td>'
 					+'</tr>';
 			//alert(html);
-			$("#area").append(html);
+			$("#area").before(html);
 			layui.form.render(); 	//重置表单
 		});
 		
@@ -279,7 +279,7 @@
 						+'<td style="text-align:center;"><a class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</a></td>'
 					+'</tr>';
 			//alert(html);
-			$("#button_area").append(html);
+			$("#button_area").before(html);
 			layui.form.render(); 	//重置表单
 		});
 		

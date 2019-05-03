@@ -129,7 +129,7 @@
 							操作提示：1、不同颜色的字段属性代表不同的字段来源；2、更多针对字段的设置请在 <button type="button" class="layui-btn layui-btn-sm layui-btn-xs layui-btn-danger">附加属性</button> 中操作
 						</blockquote>
 						<fieldset class="layui-elem-field layui-field-title">
-							<legend>Sql查询高级设置</legend>
+							<legend>Sql查询设置</legend>
 						</fieldset>
 						<div class="layui-form-item">
 							<label class="layui-form-label">Order By</label>

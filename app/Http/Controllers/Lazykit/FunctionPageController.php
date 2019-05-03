@@ -208,6 +208,8 @@ class FunctionPageController extends Controller
 				$this->datatable_set($function_page, $request, $route_message, $path, $config_path);
 			}else if($function_page['model'] == 3){
 				$this->chart_set($function_page, $request, $route_message, $path, $config_path);
+			}else if($function_page['model'] == 4){
+				$this->config_set($function_page, $request, $route_message, $path, $config_path);
 			}
 			
 			return success("操作成功");
@@ -235,7 +237,15 @@ class FunctionPageController extends Controller
 				}
 			}
 			
-			//dd($function_page);
+			view()->share([
+				'function_page' 		=> $function_page,			//页面设计 记录
+				'design_id' 			=> $request->design_id,		//页面设计ID
+				'system_id' 			=> $request->system_id,		//系统ID
+				'route_message' 		=> $route_message, 			//获得路由信息
+				'module' 				=> $module, 				//当前配置所在模型
+				'system' 				=> $system, 				//当前配置所在系统
+			]);
+			
 			if(in_array($function_page['model'], [2, 5])){
 				if($function_page['model'] == 2){
 					view()->share([
@@ -254,27 +264,147 @@ class FunctionPageController extends Controller
 					'button_open_type_arr' 	=> $this->buttonOpenTypeDic(),					//字典：按钮打开方式
 					'search_conditions_dic_arr' => $this->searchConditionsDic(),			//字典：按钮打开方式
 					'head_menu_arr' 		=> $this->headMenu($config, $function_page),	//datatable 头部工具菜单
-					'function_page' 		=> $function_page,								//页面设计 记录
 					'datatable_config' 		=> $config,										//datatable 配置
-					'design_id' 			=> $request->design_id,							//页面设计ID
-					'system_id' 			=> $request->system_id,							//系统ID
-					'route_message' 		=> $route_message, 								//获得路由信息
-					'module' 				=> $module, 									//当前配置所在模型
-					'system' 				=> $system, 									//当前配置所在系统
+					// 'function_page' 		=> $function_page,								//页面设计 记录
+					// 'design_id' 			=> $request->design_id,							//页面设计ID
+					// 'system_id' 			=> $request->system_id,							//系统ID
+					// 'route_message' 		=> $route_message, 								//获得路由信息
+					// 'module' 				=> $module, 									//当前配置所在模型
+					// 'system' 				=> $system, 									//当前配置所在系统
 				]);
-			}else{
+			}else if($function_page['model'] == '3'){
 				return view('lazykit.chart.set', [
-					'function_page' 		=> $function_page,			//页面设计 记录
+					// 'function_page' 		=> $function_page,			//页面设计 记录
+					// 'design_id' 			=> $request->design_id,		//页面设计ID
+					// 'system_id' 			=> $request->system_id,		//系统ID
+					// 'route_message' 		=> $route_message, 			//获得路由信息
+					// 'module' 				=> $module, 				//当前配置所在模型
+					// 'system' 				=> $system, 				//当前配置所在系统
 					'chart_config' 			=> $config,					//chart 配置
-					'design_id' 			=> $request->design_id,		//页面设计ID
-					'system_id' 			=> $request->system_id,		//系统ID
-					'route_message' 		=> $route_message, 			//获得路由信息
-					'module' 				=> $module, 				//当前配置所在模型
-					'system' 				=> $system, 				//当前配置所在系统
 					'chart_tpl' 			=> $this->chart('all'),		//统计图表模板
+				]);
+			}else if($function_page['model'] == '4'){
+				return view('lazykit.config.set', [
+					'config' 				=> $config,					//chart 配置
+					// 'function_page' 		=> $function_page,			//页面设计 记录
+					// 'design_id' 			=> $request->design_id,		//页面设计ID
+					// 'system_id' 			=> $request->system_id,		//系统ID
+					// 'route_message' 		=> $route_message, 			//获得路由信息
+					// 'module' 				=> $module, 				//当前配置所在模型
+					// 'system' 				=> $system, 				//当前配置所在系统
 				]);
 			}
 		}
+	}
+	
+	/**
+	 * 设置菜单模型
+	 *
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		$datatable_arr  			页面设计记录
+	 * @param  		\Illuminate\Http\Request  	$request
+	 * @param 		$route_message 				页面设计路由信息
+	 * @param 		$path 						当前页面设计对应的各类文件路径
+	 * @param 		$config_path 				当前页面设计对应配置文件的路径
+	 * @return  	void
+	 */
+	private function config_set($function_page, $request, $route_message, $path, $config_path)
+	{
+		//去取配置文件
+		if(file_exists($config_path)){
+			$config = include($config_path);
+			if(!is_array($config)){
+				$config = [];
+			}
+		}else{
+			$config = [];
+		}
+		
+		$config['id'] 			= $function_page['id'];
+		$config['title'] 		= $function_page['title'];
+		$config['url'] 			= $function_page['url'];
+		$config['method'] 		= $function_page['method'];
+		
+		//获得表单提交的配置基本信息数据
+		$config_set_from_form = [];
+		if($request->config){
+			//dd($request->chart_set);
+			foreach($request->config['tag'] as $k=>$v){
+				if($v){
+					$tag = $request->config['tag'][$k];
+					$config_set_from_form[$tag]['name'] 	= $request->config['name'][$k];
+					$config_set_from_form[$tag]['tag'] 		= $request->config['tag'][$k];
+					$config_set_from_form[$tag]['describe'] = $request->config['describe'][$k];
+					
+					//dd($request->config_fields);
+					$field_arr = isset($request->config_fields[$request->config['tag'][$k]])?$request->config_fields[$request->config['tag'][$k]]:[];
+					//dd($field_arr);
+					$fields = [];
+					if($field_arr){
+						foreach($field_arr['field'] as $key=>$value){
+							$field = $field_arr['field'][$key];
+							if($field){
+								$fields[$field]['field'] 		= $field;
+								$fields[$field]['title'] 		= $field_arr['title'][$key];
+								$fields[$field]['sorting'] 		= $field_arr['sorting'][$key]?$field_arr['sorting'][$key]:0;
+								$fields[$field]['width'] 		= $field_arr['width'][$key]?$field_arr['sorting'][$key]:'100%';
+								$fields[$field]['instructions'] = $field_arr['instructions'][$key];
+							}
+						}
+					}
+					
+					//字段排序
+					$fields = array_sort($fields,'sorting');
+					
+					$config_set_from_form[$tag]['fields'] = $fields;
+				}
+			}
+		}
+		
+		//将表单提交的配置基本信息数据添加到已有配置中
+		//$config_set = isset($config['config_set'])?$config['config_set']:false;
+		// foreach($config_set_from_form as $k=>$v){
+		// 	if(isset($config_set[$k])){
+		// 		$config_set[$k] = $v;
+		// 	}else{
+		// 		$config_set[$k] = $v;
+		// 	}
+		// }
+		//
+		$config['config_set'] = $config_set_from_form;		
+		//dd($config);
+		
+		$config = '<?php return '.var_export($config, true).';?>';
+		file_put_contents($config_path, $config);
+	}
+	
+	
+	
+	/**
+	 * 将$array2的元素按照一维键与$array1元素按照一维键合并
+	 * 如果$array2中存在同名键，则将$array2对应键的值赋值给$array1
+	 *
+	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		array 		$array1
+	 * @param 		array 		$array2
+	 * @return  	array 		将$array2合并到$array1后的数组
+	 */
+	private function mergeArray($array1, $array2)
+	{
+		if(!empty($array2)){
+			//dd($array1, $array2);
+			foreach($array1 as $k=>$v){
+				if(isset($array2[$k])){
+					$array2[$k]['fields'] = $this->mergeArray($array1[$k]['fields'], $array2[$k]['fields']);
+					$array1[$k] = $array2[$k];
+				}
+			}
+		}
+			
+		return $array1;
+		
 	}
 	
 	/**
@@ -301,7 +431,7 @@ class FunctionPageController extends Controller
 		$chart_arr['method'] 		= $function_page['method'];
 		
 		$chart_set = [];
-		//新增行
+		//表单提交的已经设置的数据
 		if($request->chart_set){
 			$chart_set = $request->chart_set;
 		}

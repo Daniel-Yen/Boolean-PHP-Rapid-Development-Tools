@@ -24,10 +24,11 @@ class ChartController extends Controller
      */
     public function index(Request $request)
     {
-    	//读取配置统计图表模板
-		$chart_config = chart_strat('chart_73');
+    	//读取配置统计图表数据
+		$chart = chart_strat('chart_73');
+		//print_r($chart);
 		//
 		
-		create_chart('chart_73', $chart_config, $request);
+		create_chart($chart);
     }
 }
