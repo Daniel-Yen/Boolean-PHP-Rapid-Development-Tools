@@ -28,22 +28,6 @@ class ConfigController extends Controller
     }
 	
 	/**
-	 * middleware字段的下拉选择
-	 *
-	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
-	 * @access 		private
-	 * @return 		array                       
-	 */
-	public function attributeMiddleware(){
-		$data = [
-			['value' => '1', 'name' => '身份验证'],
-			['value' => '2', 'name' => '身份验证 & 权限控制'],
-		];
-		
-		return $data;
-	}
-	
-	/**
 	 * 多种输入方式的配置
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 

@@ -27,7 +27,7 @@
 	<table class="layui-hide" id="buer-table" lay-filter="buer-table"></table>
 	<script type="text/html" id="buer-table-toolbar">
 		<div class="layui-btn-container">
-		@if (isset($datatable_config['head_menu']))
+		@if (isset($datatable_config['head_menu'])?is_array($datatable_config['head_menu']):false)
 		@foreach ($datatable_config['head_menu'] as $key=>$vo)
 		@if ($do != "recycle")
 			@if (isset($vo['must']))
@@ -44,7 +44,7 @@
 		@endif
 		
 		@if ($do != "recycle")
-		@if (isset($datatable_config['new_head_menu']))
+		@if (isset($datatable_config['new_head_menu'])?is_array($datatable_config['new_head_menu']):false)
 		@foreach ($datatable_config['new_head_menu'] as $key=>$vo)
 		<button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="{{$key}}"><i class="layui-icon {{$vo['icon']}}"></i> {{$vo['text']}}</button>
 		@endforeach
@@ -54,9 +54,9 @@
 		</div>
 	</script>
 	<script type="text/html" id="buer-table-bar">
-		@if (isset($datatable_config['line_button']))
+		@if (isset($datatable_config['line_button'])?is_array($datatable_config['line_button']):false)
 		@foreach ($datatable_config['line_button'] as $key=>$vo)
-			<a class="layui-btn {{$vo['style']}} layui-btn-xs" lay-event="{{$key}}">{{$vo['text']}}</a>
+		<a class="layui-btn {{$vo['style']}} layui-btn-xs" lay-event="{{$key}}">{{$vo['text']}}</a>
 		@endforeach
 		@endif
 	</script>

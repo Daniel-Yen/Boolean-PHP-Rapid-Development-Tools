@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\BlkFunctionPageRepository;
+use App\Repositories\BlkMiddlewareRepository;
 use App\Repositories\BlkModuleRepository;
 use App\Repositories\BlkSystemRepository;
 use App\Repositories\BlkMenuRepository;
@@ -259,8 +260,15 @@ trait Create
 					->where('system_id', $system->id)
 					->where('method', '!=', '')
 					->get();
-		//dd($data);
-		$route = "<?php		
+		if($data->count()){
+			$data = $data->toArray();
+			
+			$data_arr = [];
+			foreach($data as $k=>$v){
+				$data_arr[$v['middleware']][] = $v;
+			}
+			
+			$route = "<?php		
 /*
 |--------------------------------------------------------------------------
 | Datatable Routes
@@ -268,60 +276,71 @@ trait Create
 | 此路由文件由布尔懒人工具包自动生成，包含DataTable生成器相关路由
 | 生成日期：".date('Y-m-d H:i:s', time())."
 | 注    意：请不要在此文件手写路由
-*/
+*/".PHP_EOL;
 		
-Route::group(['middleware' => ['auth', 'permission']], function(){".PHP_EOL;
-				
-		if($data->count()){
-			$data = $data->toArray();
-			//dd($data);
-			foreach($data as $k=>$v){
-				$module = BlkModuleRepository::where('id',$v['module_id'])->get();
-				//dd($module);
-				if($module->first()){
-					$module = $module->toArray()[0];
-				}else{
-					$module = [];
-				}
-				//dd($module);
-				//如果菜单没有对应模块则软删除该菜单
-				if(!empty($module)){
-					if($v['url'] && $v['method']){
-						$route_name = "'/".$v['url']."',";
-						//计算要补充的空格,让路由文件易读
-						$lenth = 35-strlen($route_name);
-						if($lenth>0){
-							for($i=0;$i<$lenth;$i++){
-								$route_name = $route_name.' ';
-							}
-						}
-						$method = $module['module'].'\\'.$v['method'];
-						$route_record = "	Route::any(".$route_name."'".$method."');";
-						$lenth = 90-strlen($route_record);
-						if($lenth>0){
-							for($i=0;$i<$lenth;$i++){
-								$route_record = $route_record.' ';
-							}
-						}
-						$route .= $route_record."  //".$v['title'].PHP_EOL;
+			foreach($data_arr as $key=>$value){
+				//获得中间件
+				$middleware = BlkMiddlewareRepository::whereIn('id',explode(',',$key))->get();
+				$data = [];
+				if($middleware->count()){
+					$middleware = $middleware->toArray();
+					foreach($middleware as $k=>$v){
+						$data[] = "'".$v['key']."'";
 					}
-				}else{
-					//删除没有对应模块跟系统的菜单
-					//BlkMenuRepository::where('id',$v['id'])->delete();
 				}
+				
+				$route .= "Route::group(['middleware' => [".join(',', $data)."]], function(){".PHP_EOL;
+				//dd($data);
+				foreach($value as $k=>$v){
+					$module = BlkModuleRepository::where('id',$v['module_id'])->get();
+					//dd($module);
+					if($module->first()){
+						$module = $module->toArray()[0];
+					}else{
+						$module = [];
+					}
+					//dd($module);
+					//如果菜单没有对应模块则软删除该菜单
+					if(!empty($module)){
+						if($v['url'] && $v['method']){
+							$route_name = "'/".$v['url']."',";
+							//计算要补充的空格,让路由文件易读
+							$lenth = 35-strlen($route_name);
+							if($lenth>0){
+								for($i=0;$i<$lenth;$i++){
+									$route_name = $route_name.' ';
+								}
+							}
+							$method = $module['module'].'\\'.$v['method'];
+							$route_record = "	Route::any(".$route_name."'".$method."');";
+							$lenth = 90-strlen($route_record);
+							if($lenth>0){
+								for($i=0;$i<$lenth;$i++){
+									$route_record = $route_record.' ';
+								}
+							}
+							$route .= $route_record."  //".$v['title'].PHP_EOL;
+						}
+					}else{
+						//删除没有对应模块跟系统的菜单
+						//BlkMenuRepository::where('id',$v['id'])->delete();
+					}
+				}
+				//dd($route);
+				$route .= '});';
 			}
-			//dd($route);
-			$route .= '});';
-			
 			create_dir($path['route']);
 			$route_path = $path['route'].'blk.php';
 			//dd($route_path);
 			file_put_contents($route_path, $route);
 			
-			$callback = ['code' => 0, 'msg' => "路由文件更新成功", 'refresh' => 'no'];
+			$callback = ['code' => 0, 'msg' => "路由文件更新成功", 'refresh' => 'no'];			
 		}else{
 			$callback = ['code' => 1, 'msg' => "没有要生成的路由", 'refresh' => 'no'];
 		}
+		//dd($data_arr);
+		
+		
 		
 		return $callback;
 	}

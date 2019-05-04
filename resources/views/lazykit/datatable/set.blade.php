@@ -314,7 +314,7 @@
 			},
 			//title:表字段名称, field:字段, field_from:字段类型
 			openDialog: function(title, field, field_from) {
-				var url = '{{url("lazykit/functionpage/attribute_set")}}?system_id={{$system_id}}&design_id={{$design_id}}&field=' + field + '&field_from=' + field_from;
+				var url = '{{url("lazykit/function_page/attribute_set")}}?system_id={{$system_id}}&design_id={{$design_id}}&field=' + field + '&field_from=' + field_from;
 				//执行重载
 				layer.open({
 					id: 'layerDemo',

@@ -12,9 +12,11 @@
 						<td>
 						<select name="inheritance" lay-verify="required" style="width:150px;">
 							<option value=""></option>
-							@foreach ($inheritance_function_page as $vo)
+							@if (isset($inheritance_datatable_arr)?is_array($inheritance_datatable_arr):false)
+							@foreach ($inheritance_datatable_arr as $vo)
 							<option @if ($function_page['inheritance'] == $vo['id']) selected="selected" @endif value="{{$vo['id']}}">{{$vo['title']}}</option>
 							@endforeach
+							@endif
 						</select>
 						</td>
 						<td>

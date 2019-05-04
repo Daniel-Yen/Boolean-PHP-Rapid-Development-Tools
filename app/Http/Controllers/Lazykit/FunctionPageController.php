@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\BlkFunctionPageRepository;
+use App\Repositories\BlkMiddlewareRepository;
 use App\Repositories\BlkModuleRepository;
 use App\Repositories\BlkSystemRepository;
 use App\Repositories\BlkMenuRepository;
@@ -810,7 +811,7 @@ class FunctionPageController extends Controller
 		}else{
 			$data = [];
 		}
-		
+		//dd($data);
 		return $data;
 	}
 	
@@ -1316,5 +1317,27 @@ class FunctionPageController extends Controller
 				.sf-dump{min-height:100%;}
 			 </style>";
 		dd($datatable_config);
+	}
+	
+	/**
+	 * middleware字段的下拉选择
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	public function attributeMiddleware(){
+		$middleware = BlkMiddlewareRepository::get();
+		
+		$data = [];
+		if($middleware->count()){
+			$middleware = $middleware->toArray();
+			foreach($middleware as $k=>$v){
+				$data[$k]['name'] 	= $v['key'];
+				$data[$k]['value'] 	= $v['id'];
+			}
+		}
+		
+		return $data;
 	}
 }

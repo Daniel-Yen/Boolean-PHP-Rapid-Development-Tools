@@ -174,7 +174,7 @@
       'attribute' => 
       array (
         'align' => 'left',
-        'data_input_form' => 'select',
+        'data_input_form' => 'multiple_select',
         'data_source_type' => 'method',
         'data_source' => 'attributeMiddleware',
         'validate' => NULL,

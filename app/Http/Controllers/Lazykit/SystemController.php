@@ -31,5 +31,17 @@ class SystemController extends Controller
     {
     	create_datatable('datatable_45', [], $request);
     }
-
+	
+	/**
+	 * 系统管理
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		\Illuminate\Http\Request $request
+	 * @return  	mixed
+	 */
+	public function middlewareManagement(Request $request)
+	{
+		create_datatable('datatable_81', [], $request);
+	}
 }
