@@ -125,17 +125,17 @@ trait SetDic
      * @access 		private
      * @return 		array
      */
-    private function verifyDic(){
-    	return [
-    		'required' 	=> '必填项',
-    		'phone' 	=> '手机号',
-    		'email' 	=> '邮箱',
-    		'url' 		=> '网址',
-    		'number' 	=> '数字',
-    		'date' 		=> '日期',
-    		'identity' 	=> '身份证',
-    	];
-    }
+    // private function verifyDic(){
+    // 	return [
+    // 		'required' 	=> '必填项',
+    // 		'phone' 	=> '手机号',
+    // 		'email' 	=> '邮箱',
+    // 		'url' 		=> '网址',
+    // 		'number' 	=> '数字',
+    // 		'date' 		=> '日期',
+    // 		'identity' 	=> '身份证',
+    // 	];
+    // }
     
     /**
      * 数据字典：事件类型

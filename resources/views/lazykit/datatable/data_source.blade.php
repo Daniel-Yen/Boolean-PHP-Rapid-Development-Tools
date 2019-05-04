@@ -42,7 +42,11 @@
 				</tbody>
 			</table>
 			<blockquote class="layui-elem-quote">
-				主表（关联表）跟自定义字段可同时设置；
+				<h3>操作提示：</h3>
+				<ul>
+					<li>1、设置关联表，必须要设置主表</li>
+					<li>2、主表（关联表）跟自定义字段可同时设置</li>
+				</ul>
 			</blockquote>
 			<div class="layui-form-item">
 				<button class="layui-btn"  lay-submit="" lay-filter="demo2">提交</button>

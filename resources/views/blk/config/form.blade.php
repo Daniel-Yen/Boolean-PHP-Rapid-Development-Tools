@@ -26,6 +26,7 @@
 						@endif
 					</ul>
 					<div class="layui-tab-content">
+						<br/>
 						@if (isset($config['config_set'])?$config['config_set']:false)
 						@foreach ($config['config_set'] as $value)
 						<div class="layui-tab-item @if ($loop->first)  layui-show @endif ">

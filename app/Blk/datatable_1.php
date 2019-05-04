@@ -4,6 +4,7 @@
   'sorted' => 0,
   'id_prefix' => 'design_',
   'pid' => 46,
+  'middleware' => 'auth&permission',
   'model' => '2',
   'function_type' => '2',
   'url' => 'lazykit/function_page/design',
@@ -16,19 +17,6 @@
   'external_field' => NULL,
   'datatable_set' => 
   array (
-    'inheritance_note' => 
-    array (
-      'field_type' => 'varchar',
-      'field_length' => '250',
-      'sorting' => NULL,
-      'fixed' => '0',
-      'title' => '继承备注',
-      'field' => 'inheritance_note',
-      'field_from' => 'main_table',
-      'width' => NULL,
-      'search' => '0',
-      'attribute' => NULL,
-    ),
     'main_table' => 
     array (
       'field_type' => 'varchar',
@@ -94,6 +82,19 @@
       'search' => '0',
       'attribute' => NULL,
     ),
+    'inheritance_note' => 
+    array (
+      'field_type' => 'varchar',
+      'field_length' => '250',
+      'sorting' => NULL,
+      'fixed' => '0',
+      'title' => '继承备注',
+      'field' => 'inheritance_note',
+      'field_from' => 'main_table',
+      'width' => NULL,
+      'search' => '0',
+      'attribute' => NULL,
+    ),
     'id' => 
     array (
       'field_type' => 'int',
@@ -108,6 +109,22 @@
       'search' => '0',
       'attribute' => NULL,
     ),
+    'id_prefix' => 
+    array (
+      'field_type' => 'varchar',
+      'field_length' => '40',
+      'sorting' => '2',
+      'fixed' => '0',
+      'title' => 'ID前缀',
+      'field' => 'id_prefix',
+      'field_from' => 'main_table',
+      'width' => '100',
+      'create' => 'on',
+      'update' => 'on',
+      'read' => 'on',
+      'search' => '0',
+      'attribute' => NULL,
+    ),
     'title' => 
     array (
       'field_type' => 'varchar',
@@ -117,7 +134,7 @@
       'title' => '页面名称',
       'field' => 'title',
       'field_from' => 'main_table',
-      'width' => '220',
+      'width' => '260',
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
@@ -140,21 +157,33 @@
         'cell_style_template' => NULL,
       ),
     ),
-    'id_prefix' => 
+    'middleware' => 
     array (
       'field_type' => 'varchar',
-      'field_length' => '40',
-      'sorting' => '2',
+      'field_length' => '20',
+      'sorting' => '3',
       'fixed' => '0',
-      'title' => 'ID前缀',
-      'field' => 'id_prefix',
+      'title' => '中间件',
+      'field' => 'middleware',
       'field_from' => 'main_table',
       'width' => NULL,
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
-      'search' => '0',
-      'attribute' => NULL,
+      'search' => '=',
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'select',
+        'data_source_type' => 'method',
+        'data_source' => 'attributeMiddleware',
+        'validate' => NULL,
+        'dic_static' => NULL,
+        'method' => NULL,
+        'event_type' => 'window',
+        'event_behavior' => NULL,
+        'cell_style_template' => NULL,
+      ),
     ),
     'pid' => 
     array (

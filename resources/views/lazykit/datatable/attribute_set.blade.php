@@ -8,6 +8,8 @@
 	.create td{padding: 0;}
 	.create td input{border: 0;}
 	.create .switch_area{padding-bottom:8px; text-align: center;}
+	.layui-form-label{width:130px; height:20px; line-height:25px;}
+	.layui-input-block{margin-left:160px;}
 	#textarea {
 		display: block;
 		margin:0 auto;
@@ -127,7 +129,7 @@
 						</select>
 					</div>
 					<label class="layui-form-label" style="width: 30px;">行为</label>
-					<div class="layui-input-inline" style="width: 370px;">
+					<div class="layui-input-inline" style="width: 350px;">
 						<input type="text" name="event_behavior" value="{{isset($attribute_arr['event_behavior'])?$attribute_arr['event_behavior']:''}}" placeholder="请输入点击单元格触发的超链接、路由或者控制器方法" autocomplete="off" class="layui-input">
 					</div>
 				</div>

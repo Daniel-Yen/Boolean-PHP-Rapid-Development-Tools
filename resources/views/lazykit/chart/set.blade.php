@@ -19,10 +19,10 @@
 		<div class="layui-col-md12">
 			<form class="layui-form" action="" method="post">
 			@csrf
-			<div class="layui-tab layui-tab-brief">
+			<div class="layui-tab layui-tab-brief" lay-filter="config">
 				<ul class="layui-tab-title">
-					<li>配置信息</li>
-					<li class="layui-this">图表布局</li>
+					<li lay-id="1">配置信息</li>
+					<li lay-id="2" class="layui-this">图表布局</li>
 				</ul>
 				<div class="layui-tab-content">
 					<div class="layui-tab-item">
@@ -89,7 +89,8 @@ layui.config({
 		var $ = layui.$,
 			form = layui.form,
 			layer = layui.layer,
-			echarts = layui.echarts;
+			echarts = layui.echarts,
+			element = layui.element;
 
 		$('.drag-able').arrangeable({dragSelector: '.dragsort'});
 
@@ -105,7 +106,13 @@ layui.config({
 			});
 		});
 		
-		//$(".chart_main:first").dragsort();
+		//Hash地址的定位
+		var layid = location.hash.replace(/^#config=/, '');
+		element.tabChange('config', layid);
+		
+		element.on('tab(config)', function(elem){
+			location.hash = 'config='+ $(this).attr('lay-id');
+		});
 		
 		var _tools = {
 			layerCloseAll: function() {

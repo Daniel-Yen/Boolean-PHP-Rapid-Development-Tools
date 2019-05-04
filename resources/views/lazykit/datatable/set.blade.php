@@ -22,17 +22,17 @@
 		<div class="layui-col-md12">
 			<form class="layui-form" action="" method="post">
 			@csrf
-			<div class="layui-tab layui-tab-brief">
+			<div class="layui-tab layui-tab-brief" lay-filter="config">
 				<ul class="layui-tab-title">
-					<li>配置信息</li>
-					<li class="layui-this"> @if ($function_page['model'] == 2) 数据源设置 @elseif ($function_page['model'] == 5) 数据表格继承设置 @endif</li>
+					<li lay-id="1">配置信息</li>
+					<li lay-id="2" class="layui-this"> @if ($function_page['model'] == 2) 数据源设置 @elseif ($function_page['model'] == 5) 数据表格继承设置 @endif</li>
 					@if (in_array($function_page['model'], [2, 5]) && ($function_page['main_table'] != '' || $function_page['external_field'] != '' || $function_page['inheritance'] != ''))
 					@if ($function_page['model'] == 2)
-					<li>数据表格设置</li>
+					<li lay-id="3">数据表格设置</li>
 					@endif
-					<li>头部内置工具菜单</li>
-					<li>头部附加工具菜单</li>
-					<li>行内工具按钮</li>
+					<li lay-id="4">头部内置工具菜单</li>
+					<li lay-id="5">头部附加工具菜单</li>
+					<li lay-id="6">行内工具按钮</li>
 					@endif
 				</ul>
 				<div class="layui-tab-content">
@@ -246,7 +246,8 @@
 	layui.use(['jquery', 'form', 'layer', 'element'], function() {
 		var $ = layui.$,
 			form = layui.form,
-			layer = layui.layer;
+			layer = layui.layer,
+			element = layui.element;
 
 		$(document).on('click','#add',function(){
 			var html = '<tr>'
@@ -297,6 +298,14 @@
 		
 		$(document).on('click','.demo-delete',function(){
 			$(this).parent().parent().remove();
+		});
+		
+		//Hash地址的定位
+		var layid = location.hash.replace(/^#config=/, '');
+		element.tabChange('config', layid);
+
+		element.on('tab(config)', function(elem){
+			location.hash = 'config='+ $(this).attr('lay-id');
 		});
 		
 		var _tools = {

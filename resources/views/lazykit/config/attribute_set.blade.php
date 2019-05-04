@@ -36,18 +36,6 @@
 		<div class="layui-col-md12">
 			<form id="iframeForm" class="layui-form" action="" method="post">
 				@csrf
-				<div class="layui-form-item layui-form-text">
-					<label class="layui-form-label">排列方式</label>
-					<div class="layui-input-inline">
-						<select name="align" lay-filter="" lay-verify="required">
-							<option value="left">默认（居左）</option>
-							@foreach ($align_dic_arr as $k=>$vo)
-							<option @if (isset($attribute_arr['align'])) @if ($attribute_arr['align'] == $k) selected="selected" @endif  @endif value="{{$k}}">{{$vo}}</option>
-							@endforeach
-						</select>
-					</div>
-				</div>
-				@if ($request->field_from == "main_table")
 				<div class="layui-form-item">
 					<label class="layui-form-label">输入方式</label>
 					<div class="layui-input-inline">
@@ -83,58 +71,6 @@
 						<select name="validate" lay-filter="" xm-select-skin="normal" xm-select="validate">
 							<option value="">请选择</option>
 						</select>
-					</div>
-				</div>
-				<div class="layui-form-item layui-form-text" style="display: none;" id="static_dic_area">
-					<label class="layui-form-label"></label>
-					<div class="layui-input-block">
-						<textarea id="dic_static" name="dic_static" placeholder="请输入静态数据键值对的JSON格式数据" class="layui-textarea">{{isset($attribute_arr['dic_static'])?$attribute_arr['dic_static']:''}}</textarea>
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">后端方法</label>
-					<div class="layui-input-block">
-						<input type="text" name="method" value="{{isset($attribute_arr['method'])?$attribute_arr['method']:''}}" placeholder="请输入新增修改时针对该字段的操作方法" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				@endif
-				<div class="layui-form-item">
-					<label class="layui-form-label">前端排序</label>
-					<div class="layui-input-inline" style="width: 70px;">
-						<input type="checkbox" name="sort" lay-skin="switch" @if (isset($attribute_arr['sort'])) @if ($attribute_arr['sort'] == 'on') checked="checked" @endif  @endif lay-text="是|否"> 
-					</div>
-					<div class="layui-form-mid layui-word-aux">选择是，该字段在前端可排序</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">窗口附加标题</label>
-					<div class="layui-input-inline" style="width: 70px;">
-						<input type="checkbox" name="window_title" lay-skin="switch" @if (isset($attribute_arr['window_title'])) @if ($attribute_arr['window_title'] == 'on') checked="checked" @endif  @endif lay-text="是|否">
-					</div>
-					<div class="layui-form-mid layui-word-aux">选择是，该字段将出现在相关操作打开的弹窗标题中</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">单元格事件</label>
-					<div class="layui-input-inline" style="width: 40px;">
-						<input type="checkbox" name="event" lay-skin="switch" @if (isset($attribute_arr['event'])) @if ($attribute_arr['event'] == 'on') checked="checked" @endif  @endif lay-text="是|否"> 
-					</div>
-					<label class="layui-form-label" style="width: 60px;">事件类型</label>
-					<div class="layui-input-inline">
-						<select name="event_type" lay-filter="event_type" lay-verify="required">
-							<option value="window">默认（弹出窗口）</option>
-							@foreach ($event_type_dic_arr as $key=>$vo)
-							<option @if (isset($attribute_arr['event_type'])) @if ($attribute_arr['event_type'] == $key) selected="selected" @endif  @endif value="{{$key}}">{{$vo}}</option>
-							@endforeach
-						</select>
-					</div>
-					<label class="layui-form-label" style="width: 30px;">行为</label>
-					<div class="layui-input-inline" style="width: 370px;">
-						<input type="text" name="event_behavior" value="{{isset($attribute_arr['event_behavior'])?$attribute_arr['event_behavior']:''}}" placeholder="请输入点击单元格触发的超链接、路由或者控制器方法" autocomplete="off" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-form-item layui-form-text">
-					<label class="layui-form-label">单元格样式</label>
-					<div class="layui-input-block">
-						<textarea cols="15" name="cell_style_template" id="cell_style_template" placeholder="" class="layui-textarea">{{isset($attribute_arr['cell_style_template'])?$attribute_arr['cell_style_template']:''}}</textarea>
 					</div>
 				</div>
 				<div class="layui-form-item layui-form-text">

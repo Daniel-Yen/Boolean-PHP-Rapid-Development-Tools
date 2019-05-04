@@ -28,7 +28,7 @@
 								@endforeach
 								@endif
 								<tr id="{{$ko['tag']}}">
-									<td colspan="6" style="padding:5px; text-align:right;">
+									<td colspan="6" style="padding:5px;">
 										<a class="layui-btn layui-btn-normal layui-btn-sm" id="add{{$ko['tag']}}">添加一个字段</a>
 									</td>
 								</tr>
@@ -37,7 +37,11 @@
 						@endforeach
 						@endif
 						<blockquote class="layui-elem-quote">
-							操作提示：1、不同颜色的字段属性代表不同的字段来源；2、更多针对字段的设置请在 <button type="button" class="layui-btn layui-btn-sm layui-btn-xs layui-btn-danger">附加属性</button> 中操作
+							<h3>操作提示：</h3>
+							<ul>
+								<li>1、字段的“输入方式”、“验证规则”请在 <button type="button" class="layui-btn layui-btn-sm layui-btn-xs layui-btn-danger">附加属性</button> 中设置</li>
+								<li>2、默认的输入方式为单行文本框</li>
+							</ul>
 						</blockquote>
 						<div class="layui-form-item">
 							<button class="layui-btn"  lay-submit="" lay-filter="demo2">提交</button>

@@ -47,8 +47,8 @@ class DatatableController extends Controller
 				//dd($request->post());
 				$param = $this->getAllowField($dom, $request->post());
 				//dump($param); die();
-				//5、附加的新增数据
 				
+				//5、附加的新增数据
 				if(isset($additional_config['create_param'])?$additional_config['create_param']:false){
 					foreach($additional_config['create_param'] as $k=>$v){
 						$param[$k] = $v;
@@ -109,7 +109,7 @@ class DatatableController extends Controller
 			}
 			
 			//获得要修改的记录
-			$data_arr = $datatable_config['modelClass']::where('id', $request->id)->lockForUpdate()->get();
+			$data_arr = $datatable_config['modelClass']::where('id', $request->id)->get();
 			if($data_arr->first()){
 				$data_arr = $data_arr->first()->toArray();
 			}
@@ -238,10 +238,10 @@ class DatatableController extends Controller
 				
 				//绑定查询条件
 				foreach($conditions as $k=>$v){
-					if(isset($v['0'])){ $field = $v['0']; }else{ $field = ''; }
-					if(isset($v['1'])){ $search_type = $v['1']; }else{ $search_type = ''; }
-					if(isset($v['2'])){ $value = $v['2']; }else{ $value = ''; }
-					if(isset($v['3'])){ $value_end = $v['3']; }else{ $value_end = ''; }
+					if(isset($v['0'])){ $field 			= $v['0']; }else{ $field 		= ''; }
+					if(isset($v['1'])){ $search_type 	= $v['1']; }else{ $search_type 	= ''; }
+					if(isset($v['2'])){ $value 			= $v['2']; }else{ $value 		= ''; }
+					if(isset($v['3'])){ $value_end 		= $v['3']; }else{ $value_end 	= ''; }
 					if($search_type == 'like'){
 						$data = $data->when($field, function ($query) use ($field, $search_type, $value) {
 									return $query->where($field, $search_type, '%'.$value.'%');
@@ -367,18 +367,18 @@ class DatatableController extends Controller
 				//http_build_query();
 				
 				view()->share([
-					'search' => $this->getDataFieldSet($datatable_config, 'search'), 			//搜索字段
-					'cols' => $this->cols($read, $datatable_config),						//表头
-					'read' => $read,														//字段
-					'datatable_config' => $datatable_config,								//数据表格配置
-					'do' => $request->do,
-					'parse_url_query' => $parse_url_query,
-					'search_conditions_dic_arr' => $this->searchConditionsDic(),			//字典：按钮打开方式
-					'data_input_form_to_input_dic_arr' => $this->dataInputFormToInputDic(),	//字典：按钮打开方式
-					'data_input_form_between_dic_arr' => $this->dataInputFormBetweenDic(),	//字典：支持区间搜索的字段
-					'data_input_form_like_dic_arr' => $this->dataInputFormLikeDic(),			//字典：支持模糊匹配的字段
+					'search' 	=> $this->getDataFieldSet($datatable_config, 'search'), 		//搜索字段
+					'cols' 		=> $this->cols($read, $datatable_config),						//表头
+					'read' 								=> $read,														//字段
+					'datatable_config' 					=> $datatable_config,					//数据表格配置
+					'do' 								=> $request->do,
+					'parse_url_query' 					=> $parse_url_query,
+					'search_conditions_dic_arr' 		=> $this->searchConditionsDic(),		//字典：按钮打开方式
+					'data_input_form_to_input_dic_arr' 	=> $this->dataInputFormToInputDic(),	//字典：按钮打开方式
+					'data_input_form_between_dic_arr' 	=> $this->dataInputFormBetweenDic(),	//字典：支持区间搜索的字段
+					'data_input_form_like_dic_arr' 		=> $this->dataInputFormLikeDic(),		//字典：支持模糊匹配的字段
 					'data_input_form_only_like_dic_arr' => $this->dataInputFormOnlyLikeDic(),	//字典：支持模糊匹配的字段
-					'data_input_form_only_equal_dic_arr' => $this->dataInputFormOnlyEqualDic(),	//字典：支持模糊匹配的字段
+					'data_input_form_only_equal_dic_arr'=> $this->dataInputFormOnlyEqualDic(),	//字典：支持模糊匹配的字段
 				]);
 				
 				$content = view('blk.datatable.body');
@@ -584,7 +584,7 @@ class DatatableController extends Controller
 					}
 					
 					//判断按钮对应的操作地址
-					if(Str::contains($v['method'], '@')){
+					if(strpos($v['method'], '@')){
 						$arr = explode('@',$v['method']);
 						$datatable_config['new_head_menu'][$k]['route'] = '/'.$arr['1'];
 					}
@@ -600,7 +600,7 @@ class DatatableController extends Controller
 					}
 					
 					//判断按钮对应的操作地址
-					if(Str::contains($v['method'], '@')){
+					if(strpos($v['method'], '@')){
 						$arr = explode('@',$v['method']);
 						$datatable_config['line_button'][$k]['route'] = '/'.$arr['1'];
 					}
@@ -817,7 +817,7 @@ class DatatableController extends Controller
 				//判断字段是否在字典数组中,如果有则替换字段为在字典中的值
 				if(isset($dic_arr[$key])?!empty($dic_arr[$key]):false){
 					//字典在数据库中存储格式 1、 1,2、 1/2/3 
-					if(Str::contains($value, ',')){
+					if(strpos($value, ',')){
 						$arr = explode(',',$value);
 						$dic= [];
 						foreach($arr as $v1){
@@ -827,7 +827,7 @@ class DatatableController extends Controller
 							}
 						}
 						$dic_value = join('，', $dic);
-					}else if(Str::contains($value, '/')){
+					}else if(strpos($value, '/')){
 						$arr = explode('/',$value);
 						$dic = [];
 						foreach($arr as $v1){
@@ -915,7 +915,7 @@ class DatatableController extends Controller
 	 * @return 		object                      			返回值为数据表模型实例化的对象
 	 */
 	private function getDataByMethod($method, $datatable_config){
-		if(Str::contains($method, '->')){
+		if(strpos($method, '->')){
 			$arr = explode('->',$method);
 			$controller = $arr['0'];
 			$method = $arr['1'];

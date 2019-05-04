@@ -357,6 +357,20 @@ class FunctionPageController extends Controller
 					//字段排序
 					$fields = array_sort($fields,'sorting');
 					
+					foreach($fields as $k1=>$v1){
+						//取设置的字段属性,用于表单生成
+						$conditions = [
+							['design_id', '=', $request->design_id],
+							['field', '=', $v1['field']],
+						];
+						$attribute_arr = BlkAttributeRepository::where($conditions)->first();
+						if($attribute_arr){
+							$fields[$k1]['attribute'] = json_decode($attribute_arr['attribute'], true);
+						}else{
+							$fields[$k1]['attribute'] = NULL;
+						}
+					}
+					
 					$config_set_from_form[$tag]['fields'] = $fields;
 				}
 			}
@@ -372,7 +386,13 @@ class FunctionPageController extends Controller
 		// 	}
 		// }
 		//
-		$config['config_set'] = $config_set_from_form;		
+		$config['config_set'] = $config_set_from_form;
+		$config['route'] = [
+			'route_path' 	=> $route_message['route_path'],
+			'route_name' 	=> $route_message['route_name'],
+			'controller' 	=> $route_message['namespace'].'\\'.$route_message['controller'],
+			'method' 		=> $route_message['method'],
+		];
 		//dd($config);
 		
 		$config = '<?php return '.var_export($config, true).';?>';
@@ -450,7 +470,7 @@ class FunctionPageController extends Controller
 	}
 	
 	/**
-	 * 设置菜单模型
+	 * 统计图表属性设置
 	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		public
@@ -516,6 +536,12 @@ class FunctionPageController extends Controller
 				$config['chart_set'][$request->key]['attribute'] = [];
 			}
 			
+			//将页面设计对应的统计图表 配置文件保存到数据库
+			BlkAutoGenerateRepository::updateOrInsert(
+					['function_page_id' => $request->design_id],
+					['config' => json_encode($config)]
+				);
+			
 			$chart_config = '<?php return '.var_export($config, true).';?>';
 			file_put_contents($config_path, $chart_config);
 			
@@ -536,7 +562,105 @@ class FunctionPageController extends Controller
 		}
 	}
 	
-	
+	/**
+	 * 配置文件字段附加属性设置
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		public
+	 * @param  		\Illuminate\Http\Request $request
+	 * @return  	\Illuminate\Http\Response
+	 */
+	public function configAttributeSet(Request $request)
+	{
+		if($request->isMethod('post')){
+			$data = $request->post();
+			unset($data['_token']);
+			
+			$conditions = [
+				'design_id' => $request->design_id,
+				'field' => $request->field,
+			];
+			
+			$param = [
+				'field_from' => $request->field_from,
+				'attribute' => json_encode($data),
+			];
+			
+			//新增字段属性设置记录，如果已存在，则修改
+			$result = BlkAttributeRepository::updateOrInsert($conditions, $param);
+			if($result){
+				//获得当前页面信息
+				$function_page = BlkFunctionPageRepository::where('id', $request->design_id)->first();
+				
+				//将字段属性设置写入Datatable配置文件
+				$system = BlkSystemRepository::where('id', $request->system_id)->first();
+				
+				if($system){
+					$path = $this->getPath($system);
+					$config_path = $path['blk_config'].$this->getModel($function_page['model']).$request->design_id.'.php';
+					
+					if(file_exists($config_path)){
+						$config = require($config_path);
+						$config['config_set'][$request->field_from]['fields'][$request->field]['attribute'] = $data;
+						//dd($config);
+						
+						//将页面设计对应的统计图表 配置文件保存到数据库
+						BlkAutoGenerateRepository::updateOrInsert(
+							['function_page_id' => $request->design_id],
+							['config' 			=> json_encode($config)]
+						);
+						
+						$config = '<?php return '.var_export($config, true).';?>';
+						file_put_contents($config_path,$config);
+					}
+				}
+				
+				return success("保存成功");
+			}else{
+				return error("保存失败");
+			}
+		}
+		
+		//DB::connection()->enableQueryLog();
+		$conditions = [
+			['design_id', '=', $request->design_id],
+			['field', '=', $request->field],
+		];
+		
+		$attribute_arr = BlkAttributeRepository::where($conditions)->get();
+		if($attribute_arr->first()){
+			$attribute_arr = $attribute_arr->toArray();
+			$attribute = json_decode($attribute_arr[0]['attribute'], true);
+		}else{
+			$attribute = [];
+		}
+		//dd(DB::getQueryLog());
+		//dd($attribute_arr);
+		
+		//获得验证类型
+		$validate = isset($attribute['validate'])?explode(',',$attribute['validate']):[];
+		if($validate){
+			$attribute['validate'] = json_encode($validate);
+		}else{
+			//没有验证规则，返回一个空的json
+			$attribute['validate'] = json_encode([]);
+		}
+		
+		//dd($attribute);
+		view()->share([
+			'attribute_arr' 			=> $attribute,						//字段属性
+			'validate_dic_arr' 			=> $this->validateDic(),			//字典：验证规则
+			'data_input_form_dic_arr' 	=> $this->dataInputFormDic(),		//字典：数据输入方式选择
+			//'event_type_dic_arr' 		=> $this->eventTypeDic(),			//字典：事件类型
+			//'dic_type_dic_arr' 			=> $this->dicTypeDic(),			//字典：数据字典类型
+			//'verify_dic_arr' 			=> $this->verifyDic(),				//字典：数据字典类型
+			//'align_dic_arr' 			=> $this->alignDic(),				//字典：单元格排列方式
+			'data_source_dic_arr' 		=> $this->dataSourceDic(),			//字典：单元格排列方式
+			'request' 					=> $request
+		]);
+		
+		return view('lazykit.config.attribute_set');
+	}
 	
 	/**
 	 * 设置菜单模型
@@ -653,9 +777,9 @@ class FunctionPageController extends Controller
 		
 		//将页面设计对应的datatable 配置文件保存到数据库
 		BlkAutoGenerateRepository::updateOrInsert(
-				['function_page_id' => $datatable_arr['id']],
-				['config' => json_encode($datatable_arr)]
-			);
+			['function_page_id' => $datatable_arr['id']],
+			['config' 			=> json_encode($datatable_arr)]
+		);
 		
 		//生成对应系统的改页面设计对应的datatable 配置文件
 		unset($datatable_arr['module_id']);
@@ -890,7 +1014,7 @@ class FunctionPageController extends Controller
 	}
 	
 	/**
-	 * 字段附加属性设置
+	 * 数据表格字段附加属性设置
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		public
@@ -927,10 +1051,9 @@ class FunctionPageController extends Controller
 				
 				//将字段属性设置写入Datatable配置文件
 				$system = BlkSystemRepository::where('id', $request->system_id)->first();
-				
 				if($system){
 					$path = $this->getPath($system);
-					$config_path = $path['blk_config'].$this->getModel($datatable_arr['model']).'_'.$request->design_id.'.php';
+					$config_path = $path['blk_config'].$this->getModel($datatable_arr['model']).$request->design_id.'.php';
 					
 					if(file_exists($config_path)){
 						$datatable_arr = require($config_path);
@@ -943,9 +1066,9 @@ class FunctionPageController extends Controller
 					
 					//将页面设计对应的datatable 配置文件保存到数据库
 					BlkAutoGenerateRepository::updateOrInsert(
-							['function_page_id' => $request->design_id],
-							['config' => json_encode($datatable_arr)]
-						);
+						['function_page_id' => $request->design_id],
+						['config' 			=> json_encode($datatable_arr)]
+					);
 				}
 				
 				return success("保存成功");
@@ -986,7 +1109,7 @@ class FunctionPageController extends Controller
 			'data_input_form_dic_arr' 	=> $this->dataInputFormDic(),		//字典：数据输入方式选择
 			'event_type_dic_arr' 		=> $this->eventTypeDic(),			//字典：事件类型
 			//'dic_type_dic_arr' 			=> $this->dicTypeDic(),			//字典：数据字典类型
-			'verify_dic_arr' 			=> $this->verifyDic(),				//字典：数据字典类型
+			//'verify_dic_arr' 			=> $this->verifyDic(),				//字典：数据字典类型
 			'align_dic_arr' 			=> $this->alignDic(),				//字典：单元格排列方式
 			'data_source_dic_arr' 		=> $this->dataSourceDic(),			//字典：单元格排列方式
 			'request' 					=> $request
@@ -1125,7 +1248,6 @@ class FunctionPageController extends Controller
 		
 		return $data;
 	}
-	
 	
 	/**
 	 * function_type字段的下拉选择

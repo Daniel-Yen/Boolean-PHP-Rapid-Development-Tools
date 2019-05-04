@@ -126,7 +126,12 @@
 							</tbody>
 						</table>
 						<blockquote class="layui-elem-quote">
-							操作提示：1、不同颜色的字段属性代表不同的字段来源；2、更多针对字段的设置请在 <button type="button" class="layui-btn layui-btn-sm layui-btn-xs layui-btn-danger">附加属性</button> 中操作
+							<h3>操作提示：</h3>
+							<ul>
+								<li>1、不同颜色的字段属性代表不同的字段来源；2、更多针对字段的设置请在 <button type="button" class="layui-btn layui-btn-sm layui-btn-xs layui-btn-danger">附加属性</button> 中操作</li>
+								<li>2、设置搜索条件的字段会在搜索表单出现，当前设置的搜索条件会作为搜索表单中该字段默认的搜索条件</li>
+							</ul>
+							
 						</blockquote>
 						<fieldset class="layui-elem-field layui-field-title">
 							<legend>Sql查询设置</legend>

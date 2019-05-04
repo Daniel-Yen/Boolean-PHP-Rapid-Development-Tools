@@ -119,14 +119,36 @@ layui.config({
 		$(document).on('click','.demo-delete',function(){
 			$(this).parent().parent().remove();
 		});
-		
+		  
 		//Hash地址的定位
 		var layid = location.hash.replace(/^#config=/, '');
 		element.tabChange('config', layid);
-		  
+		
 		element.on('tab(config)', function(elem){
 			location.hash = 'config='+ $(this).attr('lay-id');
 		});
+		
+		var _tools = {
+			layerCloseAll: function() {
+				layer.closeAll();
+			},
+			//title:表字段名称, field:字段, field_from:字段类型
+			openDialog: function(title, field, field_from) {
+				var url = '{{url("lazykit/functionpage/config_attribute_set")}}?system_id={{$system_id}}&design_id={{$design_id}}&field=' + field + '&field_from=' + field_from;
+				//执行重载
+				layer.open({
+					id: 'layerDemo',
+					type: 2,
+					title: '附加属性设置：' + title + '（' + field + '）',
+					offset: 'lt',
+					area: ['90%', '100%'],
+					content: url,
+					shade: 0.3,
+					scrollbar: false,
+				});
+			}
+		}
+		window.tools = _tools;
 	});
 </script>
 @endpush
