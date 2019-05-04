@@ -293,13 +293,12 @@ trait Create
 				//dd($data);
 				foreach($value as $k=>$v){
 					$module = BlkModuleRepository::where('id',$v['module_id'])->get();
-					//dd($module);
 					if($module->first()){
 						$module = $module->toArray()[0];
 					}else{
 						$module = [];
 					}
-					//dd($module);
+					
 					//如果菜单没有对应模块则软删除该菜单
 					if(!empty($module)){
 						if($v['url'] && $v['method']){
