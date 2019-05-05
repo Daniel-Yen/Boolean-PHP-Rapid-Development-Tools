@@ -21,4 +21,15 @@ class UserController extends Controller
     {
     	create_datatable('datatable_42', [], $request);
     }
+	
+	//修改个人信息
+	public function updateUser(Request $request)
+	{
+		$user = $request->user();
+		$id = $user->id;
+		$additional_config = [
+			'allow_update_fields' => ['name', 'phone', 'email']
+		];
+		create_update_form('datatable_42', $additional_config, $request, $id);
+	}
 }

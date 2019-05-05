@@ -16,6 +16,7 @@
 	<div class="layui-row layui-col-space15">
 		<div class="layui-col-md12">
 			<br/>
+			<br/>
 			<form class="layui-form" method="post" enctype="multipart/form-data" action="">
 				@csrf
 				@foreach ($dom as $key=>$vo)

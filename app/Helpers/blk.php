@@ -24,6 +24,59 @@ if (!function_exists('create_datatable')) {
     }
 }
 
+if (!function_exists('create_insert_form')) {
+    /**
+     * 数据表格生成器
+     * @auther 		杨鸿<yh15229262120@qq.com> 
+     * @param 		string     					$config_name 		配置名称
+     * @param 		array   					$additional_config 	调用数据表格生成器自定义的附加配置参数
+	 * @param  		\Illuminate\Http\Request  	$request
+     */
+    function create_insert_form($config_name, $additional_config = [], $request)
+    {
+        $request->merge([
+			'do' 			=> 'create',
+			'blk_success' 	=> 'success',
+			'lazykit_rules' => [
+				'button' => [
+					'key' 	=> 'do',
+					'value' => ['create']
+				]
+			]
+		]);
+		
+		$datatable = new App\Http\Controllers\Blk\DatatableController();
+		$datatable->createDatatable($config_name, $additional_config, $request);
+    }
+}
+
+if (!function_exists('create_update_form')) {
+    /**
+     * 数据表格生成器
+     * @auther 		杨鸿<yh15229262120@qq.com> 
+     * @param 		string     					$config_name 		配置名称
+     * @param 		array   					$additional_config 	调用数据表格生成器自定义的附加配置参数
+	 * @param  		\Illuminate\Http\Request  	$request
+     */
+    function create_update_form($config_name, $additional_config = [], $request, $id)
+    {
+        $request->merge([
+			'id' 			=> $id,
+			'do' 			=> 'update',
+			'blk_success' 	=> 'success',
+			'lazykit_rules' => [
+				'button' => [
+					'key' 	=> 'do',
+					'value' => ['update']
+				]
+			]
+		]);
+		
+		$datatable = new App\Http\Controllers\Blk\DatatableController();
+		$datatable->createDatatable($config_name, $additional_config, $request);
+    }
+}
+
 if (!function_exists('chart_strat')) {
     /**
      * 统计图表生成器：获得统计图表配置
@@ -173,7 +226,7 @@ if (!function_exists('success')) {
 		    'url' => $url ? $url : url()->previous(),
 		    //跳转等待时间（s）
 		    'jumpTime' => 2,
-		]); 
+		]);
 	}
 }
 

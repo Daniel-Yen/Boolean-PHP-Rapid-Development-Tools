@@ -277,7 +277,7 @@ trait Create
 | 生成日期：".date('Y-m-d H:i:s', time())."
 | 注    意：请不要在此文件手写路由
 */".PHP_EOL;
-		
+			$route .= PHP_EOL;
 			foreach($data_arr as $key=>$value){
 				//获得中间件
 				$middleware = BlkMiddlewareRepository::whereIn('id',explode(',',$key))->get();
@@ -326,7 +326,8 @@ trait Create
 					}
 				}
 				//dd($route);
-				$route .= '});';
+				$route .= '});'.PHP_EOL;
+				$route .= PHP_EOL;
 			}
 			create_dir($path['route']);
 			$route_path = $path['route'].'blk.php';

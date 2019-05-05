@@ -1260,7 +1260,7 @@ class FunctionPageController extends Controller
 	public function attributeFunctionType(){
 		$data = [
 			['value' => 1, 		'name' => '系统菜单'],
-			['value' => 2, 		'name' => '内页按钮'],
+			['value' => 2, 		'name' => '数据表格按钮'],
 			['value' => 3, 		'name' => '路由'],
 		];
 		

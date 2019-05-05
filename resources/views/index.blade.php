@@ -33,11 +33,6 @@
 				</li> -->
 			</ul>
 			<ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
-				<!-- <li class="layui-nav-item" lay-unselect>
-					<a lay-href="app/message/index.html" layadmin-event="message" lay-text="系统切换">
-						<i class="layui-icon layui-icon-app"></i>
-					</a>
-				</li> -->
 				<li class="layui-nav-item" lay-unselect>
 					<a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
 						<i class="layui-icon layui-icon-notice"></i>
@@ -51,11 +46,6 @@
 					</a>
 				</li>
 				<li class="layui-nav-item layui-hide-xs" lay-unselect>
-					<a href="javascript:;" layadmin-event="note">
-						<i class="layui-icon layui-icon-note"></i>
-					</a>
-				</li>
-				<li class="layui-nav-item layui-hide-xs" lay-unselect>
 					<a href="javascript:;" layadmin-event="fullscreen">
 						<i class="layui-icon layui-icon-screen-full"></i>
 					</a>
@@ -65,6 +55,7 @@
 						<cite>{{ Auth::user()->name }}</cite>
 					</a>
 					<dl class="layui-nav-child" style="text-align: center;">
+						<dd><a lay-href="{{url('system/user/update_user')}}">个人资料</a></dd>
 						<hr>
 						<dd><a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" href="{{route('logout')}}">退出</a></dd>
 					</dl>

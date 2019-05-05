@@ -39,7 +39,7 @@ class DatatableController extends Controller
 		}
 		
 		if( $request->do == "create") {
-			$dom = $this->getDataFieldSet($datatable_config, 'create');
+			$dom = $this->getDataFieldSet($datatable_config, 'create', $additional_config);
 			//dd($dom);
 			if($request->isMethod('post')){
 				$request->validate([]);
@@ -61,7 +61,13 @@ class DatatableController extends Controller
 				
 				//这么直接插入记录created_at
 				$datatable_config['modelClass']::insert($param);
-				datatable_success("保存成功");
+				
+				if(isset($request->blk_success)?$request->blk_success == 'success':false){
+					echo success("添加成功");
+					die();
+				}else{
+					datatable_success("添加成功");
+				}
 			}
 			
 			//避免新增与修改使用同样模板页面导致新增时模板变量未定义,给$data_arr中的字段定义空值
@@ -86,7 +92,7 @@ class DatatableController extends Controller
 			//cache($config_name, $template);
 			echo $template;
 		}elseif( $request->do == "update") {
-			$dom = $this->getDataFieldSet($datatable_config, 'update');
+			$dom = $this->getDataFieldSet($datatable_config, 'update', $additional_config);
 			if($request->isMethod('post')){
 				$request->validate([]);
 				
@@ -105,7 +111,13 @@ class DatatableController extends Controller
 				//dd($param);
 				$datatable_config['modelClass']::where('id', $request->id)->update($param);
 				//dd(DB::getQueryLog());
-				datatable_success("保存成功");
+				
+				if(isset($request->blk_success)?$request->blk_success == 'success':false){
+					echo success("修改成功");
+					die();
+				}else{
+					datatable_success("修改成功");
+				}
 			}
 			
 			//获得要修改的记录
@@ -187,7 +199,7 @@ class DatatableController extends Controller
 				DB::connection()->enableQueryLog();
 				
 				//获得要查询的字段
-				$read = $this->getDataFieldSet($datatable_config, 'read');
+				$read = $this->getDataFieldSet($datatable_config, 'read', $additional_config);
 				//dd($read);
 				$fields_arr['id'] = 'id';
 				if(isset($datatable_config['other_set']['is_tree'])){
@@ -340,7 +352,7 @@ class DatatableController extends Controller
 			if($template && 0){
 				echo $template;
 			}else{
-				$read = $this->getDataFieldSet($datatable_config, 'read');
+				$read = $this->getDataFieldSet($datatable_config, 'read', $additional_config);
 				//只有回收站才显示删除时间字段
 				if( $request->do  != 'recycle'){
 					unset($read['deleted_at']['read']);
@@ -367,7 +379,7 @@ class DatatableController extends Controller
 				//http_build_query();
 				
 				view()->share([
-					'search' 	=> $this->getDataFieldSet($datatable_config, 'search'), 		//搜索字段
+					'search' 	=> $this->getDataFieldSet($datatable_config, 'search', $additional_config), 		//搜索字段
 					'cols' 		=> $this->cols($read, $datatable_config),						//表头
 					'read' 								=> $read,														//字段
 					'datatable_config' 					=> $datatable_config,					//数据表格配置
@@ -417,12 +429,12 @@ class DatatableController extends Controller
 	 * @access 		private
 	 * @param  		string 		$config_name 			数据表格配置名称
 	 * @param 		$additional_config = [						代码中定义的数据表格附加配置
-	 *		1、【已实现】定义要隐藏的头部操作按钮
-	 *		'hide_head_menu' => ['create', 'update'],
-	 *		2、定义要隐藏的行内操作按钮
-	 *		'hide_line_menu' => ['anniu1', 'anniu2'],
-	 *		3、定义要查询的字段，此定义会覆盖数据表格生成器datatable_set中字段的read属性设置，查询和查看将仅基于此设置
-	 *		'fields' => ['field1', 'field2', 'field3'],
+	 *		1、【已实现】允许修改的字段
+	 *		'allow_update_fields' => ['field1', 'field2', 'field3'],
+	 *		2、【已实现】定义要隐藏的行内操作按钮
+	 *		'allow_create_fields' => ['field1', 'field2', 'field3'],
+	 *		3、【已实现】定义要查询的字段，此定义会覆盖数据表格生成器datatable_set中字段的read属性设置，查询和查看将仅基于此设置
+	 *		'allow_read_fields' => ['field1', 'field2', 'field3'],
 	 *		4、【已实现】查询条件,$value_end可选
 	 *		'conditions' => [
 	 *			[$field, $search_type, $value, [$value_end]],
@@ -442,8 +454,7 @@ class DatatableController extends Controller
 	 *		9、【已实现】自定义新增页面
 	 *		'create_page' => 'blk.datatable.form',  
 	 *		10、【已实现】自定义修改页面
-	 *		'update_page' => 'blk.datatable.form',
-	 *		
+	 *		'update_page' => 'blk.datatable.form',	
 	 *	];
 	 * @return 		array       返回处理后的Datatable数据表格的配置文件
 	 */
@@ -459,30 +470,29 @@ class DatatableController extends Controller
 				$datatable_config['datatable_set'] = $inheritance_datatable_config['datatable_set'];
 				//$datatable_config['other_set']['line_button_area_width'] = $inheritance_datatable_config['other_set']['line_button_area_width'];
 				$datatable_config['main_table'] = $inheritance_datatable_config['main_table'];
-				$datatable_config['main_table'] = $inheritance_datatable_config['main_table'];
 			}
 			
 			//1、定义要隐藏的头部操作按钮
-			if(isset($additional_config['hide_head_menu'])){
-				if($additional_config['hide_head_menu'][0] == 'all'){
-					$datatable_config['head_menu'] = [];
-				}else{
-					foreach($additional_config['hide_head_menu'] as $v){
-						unset($datatable_config['head_menu'][$v]);
-					}
-				}
-			}
+			// if(isset($additional_config['hide_head_menu'])){
+			// 	if($additional_config['hide_head_menu'][0] == 'all'){
+			// 		$datatable_config['head_menu'] = [];
+			// 	}else{
+			// 		foreach($additional_config['hide_head_menu'] as $v){
+			// 			unset($datatable_config['head_menu'][$v]);
+			// 		}
+			// 	}
+			// }
 			
 			//2、定义要隐藏的行内操作按钮
-			if(isset($additional_config['hide_line_menu'])){
-				if($additional_config['hide_line_menu'][0] == 'all'){
-					$datatable_config['line_button'] = [];
-				}else{
-					foreach($additional_config['hide_line_menu'] as $v){
-						unset($datatable_config['line_button'][$v]);
-					}
-				}
-			}
+			// if(isset($additional_config['hide_line_menu'])){
+			// 	if($additional_config['hide_line_menu'][0] == 'all'){
+			// 		$datatable_config['line_button'] = [];
+			// 	}else{
+			// 		foreach($additional_config['hide_line_menu'] as $v){
+			// 			unset($datatable_config['line_button'][$v]);
+			// 		}
+			// 	}
+			// }
 			
 			//7、更换数据源
 			if(isset($additional_config['data_source_method'])){
@@ -755,25 +765,28 @@ class DatatableController extends Controller
 	 * @access 		private
 	 * @param  		array 		$datatable_config 			数据表格的配置文件
 	 * @param  		string 		$type 						$type参数的值为：create，update，read，search，import，export
+	 * @param 		array     	$additional_config 			代码中定义的数据表格附加配置
 	 * @return 		array                      				返回值为$type需要的字段
 	 */
-	private function getDataFieldSet($datatable_config, $type){
+	private function getDataFieldSet($datatable_config, $type, $additional_config){
 		$dom_arr = [];
 		//获得数据表字段
 		foreach($datatable_config['datatable_set'] as $k=>$v){
 			//如果字段指定type属性有值为on则继续
 			if(isset($v[$type])?$v[$type]:false){
-				//如果是搜索,需要将部分字段处理成input类型
-// 				if($type == 'search'){
-// 					if(in_array($v['data_input_form'],$this->dataInputFormToInputDic())){
-// 						$v['data_input_form'] = 'input';
-// 					}
-// 				}
 				$dom_arr[$v['field']] = $v;
 			}
 			
-			//新增修改时如果字段不在数据库表中则跳过
+			//如果$additional_config传入了允许create/update/read的字段,则剔除不在数组中的字段
+			if(isset($additional_config['allow_'.$type.'_fields'])?$additional_config['allow_'.$type.'_fields']:false){
+				if(!in_array($v['field'], $additional_config['allow_'.$type.'_fields'])){
+					unset($dom_arr[$v['field']]);
+				}
+			}
+			
+			//新增修改时如果字段不在主表中则跳过
 			if(in_array($type, ['create','update'])){
+				//剔除不在数据表中的字段
 				$table_fields_arr = Schema::getColumnListing($datatable_config['main_table']);
 				if(!in_array($v['field'], $table_fields_arr)){
 					unset($dom_arr[$v['field']]);
