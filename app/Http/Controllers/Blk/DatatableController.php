@@ -186,6 +186,49 @@ class DatatableController extends Controller
 		}elseif( $request->do == "layui_upload") {
 			//处理layui文件上传,返回值为被上传文件在数据库中的记录的json结构
 			FileProcessing::layuiUpload();
+		}elseif( $request->do == "import") {
+			if(isset($request->ac)){
+				switch($request->ac){
+					//下载导入摸板
+					case 'download':
+						$this->downloadImportTpl($datatable_config);
+						break;
+					//提取提交的数据
+					case 'data':
+						$data = $this->getCsvLines($_FILES['file']['tmp_name'], 100, 1, $datatable_config);
+						$data = array_filter($data);
+						//dd($data);
+						view()->share([
+							'datatable_set' => $datatable_config['datatable_set'],
+							'data' 			=> $data,
+							'step'			=> 2
+						]);
+						break;
+					//将数据保存到数据库
+					case 'save':
+						$data = json_decode($_POST['DATA'], true);
+						$num_insert = 0;
+						foreach($data as $k=>$v){
+							$datatable_config['modelClass']::insert($v);
+							//echo $zhibiao->getLastSql();
+							$num_insert++;
+						}
+						
+						view()->share([
+							'data' 			=> $data,
+							'num_insert' 	=> $num_insert,
+							'step'			=> 3
+						]);
+						break;
+				}
+			}else{
+				view()->share([
+					'title' => $datatable_config['title'],
+					'step'	=> 1
+				]);
+			}
+			
+			echo view('blk.datatable.import');
 		}elseif( $request->do == "data") {
 			//如果有外部数据源,则读取
 			if($datatable_config['data_source_method']){
@@ -196,7 +239,7 @@ class DatatableController extends Controller
 					echo json_encode($result);
 				}
 			}else{
-				DB::connection()->enableQueryLog();
+				//DB::connection()->enableQueryLog();
 				
 				//获得要查询的字段
 				$read = $this->getDataFieldSet($datatable_config, 'read', $additional_config);
@@ -1042,7 +1085,8 @@ class DatatableController extends Controller
 	 * @access 		private
 	 * @return 		array                      		返回验证规则
 	 */
-	private function validateRulesDic(){
+	private function validateRulesDic()
+	{
 		return $data = [
 			'bail' 			=> '第一次验证失败后停止运行验证规则',
 			'required' 		=> '不能为空',
@@ -1070,7 +1114,8 @@ class DatatableController extends Controller
 	 * @access 		private
 	 * @return 		array                       
 	 */
-	private function searchConditionsDic(){
+	private function searchConditionsDic()
+	{
 		return [
 			'=' 		=> '等于',
 			'<>' 		=> '不等于',
@@ -1080,4 +1125,78 @@ class DatatableController extends Controller
 			'between' 	=> '区间',
 		];
 	}
+	
+	/**
+	 * 下载导入模板
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @param  		array 		$datatable_config 	数据表格的配置文件
+	 * @return 		file                       
+	 */
+	private function downloadImportTpl($datatable_config)
+	{
+		header("Content-Type: application/force-download");
+        header("Content-Type: application/octet-stream");
+        header("Content-Type: application/download");
+        header('Content-Type: application/vnd.ms-excel;charset=utf-8');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+		$filename = '【'.$datatable_config['title'].'】导入摸板.csv';  //文件名
+        $filename = urlencode($filename);
+        $filename = str_replace("+", "%20", $filename);
+        header('Content-Disposition: attachment; filename=' . $filename);
+
+        $content = '';
+		foreach($datatable_config['datatable_set'] as $k=>$v){
+			if(isset($v['import'])?$v['import'] == 'on':false){
+				 $content .= iconv('UTF-8', 'GBK', $v['title']) . ",";
+			}
+		}
+		
+        echo $content .= "\n";
+	}
+	
+	/**
+     * 读取CSV文件
+     *
+     * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+     * @access 		private
+     * @param 		int 		$lines 			读取行数
+     * @param 		int 		$offset 		起始行数
+     * @return 		array|bool
+     */
+    public function getCsvLines($csv_file = '', $lines = 0, $offset = 0, $datatable_config = []) {
+        if (!$fp = fopen($csv_file, 'r')) {
+            return false;
+        }
+        $j = 0;
+        $data = [];
+        while (($j < $lines) && !feof($fp)) {
+            if($j >= $offset){
+				$fget_data= fgetcsv($fp);
+				$fget_data = eval('return '.iconv('gbk','utf-8',var_export($fget_data,true)).';');
+				if($fget_data){
+					$data[] = $fget_data;
+				}
+			}else{
+				//指针下移一行
+				fgetcsv($fp);
+			}
+			$j++;
+        }
+        fclose($fp);
+		
+		foreach($data as $key=>$value){
+			$i = 0;
+			foreach($datatable_config['datatable_set'] as $k=>$v){
+				if(isset($v['import'])?$v['import'] == 'on':false){
+					 $data_arr[$key][$v['field']] = $value[$i];
+					 $i++;
+				}
+			}
+		}
+		
+        return $data_arr;
+    }
 }

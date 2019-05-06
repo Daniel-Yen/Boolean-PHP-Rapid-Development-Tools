@@ -55,7 +55,8 @@
 						<cite>{{ Auth::user()->name }}</cite>
 					</a>
 					<dl class="layui-nav-child" style="text-align: center;">
-						<dd><a lay-href="{{url('system/user/update_user')}}">个人资料</a></dd>
+						<dd><a lay-href="{{url('user/user/update_user')}}">个人资料</a></dd>
+						<dd><a lay-href="{{url('user/user/update_user_password')}}">修改密码</a></dd>
 						<hr>
 						<dd><a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" href="{{route('logout')}}">退出</a></dd>
 					</dl>

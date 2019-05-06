@@ -201,7 +201,7 @@ trait SetDic
     		  'route' => '',
     		  'icon' => 'layui-icon-delete'
     		],
-    		/*'import' => 
+    		'import' => 
     		[
     		  'text' => '导入',
     		  'must' => '',
@@ -230,7 +230,7 @@ trait SetDic
     		  'height' => '100%',
     		  'route' => '',
     		  'icon' => 'layui-icon-upload-drag'
-    		],*/
+    		],
     		'recycle' => 
     		[
     		  'text' => '回收站',

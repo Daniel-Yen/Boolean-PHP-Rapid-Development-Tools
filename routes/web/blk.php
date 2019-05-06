@@ -4,7 +4,7 @@
 | Datatable Routes
 |--------------------------------------------------------------------------
 | 此路由文件由布尔懒人工具包自动生成，包含DataTable生成器相关路由
-| 生成日期：2019-05-05 19:22:10
+| 生成日期：2019-05-06 08:35:49
 | 注    意：请不要在此文件手写路由
 */
 
@@ -25,11 +25,12 @@ Route::group(['middleware' => ['auth','permission']], function(){
 	Route::any('/lazykit/function_page/config_attribute_set','Lazykit\FunctionPageController@configAttributeSet');  //配置文件附加属性设置
 	Route::any('/lazykit/function_page/attribute_set','Lazykit\FunctionPageController@attributeSet');  //数据表格附加属性设置
 	Route::any('/lazykit/system/middleware_management','Lazykit\SystemController@middlewareManagement');  //中间件管理
-	Route::any('/system/user/index',              'System\UserController@index');              //系统用户管理
-	Route::any('/system/user_group/index',        'System\UserGroupController@index');         //用户组管理
+	Route::any('/user/user/index',                'User\UserController@index');                //系统用户管理
+	Route::any('/user/user_group/index',          'User\UserGroupController@index');           //用户组管理
 });
 
 Route::group(['middleware' => ['auth']], function(){
-	Route::any('/system/user/update_user',        'System\UserController@updateUser');         //个人资料
+	Route::any('/user/user/update_user',          'User\UserController@updateUser');           //个人资料
+	Route::any('/user/user/update_user_password', 'User\UserController@updateUserPassword');   //修改密码
 });
 

@@ -5,7 +5,7 @@
  * @auther 		Buer Lazykit
  */
 
-namespace App\Http\Controllers\System;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -64,6 +64,11 @@ class UserGroupController extends Controller
 					//dd($datatable_config);
 					//头部菜单按钮
 					if(isset($datatable_config['head_menu'])){
+						// foreach($datatable_config['head_menu'] as $k1=>$v1){
+						// 	if($v1['must'] != 'on'){
+						// 		unset($datatable_config['head_menu'][$k1]);
+						// 	}
+						// }
 						$head_menu = $datatable_config['head_menu'];
 					}else{
 						$head_menu = [];
@@ -72,6 +77,11 @@ class UserGroupController extends Controller
 					
 					//头部附加菜单按钮
 					if(isset($datatable_config['new_head_menu'])){
+						// foreach($datatable_config['new_head_menu'] as $k1=>$v1){
+						// 	if($v1['must'] != 'on'){
+						// 		unset($datatable_config['new_head_menu'][$k1]);
+						// 	}
+						// }
 						$head_menu = array_merge($head_menu, $datatable_config['new_head_menu']);
 					}
 					
@@ -121,7 +131,7 @@ class UserGroupController extends Controller
 			$rules = '';
 		}
 		
-		return view('system.permissions', [
+		return view('user.permissions', [
 			'view' => $view,
 			'data' => $data,
 			'rules' => $rules

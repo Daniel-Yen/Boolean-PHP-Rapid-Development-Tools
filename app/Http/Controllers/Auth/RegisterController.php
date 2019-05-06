@@ -71,9 +71,7 @@ class RegisterController extends Controller
      */
     public function registerUser($request)
     {
-        //dd($request->all());
-		$validator = $this->validator($request->post());
-		//\Illuminate\Support\Facades\DB::connection()->enableQueryLog();
+        $validator = $this->validator($request->post());
 		
 		if ($validator->fails()) {
             $errors = $validator->errors();
@@ -83,15 +81,14 @@ class RegisterController extends Controller
         }
 		
 		$user = $this->create($request->post());
-		//dd($result);
-		//dd(\Illuminate\Support\Facades\DB::getQueryLog());
-		//dd($user);
 		if($user){
 			//注册成功直接登录系统
 			Auth::login($user);
+			
 			//记录登录时间
-			BlkUsersRepository::where('status', '=', '1')
+			BlkUsersRepository::where('id', '=', $request->user()->id)
 				->update(['login_time' => date('Y-m-d H:i:s', time())]);
+				
 			return redirect('/');
 		}else{
 			return error("您输入的登录账号错误");

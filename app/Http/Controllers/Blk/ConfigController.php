@@ -47,7 +47,8 @@ class ConfigController extends Controller
 				);
 			}
     		//dd(DB::getQueryLog());
-    		success("保存成功");
+    		echo success("保存成功");
+			die();
     	}
     	
 		//从配置文件获取配置的标签

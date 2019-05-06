@@ -61,7 +61,9 @@
 										<td style="border:0; width:70px; padding:2px; padding-right:5px; text-align:right;">{{$y['title']}}</td>
 										<td style="border:0; padding:2px;">
 										@foreach ($y['node'] as $key=>$value)
+										@if (isset($value['must'])?$value['must'] == 'on':false)
 										<input type="checkbox" name="rules[{{$v['url']}}][{{$key}}]" @if (isset($rules[$v['url']]['button']['value'])?in_array($key, $rules[$v['url']]['button']['value']):false) checked="" @endif value="on" title="{{$value['text']}}">
+										@endif
 										@endforeach
 										</td>
 									</tr>
