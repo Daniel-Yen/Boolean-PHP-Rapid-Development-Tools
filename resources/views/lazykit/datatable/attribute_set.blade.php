@@ -99,6 +99,13 @@
 						<input type="text" name="method" value="{{isset($attribute_arr['method'])?$attribute_arr['method']:''}}" placeholder="请输入新增修改时针对该字段的操作方法" autocomplete="off" class="layui-input">
 					</div>
 				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">单元格编辑</label>
+					<div class="layui-input-inline" style="width: 70px;">
+						<input type="checkbox" name="edit" lay-skin="switch" @if (isset($attribute_arr['edit'])) @if ($attribute_arr['edit'] == 'on') checked="checked" @endif  @endif lay-text="是|否"> 
+					</div>
+					<div class="layui-form-mid layui-word-aux">选择是，该字段在前端可排序</div>
+				</div>
 				@endif
 				<div class="layui-form-item">
 					<label class="layui-form-label">前端排序</label>

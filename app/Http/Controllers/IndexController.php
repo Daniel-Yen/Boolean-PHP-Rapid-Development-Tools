@@ -27,6 +27,7 @@ class IndexController extends Controller
 		//获得当前登录用户的用户组
 		$user_group = BlkUserGroupRepository::whereIn('id', explode(',', $user->user_group))->get();
 		//取的当前登录用户所属用户组的权限
+		$menu = [];
 		if($user_group->count()){
 			//根据用户组获取用户权限
 			$rules_arr = $this->getRules($user_group);
@@ -63,6 +64,7 @@ class IndexController extends Controller
 	}
 	
 	public function getMenu($rules_arr){
+		//dd($rules_arr);
 		$menu_arr = DB::table('blk_menu')
 						->whereIn('url', $rules_arr)
 						->get()
@@ -103,7 +105,11 @@ class IndexController extends Controller
 			}
 		}
 		
-		return $menu;
+		$check_menu = [];
+		foreach($menu as $k=>$v){
+			$check_menu[$v['id']] = $v;
+		}
+		return $check_menu;
 	}
 	
 	public function welcome(){

@@ -92,6 +92,17 @@ class DatatableController extends Controller
 			//cache($config_name, $template);
 			echo $template;
 		}elseif( $request->do == "update") {
+			if( $request->ac == "celledit") {
+				//修改单元格
+				$result = $datatable_config['modelClass']::where('id', $request->id)->update([$request->field => $request->value]);
+				if($result){
+					echo json_encode(['code' => 0, 'msg' => "单元格修改成功", 'refresh' => 'no']);
+				}else{
+					echo json_encode(['code' => 1, 'msg' => "单元格修改失败", 'refresh' => 'no']);
+				}
+				die();
+			}
+			
 			$dom = $this->getDataFieldSet($datatable_config, 'update', $additional_config);
 			if($request->isMethod('post')){
 				$request->validate([]);
@@ -192,6 +203,7 @@ class DatatableController extends Controller
 					//下载导入摸板
 					case 'download':
 						$this->downloadImportTpl($datatable_config);
+						die();
 						break;
 					//提取提交的数据
 					case 'data':
@@ -1025,6 +1037,7 @@ class DatatableController extends Controller
 				if($v['read'] == 'on'){
 					$line_arr = [];
 					$line_arr['field'] = $v['field'];
+					//$line_arr['edit'] = 'text';
 					$line_arr['title'] = $v['title'];
 					if(isset($v['width'])){
 						if(!empty($v['width'])){
@@ -1040,6 +1053,11 @@ class DatatableController extends Controller
 					if(isset($v['sort'])){
 						if(!empty($v['sort'])){
 							$line_arr['sort'] = $v['sort'];
+						}
+					}
+					if(isset($v['edit'])){
+						if(!empty($v['edit'])){
+							$line_arr['edit'] = 'text';
 						}
 					}
 					if(isset($v['align'])){
@@ -1153,8 +1171,8 @@ class DatatableController extends Controller
 				 $content .= iconv('UTF-8', 'GBK', $v['title']) . ",";
 			}
 		}
-		
-        echo $content .= "\n";
+		$content .= "\n";
+		echo $content;
 	}
 	
 	/**

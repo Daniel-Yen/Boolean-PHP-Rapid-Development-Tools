@@ -54,7 +54,8 @@ class LoginController extends Controller
 		$user = BlkUsersRepository::where('status', '=', '1')
 				->where(function ($query) use ($request) {
 					$query->where('phone', '=', $request->username)
-						  ->orWhere('email', '=', $request->username);
+						  ->orWhere('email', '=', $request->username)
+						  ->orWhere('name', '=', $request->username);
 				})
 				->first();
 			

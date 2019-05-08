@@ -52,7 +52,7 @@ trait Create
 	 * @param 		string 		$model 				页面模型
      * @return 		array
      */
-    private function create_controller($route_message, $path, $model) {
+    private function createController($route_message, $path, $model) {
     	//dd($route_message, $path);
 		if(!$route_message['controller_exists']){
     		//$controller_path = app_path('Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.$route_message['module'].DIRECTORY_SEPARATOR);

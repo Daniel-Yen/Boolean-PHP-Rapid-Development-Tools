@@ -205,6 +205,9 @@ class FunctionPageController extends Controller
 				
 		//获得datatable配置名称
 		if($request->isMethod('post')){
+			//创建配置文件目录
+			create_dir($path['blk_config']);
+			
 			if(in_array($function_page['model'], [2, 5])){
 				$this->datatable_set($function_page, $request, $route_message, $path, $config_path);
 			}else if($function_page['model'] == 3){
@@ -232,7 +235,7 @@ class FunctionPageController extends Controller
 				//生成控制器及方法
 				if(!$route_message['controller_exists']){
 					//如果控制器不存在则生成当前配置的控制器及方法
-					$this->create_controller($route_message, $path, $model);
+					$this->createController($route_message, $path, $model);
 					
 					return success('控制器及方法生成成功', '控制器：'.$route_message['controller'].'已生成，控制器方法：'.$route_message['method'].'已生成', url()->full() );
 				}

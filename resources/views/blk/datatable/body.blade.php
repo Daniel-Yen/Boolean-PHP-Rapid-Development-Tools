@@ -110,7 +110,7 @@ layui.config({
 		layer = layui.layer,
 		laydate = layui.laydate,
 		formSelects = layui.formSelects;
-		
+	
 	var rand = Math.floor(Math.random()*10000+1);
 	@if ($do == "recycle")
 	var ac = '&ac=recycle';
@@ -119,6 +119,50 @@ layui.config({
 	@endif
 	
 	var base_url = '{{$datatable_config['route_name']}}?{!!$parse_url_query!!}';
+	
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+	
+	{{-- 单元格编辑 --}}
+	//监听单元格编辑
+	table.on('edit(buer-table)', function(obj){
+		var value = obj.value //得到修改后的值
+		,data = obj.data //得到所在行所有键值
+		,field = obj.field; //得到字段
+		//layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
+		layer.confirm('确定要修改吗?', {
+			icon: 3,
+		    skin: 'layer-ext-moon',
+		    btn: ['确认','返回'] ,//按钮
+		    btn2:function(){
+		        o.removeClass('layui-btn-disabled');
+		    }
+		}, function(){
+		    $.ajax({
+		        url:base_url+'do=update&ac=celledit',
+		        type:'post',
+		        data:{id:data.id,field:field,value:value},
+		        // beforeSend:function () {
+		        //     this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+		        // },
+		        dataType: 'json',
+		        success:function(res){
+					if(res.code == '0'){
+		                layer.msg(res.msg);
+		                return;
+		            }else{
+		                layer.msg(res.msg);
+		            }
+		        },
+		        complete: function () {
+		            layer.close(this.layerIndex);
+		        },
+		    });
+		});	
+	});
 	
 	{{-- 获取查询条件 --}}
 	$.fn.serializeObject = function() {
@@ -136,12 +180,7 @@ layui.config({
 		});
 		return o;
 	};
-	//var jsonuserinfo = $('#where').serializeObject();
-	$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		}
-	});
+	
     var tableIns = table.render({
         elem: '#buer-table'
         ,url: base_url+'do=data'+ac
