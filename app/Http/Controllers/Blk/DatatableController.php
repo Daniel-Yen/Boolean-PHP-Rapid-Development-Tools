@@ -299,7 +299,7 @@ class DatatableController extends Controller
 						$conditions = array_merge($conditions, $additional_config['conditions']);
 					}
 				}else{
-					$conditions = $additional_config['conditions'];
+					$conditions = isset($additional_config['conditions'])?$additional_config['conditions']:[];
 				}
 				//print_r($conditions);
 				
@@ -383,8 +383,13 @@ class DatatableController extends Controller
 					}else{
 						$data = [];
 					}
+					$count = count($data);
 				}else{
-					$data = $data->paginate(30);
+					$page_number = isset($request->limit)?$request->limit:$datatable_config['other_set']['limit'];
+					
+					$data = $data->paginate($page_number);
+					//dd($data);
+					$count = $data->total();
 					//如果查询到数据则输出数组
 					if($data->first()){
 						$data = $data->toArray();
@@ -395,7 +400,7 @@ class DatatableController extends Controller
 				}
 				//print_r(DB::getQueryLog());die();
 				
-				return datatable_callback_json(0, '数据读取成功', count($data), $data);
+				return datatable_callback_json(0, '数据读取成功', $count, $data);
 			}
 		}elseif( $request->do == "open" || $request->do == "recycle" ) {     //open参数是在Permission中间件中赋的值
 			//回收站不可进行基于数据的任何操作，删除行内按钮
