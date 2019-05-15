@@ -26,6 +26,34 @@ class DatatableController extends Controller
 	 * @access 		private
 	 * @param 		string     	$config_name 		配置名称
 	 * @param 		array     	$additional_config 			代码中定义的数据表格附加配置
+	 * 	$additional_config = [
+	 *		1、【已实现】允许修改的字段
+	 *		'allow_update_fields' => ['field1', 'field2', 'field3'],
+	 *		2、【已实现】定义要隐藏的行内操作按钮
+	 *		'allow_create_fields' => ['field1', 'field2', 'field3'],
+	 *		3、【已实现】定义要查询的字段，此定义会覆盖数据表格生成器datatable_set中字段的read属性设置，查询和查看将仅基于此设置
+	 *		'allow_read_fields' => ['field1', 'field2', 'field3'],
+	 *		4、【已实现】查询条件,$value_end可选
+	 *		'conditions' => [
+	 *			[$field, $search_type, $value, [$value_end]],
+	 *		],
+	 *		5、【已实现】附加的新增数据,会被合并到表单提交的数据中，相同key的数据会覆盖表单提交的数据
+	 *		'create_param' => [
+	 *			'field1' => 'value1',
+	 *		]
+	 *		6、【已实现】附加的修改数据,会被合并到表单提交的数据中
+	 *		'update_param' => [
+	 *			'field1' => 'value1',
+	 *		]
+	 *		7、【已实现】自定义data数据来源,返回数据为二维数组，每行记录的key与数据表格生成器datatable_set中字段的field属性一致
+	 *		'data_source_method' => 'dataSource',
+	 *		8、【未实现】自定义删除页面，操作成功返回：json_encode(['code' => 0, 'msg' => "删除成功"])
+	 *		'delete_page' => url('data_source_method'),
+	 *		9、【已实现】自定义新增页面
+	 *		'create_page' => 'blk.datatable.form',  
+	 *		10、【已实现】自定义修改页面
+	 *		'update_page' => 'blk.datatable.form',	
+	 *	];
 	 * @param  		\Illuminate\Http\Request  $request
 	 * @return 		mixed
 	 */
@@ -301,7 +329,7 @@ class DatatableController extends Controller
 				}else{
 					$conditions = isset($additional_config['conditions'])?$additional_config['conditions']:[];
 				}
-				//print_r($conditions);
+				//dd($conditions,1);
 				
 				//绑定查询条件
 				foreach($conditions as $k=>$v){
@@ -386,10 +414,11 @@ class DatatableController extends Controller
 					$count = count($data);
 				}else{
 					$page_number = isset($request->limit)?$request->limit:$datatable_config['other_set']['limit'];
-					
-					$data = $data->paginate($page_number);
 					//dd($data);
-					$count = $data->total();
+					$count = $data->count();
+					//dd($count);
+					$data = $data->paginate($page_number);
+					
 					//如果查询到数据则输出数组
 					if($data->first()){
 						$data = $data->toArray();
@@ -488,34 +517,7 @@ class DatatableController extends Controller
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
 	 * @param  		string 		$config_name 			数据表格配置名称
-	 * @param 		$additional_config = [						代码中定义的数据表格附加配置
-	 *		1、【已实现】允许修改的字段
-	 *		'allow_update_fields' => ['field1', 'field2', 'field3'],
-	 *		2、【已实现】定义要隐藏的行内操作按钮
-	 *		'allow_create_fields' => ['field1', 'field2', 'field3'],
-	 *		3、【已实现】定义要查询的字段，此定义会覆盖数据表格生成器datatable_set中字段的read属性设置，查询和查看将仅基于此设置
-	 *		'allow_read_fields' => ['field1', 'field2', 'field3'],
-	 *		4、【已实现】查询条件,$value_end可选
-	 *		'conditions' => [
-	 *			[$field, $search_type, $value, [$value_end]],
-	 *		],
-	 *		5、【已实现】附加的新增数据,会被合并到表单提交的数据中，相同key的数据会覆盖表单提交的数据
-	 *		'create_param' => [
-	 *			'field1' => 'value1',
-	 *		]
-	 *		6、【已实现】附加的修改数据,会被合并到表单提交的数据中
-	 *		'update_param' => [
-	 *			'field1' => 'value1',
-	 *		]
-	 *		7、【已实现】自定义data数据来源,返回数据为二维数组，每行记录的key与数据表格生成器datatable_set中字段的field属性一致
-	 *		'data_source_method' => 'dataSource',
-	 *		8、【未实现】自定义删除页面，操作成功返回：json_encode(['code' => 0, 'msg' => "删除成功"])
-	 *		'delete_page' => url('data_source_method'),
-	 *		9、【已实现】自定义新增页面
-	 *		'create_page' => 'blk.datatable.form',  
-	 *		10、【已实现】自定义修改页面
-	 *		'update_page' => 'blk.datatable.form',	
-	 *	];
+	 * @param 		array 		$additional_config		代码中定义的数据表格附加配置
 	 * @return 		array       返回处理后的Datatable数据表格的配置文件
 	 */
 	private function getDatatableConfig($config_name, $additional_config = [])
