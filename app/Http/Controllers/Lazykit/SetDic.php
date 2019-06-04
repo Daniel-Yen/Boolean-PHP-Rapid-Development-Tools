@@ -9,7 +9,7 @@ namespace App\Http\Controllers\Lazykit;
 trait SetDic
 {
     /**
-     * 数据字典：数据表关联类型
+     * 数据表格：数据表关联类型
      *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
@@ -24,7 +24,7 @@ trait SetDic
     }
     
     /**
-     * 数据字典：行内按钮样式
+     * 数据表格：行内按钮样式
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
@@ -42,7 +42,7 @@ trait SetDic
     }
 	
 	/**
-	 * 数据字典：字段验证规则
+	 * 数据表格：字段验证规则
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
@@ -70,7 +70,7 @@ trait SetDic
 	}
     
     /**
-     * 数据字典：字段验证规则
+     * 数据表格：字段验证规则
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
@@ -91,7 +91,7 @@ trait SetDic
     }
     
     /**
-     * 数据字典：功能按钮打开方式
+     * 数据表格：功能按钮打开方式
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
@@ -105,7 +105,7 @@ trait SetDic
     }
     
     /**
-     * 数据字典：固定列数组
+     * 数据表格：固定列数组
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
@@ -119,7 +119,7 @@ trait SetDic
     }
     
     /**
-     * 数据字典：表单验证规则
+     * 数据表格：表单验证规则
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
@@ -138,7 +138,7 @@ trait SetDic
     // }
     
     /**
-     * 数据字典：事件类型
+     * 数据表格：事件类型
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
@@ -153,7 +153,7 @@ trait SetDic
     }
     
     /**
-     * datatable 头部工具菜单
+     * 数据表格：datatable 头部工具菜单
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
@@ -288,7 +288,7 @@ trait SetDic
     }
     
     /**
-     * 数据字典:数据输入方式
+     * 数据表格：数据输入方式
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
@@ -336,7 +336,7 @@ trait SetDic
     }
     
     /**
-     * 数据字典类型
+     * 数据表格：数据字典类型
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
@@ -351,7 +351,7 @@ trait SetDic
 //     }
     
     /**
-     * select/tree_select数据源类型
+     * 数据表格：select/tree_select数据源类型
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
@@ -366,7 +366,7 @@ trait SetDic
     }
     
     /**
-     * 单元格排列方式
+     * 数据表格：单元格排列方式
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
@@ -381,7 +381,7 @@ trait SetDic
     }
     
     /**
-     * 搜索条件字段
+     * 数据表格：搜索条件字段
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		private
@@ -397,6 +397,20 @@ trait SetDic
     		'between' 	=> '区间',
     	];
     }
+	
+	/**
+	 * 数据表格：排序方式
+	 *
+	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @return 		array                       
+	 */
+	private function orderType(){
+		return [
+			'asc' 	=> 'asc',
+			'desc' 	=> 'desc',
+		];
+	}
 	
 	/**
 	 * 统计图表元素：X 轴定位

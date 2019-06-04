@@ -112,7 +112,14 @@
 					<div class="layui-input-inline" style="width: 70px;">
 						<input type="checkbox" name="sort" lay-skin="switch" @if (isset($attribute_arr['sort'])) @if ($attribute_arr['sort'] == 'on') checked="checked" @endif  @endif lay-text="是|否"> 
 					</div>
-					<div class="layui-form-mid layui-word-aux">选择是，该字段在前端可排序</div>
+					<div class="layui-input-inline" style="width:125px;">
+						<select name="order_type" lay-filter="order_type" lay-verify="required">
+							<option value="desc">默认（倒序）</option>
+							@foreach ($order_type_dic_arr as $key=>$vo)
+							<option @if (isset($attribute_arr['order_type'])) @if ($attribute_arr['order_type'] == $key) selected="selected" @endif  @endif value="{{$key}}">{{$vo}}</option>
+							@endforeach
+						</select>
+					</div>
 				</div>
 				<div class="layui-form-item">
 					<label class="layui-form-label">窗口附加标题</label>

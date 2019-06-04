@@ -131,10 +131,12 @@ class FunctionPageController extends Controller
 				$route_arr['controller_exists'] = false;
 				$route_arr['method_exists'] = false;
 				
+				error_reporting(0);
 				if(file_exists($class_path)){
+					//只要类文件存则就默认为类存在,避免因判断类不存在而覆盖用户代码
+					$route_arr['controller_exists'] = true;
 					include_once($class_path);
 					if(class_exists($class)){
-						$route_arr['controller_exists'] = true;
 						if(method_exists(new $class, $route_arr['method'])){
 							$route_arr['method_exists'] = true;
 						}else{
@@ -142,6 +144,7 @@ class FunctionPageController extends Controller
 						}
 					}
 				}
+				error_reporting(E_ALL);
 			}
 		}else{
 			$route_arr = [];
@@ -685,7 +688,6 @@ class FunctionPageController extends Controller
 				'main_table' 		=> $request->main_table,
 				'associated_type' 	=> $request->associated_type,
 				'associated_table' 	=> $request->associated_table,
-				'external_field' 	=> $request->external_field,
 			];
 		}else{
 			$param = [
@@ -698,6 +700,12 @@ class FunctionPageController extends Controller
 			unset($datatable_arr['associated_table']);
 			unset($datatable_arr['external_field']);
 			unset($datatable_arr['datatable_set']);
+		}
+		
+		if(isset($request->external_field)?$request->external_field:false){
+			$param = [
+				'external_field' 	=> $request->external_field,
+			];
 		}
 		
 		BlkFunctionPageRepository::where('id', '=', $request->design_id)->update($param);
@@ -1112,6 +1120,7 @@ class FunctionPageController extends Controller
 			'validate_dic_arr' 			=> $this->validateDic(),			//字典：验证规则
 			'data_input_form_dic_arr' 	=> $this->dataInputFormDic(),		//字典：数据输入方式选择
 			'event_type_dic_arr' 		=> $this->eventTypeDic(),			//字典：事件类型
+			'order_type_dic_arr' 		=> $this->orderType(),				//字典：排序方式
 			//'dic_type_dic_arr' 			=> $this->dicTypeDic(),			//字典：数据字典类型
 			//'verify_dic_arr' 			=> $this->verifyDic(),				//字典：数据字典类型
 			'align_dic_arr' 			=> $this->alignDic(),				//字典：单元格排列方式
