@@ -7,21 +7,18 @@
 @endpush
 
 @section('content')
-<div style="padding:30px;">
-	<img width="400" src="{{file_path('/include/images/logo.png')}}" />
-</div>
-<div style="background-image:url({{file_path('/include/images/banner.png')}}); border-top:4px solid rgb(0,170,136); height:445px; background-position:bottom;">
-	<div class="layadmin-user-login-main" style="margin-top:30px; background-color:#fff;">
-		<br/>
+@include('auth.nav')
+<div style="margin-top: 100px;">
+	<div class="layadmin-user-login-main">
 		<div class="layadmin-user-login-box layadmin-user-login-header">
-			<h2>绩效考核管理系统<span class="layui-badge" style="position: relative;top:-30px;">2.0 beta</span></h2>
+			<h2>布尔懒人工具包<span class="layui-badge" style="position: relative;top:-30px;">BLZ 3.0 beta</span></h2>
 		</div>
 		<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
 			<form action="" method="post">
 				@csrf
 				<div class="layui-form-item">
-					<label class="layadmin-user-login-icon layui-icon layui-icon-username" for="email"></label>
-					<input type="text" name="username" id="username" lay-verify="required" value="{{ old('email') }}" placeholder="姓名" autocomplete="new-password" class="layui-input">
+					<label class="layadmin-user-login-icon layui-icon layui-icon-email" for="email"></label>
+					<input type="text" name="username" id="username" lay-verify="required" value="{{ old('email') }}" placeholder="邮箱" autocomplete="new-password" class="layui-input">
 				</div>
 				<div class="layui-form-item">
 					<label class="layadmin-user-login-icon layui-icon layui-icon-password" for="password"></label>
@@ -39,22 +36,23 @@
 							</div>
 						</div>
 					</div>
-				</div> 
+				</div> -->
 				<div class="layui-form-item" style="margin-bottom: 20px;">
 					<input type="checkbox" name="remember" lay-skin="primary" title="记住密码">
 					<a href="{{url('password/reset')}}" class="layadmin-user-jump-change layadmin-link" style="margin-top: 7px;">忘记密码？</a>
-				</div>-->
+				</div>
 				<div class="layui-form-item">
 					<button class="layui-btn layui-btn-fluid" lay-submit lay-filter="submit">登 入</button>
 				</div>
 			</form>
 			<div class="layui-trans layui-form-item layadmin-user-login-other">
-				
+				<label>社交账号登入</label>
+				<a href="javascript:;"><i class="layui-icon layui-icon-login-qq"></i></a>
+				<a href="javascript:;"><i class="layui-icon layui-icon-login-wechat"></i></a>
+				<a href="javascript:;"><i class="layui-icon layui-icon-login-weibo"></i></a>
+				<a href="{{url('register')}}" class="layadmin-user-jump-change layadmin-link">注册帐号</a>
 			</div>
 		</div>
-	</div>
-	<div style="text-align:center;">
-		CopyRight © 2018 sxggzyfw.com 陕西省公共资源交易服务有限公司 All Rights Reserved
 	</div>
 </div>
 @endsection
@@ -64,7 +62,6 @@
 	if (window!=top){
 		top.location.href =window.location.href;
 	}
-
 	layui.config({
 	    base: '{{file_path('/include/blk/lib/')}}',
 	}).extend({
