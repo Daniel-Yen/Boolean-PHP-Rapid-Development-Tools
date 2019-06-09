@@ -4,3 +4,5 @@
  .buer-text-left{ text-align:left;}
  .buer-text-center{ text-align:left;}
  .layui-layer-iframe{overflow:hidden;}
+ .layui-tab-title li{height:36px; margin-top:4px;-moz-border-radius: 5px 5px 0 0;border-radius: 5px 5px 0 0;}
+ .layadmin-pagetabs .layui-tab-title li.layui-this{ border:1px solid rgb(211,211,211); border-bottom:0;}

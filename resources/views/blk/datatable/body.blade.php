@@ -56,7 +56,7 @@
 	<script type="text/html" id="buer-table-bar">
 		@if (isset($datatable_config['line_button'])?is_array($datatable_config['line_button']):false)
 		@foreach ($datatable_config['line_button'] as $key=>$vo)
-		<a class="layui-btn {{$vo['style']}} layui-btn-xs" lay-event="{{$key}}">{{$vo['text']}}</a>
+		<a class="layui-btn {{isset($vo['style'])?$vo['style']:''}} layui-btn-xs" lay-event="{{$key}}">{{$vo['text']}}</a>
 		@endforeach
 		@endif
 	</script>
@@ -118,7 +118,7 @@ layui.config({
 	var ac = '';
 	@endif
 	
-	var base_url = '{{$datatable_config['route_name']}}?{!!$parse_url_query!!}';
+	var base_url = '{{env('APP_URL').$datatable_config['route_name']}}?{!!$parse_url_query!!}';
 	
 	$.ajaxSetup({
 		headers: {
@@ -133,35 +133,26 @@ layui.config({
 		,data = obj.data //得到所在行所有键值
 		,field = obj.field; //得到字段
 		//layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改为：'+ value);
-		layer.confirm('确定要修改吗?', {
-			icon: 3,
-		    skin: 'layer-ext-moon',
-		    btn: ['确认','返回'] ,//按钮
-		    btn2:function(){
-		        o.removeClass('layui-btn-disabled');
-		    }
-		}, function(){
-		    $.ajax({
-		        url:base_url+'do=update&ac=celledit',
-		        type:'post',
-		        data:{id:data.id,field:field,value:value},
-		        // beforeSend:function () {
-		        //     this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
-		        // },
-		        dataType: 'json',
-		        success:function(res){
-					if(res.code == '0'){
-		                layer.msg(res.msg);
-		                return;
-		            }else{
-		                layer.msg(res.msg);
-		            }
-		        },
-		        complete: function () {
-		            layer.close(this.layerIndex);
-		        },
-		    });
-		});	
+		$.ajax({
+		    url:base_url+'do=update&ac=celledit',
+		    type:'post',
+		    data:{id:data.id,field:field,value:value},
+		    // beforeSend:function () {
+		    //     this.layerIndex = layer.load(0, { shade: [0.5, '#393D49'] });
+		    // },
+		    dataType: 'json',
+		    success:function(res){
+				if(res.code == '0'){
+		            layer.msg(res.msg);
+		            return;
+		        }else{
+		            layer.msg(res.msg);
+		        }
+		    },
+		    complete: function () {
+		        layer.close(this.layerIndex);
+		    },
+		});
 	});
 	
 	{{-- 获取查询条件 --}}
@@ -186,7 +177,7 @@ layui.config({
         ,url: base_url+'do=data'+ac
         ,toolbar: '#buer-table-toolbar'
 		,defaultToolbar:['filter','exports','print']
-        ,title: '用户数据表'
+        ,title: '{{$datatable_config['title']}}'
         ,height: 'full-0'
         ,cellMinWidth: @if (isset($datatable_config['other_set']['cell_min_width'])){{$datatable_config['other_set']['cell_min_width']}} @else 160 @endif
         ,cols: [{!! $cols !!}]
@@ -194,7 +185,7 @@ layui.config({
 		,loading:true
         ,method: 'post'
         @empty ($datatable_config['data_source'])
-		@if ( !isset( $datatable_config['other_set']['is_tree']) && $datatable_config['main_table'] )
+		@if ( !isset( $datatable_config['other_set']['is_tree']))
 		// 分页 curr起始页，groups连续显示的页码，默认每页显示的条数
 		,page: {
 		  layout: ['limit', 'count', 'prev', 'page', 'next', 'skip']
@@ -410,7 +401,7 @@ layui.config({
 					,maxmin: false
 					,offset: 'auto'
 					@if (isset($vo['route'])?$vo['route']:false)
-					,content: "{{$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id']
+					,content: "{{env('APP_URL').$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id']
 					@else
 					,content: base_url+"do={{$key}}&from=line&{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
 					@endif
@@ -419,7 +410,7 @@ layui.config({
 				layer.confirm("请确认当前操作?", {icon:3, title:'温馨提示'}, function() {
 					$.ajax({
 						@if (isset($vo['route'])?$vo['route']:false)
-						url: "{{$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
+						url: "{{env('APP_URL').$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
 						@else
 						url: base_url+"do={{$key}}&from=line&{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
 						@endif

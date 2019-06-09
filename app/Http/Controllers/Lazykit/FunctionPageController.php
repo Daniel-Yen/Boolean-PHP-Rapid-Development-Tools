@@ -688,6 +688,7 @@ class FunctionPageController extends Controller
 				'main_table' 		=> $request->main_table,
 				'associated_type' 	=> $request->associated_type,
 				'associated_table' 	=> $request->associated_table,
+				'external_field' 	=> $request->external_field,
 			];
 		}else{
 			$param = [

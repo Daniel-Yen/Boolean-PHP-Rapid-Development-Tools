@@ -4,7 +4,7 @@
   'sorted' => 0,
   'id_prefix' => 'system_',
   'pid' => 29,
-  'middleware' => '2',
+  'middleware' => '1,2',
   'model' => '2',
   'function_type' => '1',
   'url' => 'lazykit/system/index',
@@ -50,13 +50,29 @@
         'data_input_form' => 'input',
         'data_source_type' => 'method',
         'data_source' => NULL,
-        'validate' => NULL,
+        'validate' => 'required',
         'dic_static' => NULL,
         'method' => NULL,
+        'edit' => 'on',
+        'order_type' => 'desc',
         'window_title' => 'on',
         'event_type' => 'window',
         'event_behavior' => NULL,
         'cell_style_template' => NULL,
+        'do' => 'open',
+        'lazykit_rules' => 
+        array (
+          'button' => 
+          array (
+            'key' => 'do',
+            'value' => 
+            array (
+              0 => 'open',
+              1 => 'data',
+              2 => 'open',
+            ),
+          ),
+        ),
       ),
     ),
     'file_path' => 
@@ -73,7 +89,35 @@
       'update' => 'on',
       'read' => 'on',
       'search' => '0',
-      'attribute' => NULL,
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'data_source_type' => 'method',
+        'data_source' => NULL,
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'method' => NULL,
+        'edit' => 'on',
+        'order_type' => 'desc',
+        'event_type' => 'window',
+        'event_behavior' => NULL,
+        'cell_style_template' => NULL,
+        'do' => 'open',
+        'lazykit_rules' => 
+        array (
+          'button' => 
+          array (
+            'key' => 'do',
+            'value' => 
+            array (
+              0 => 'open',
+              1 => 'data',
+              2 => 'open',
+            ),
+          ),
+        ),
+      ),
     ),
     'framework' => 
     array (
@@ -89,7 +133,35 @@
       'update' => 'on',
       'read' => 'on',
       'search' => '0',
-      'attribute' => NULL,
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'data_source_type' => 'method',
+        'data_source' => NULL,
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'method' => NULL,
+        'edit' => 'on',
+        'order_type' => 'desc',
+        'event_type' => 'window',
+        'event_behavior' => NULL,
+        'cell_style_template' => NULL,
+        'do' => 'open',
+        'lazykit_rules' => 
+        array (
+          'button' => 
+          array (
+            'key' => 'do',
+            'value' => 
+            array (
+              0 => 'open',
+              1 => 'data',
+              2 => 'open',
+            ),
+          ),
+        ),
+      ),
     ),
     'host' => 
     array (
@@ -100,12 +172,40 @@
       'title' => '数据库服务器',
       'field' => 'host',
       'field_from' => 'main_table',
-      'width' => NULL,
+      'width' => '200',
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
       'search' => '0',
-      'attribute' => NULL,
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'data_source_type' => 'method',
+        'data_source' => NULL,
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'method' => NULL,
+        'edit' => 'on',
+        'order_type' => 'desc',
+        'event_type' => 'window',
+        'event_behavior' => NULL,
+        'cell_style_template' => NULL,
+        'do' => 'open',
+        'lazykit_rules' => 
+        array (
+          'button' => 
+          array (
+            'key' => 'do',
+            'value' => 
+            array (
+              0 => 'open',
+              1 => 'data',
+              2 => 'open',
+            ),
+          ),
+        ),
+      ),
     ),
     'port' => 
     array (
@@ -116,12 +216,40 @@
       'title' => '数据库端口',
       'field' => 'port',
       'field_from' => 'main_table',
-      'width' => NULL,
+      'width' => '100',
       'create' => 'on',
       'update' => 'on',
       'read' => 'on',
       'search' => '0',
-      'attribute' => NULL,
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'data_source_type' => 'method',
+        'data_source' => NULL,
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'method' => NULL,
+        'edit' => 'on',
+        'order_type' => 'desc',
+        'event_type' => 'window',
+        'event_behavior' => NULL,
+        'cell_style_template' => NULL,
+        'do' => 'open',
+        'lazykit_rules' => 
+        array (
+          'button' => 
+          array (
+            'key' => 'do',
+            'value' => 
+            array (
+              0 => 'open',
+              1 => 'data',
+              2 => 'open',
+            ),
+          ),
+        ),
+      ),
     ),
     'database' => 
     array (
@@ -137,7 +265,35 @@
       'update' => 'on',
       'read' => 'on',
       'search' => '0',
-      'attribute' => NULL,
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'data_source_type' => 'method',
+        'data_source' => NULL,
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'method' => NULL,
+        'edit' => 'on',
+        'order_type' => 'desc',
+        'event_type' => 'window',
+        'event_behavior' => NULL,
+        'cell_style_template' => NULL,
+        'do' => 'open',
+        'lazykit_rules' => 
+        array (
+          'button' => 
+          array (
+            'key' => 'do',
+            'value' => 
+            array (
+              0 => 'open',
+              1 => 'data',
+              2 => 'open',
+            ),
+          ),
+        ),
+      ),
     ),
     'username' => 
     array (
@@ -153,7 +309,35 @@
       'update' => 'on',
       'read' => 'on',
       'search' => '0',
-      'attribute' => NULL,
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'data_source_type' => 'method',
+        'data_source' => NULL,
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'method' => NULL,
+        'edit' => 'on',
+        'order_type' => 'desc',
+        'event_type' => 'window',
+        'event_behavior' => NULL,
+        'cell_style_template' => NULL,
+        'do' => 'open',
+        'lazykit_rules' => 
+        array (
+          'button' => 
+          array (
+            'key' => 'do',
+            'value' => 
+            array (
+              0 => 'open',
+              1 => 'data',
+              2 => 'open',
+            ),
+          ),
+        ),
+      ),
     ),
     'password' => 
     array (
@@ -169,7 +353,35 @@
       'update' => 'on',
       'read' => 'on',
       'search' => '0',
-      'attribute' => NULL,
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'data_source_type' => 'method',
+        'data_source' => NULL,
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'method' => NULL,
+        'edit' => 'on',
+        'order_type' => 'desc',
+        'event_type' => 'window',
+        'event_behavior' => NULL,
+        'cell_style_template' => NULL,
+        'do' => 'open',
+        'lazykit_rules' => 
+        array (
+          'button' => 
+          array (
+            'key' => 'do',
+            'value' => 
+            array (
+              0 => 'open',
+              1 => 'data',
+              2 => 'open',
+            ),
+          ),
+        ),
+      ),
     ),
     'prefix' => 
     array (
@@ -185,7 +397,35 @@
       'update' => 'on',
       'read' => 'on',
       'search' => '0',
-      'attribute' => NULL,
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'data_source_type' => 'method',
+        'data_source' => NULL,
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'method' => NULL,
+        'edit' => 'on',
+        'order_type' => 'desc',
+        'event_type' => 'window',
+        'event_behavior' => NULL,
+        'cell_style_template' => NULL,
+        'do' => 'open',
+        'lazykit_rules' => 
+        array (
+          'button' => 
+          array (
+            'key' => 'do',
+            'value' => 
+            array (
+              0 => 'open',
+              1 => 'data',
+              2 => 'open',
+            ),
+          ),
+        ),
+      ),
     ),
     'remark' => 
     array (
@@ -201,7 +441,35 @@
       'update' => 'on',
       'read' => 'on',
       'search' => '0',
-      'attribute' => NULL,
+      'attribute' => 
+      array (
+        'align' => 'left',
+        'data_input_form' => 'input',
+        'data_source_type' => 'method',
+        'data_source' => NULL,
+        'validate' => 'required',
+        'dic_static' => NULL,
+        'method' => NULL,
+        'edit' => 'on',
+        'order_type' => 'desc',
+        'event_type' => 'window',
+        'event_behavior' => NULL,
+        'cell_style_template' => NULL,
+        'do' => 'open',
+        'lazykit_rules' => 
+        array (
+          'button' => 
+          array (
+            'key' => 'do',
+            'value' => 
+            array (
+              0 => 'open',
+              1 => 'data',
+              2 => 'open',
+            ),
+          ),
+        ),
+      ),
     ),
     'created_at' => 
     array (
@@ -282,6 +550,30 @@
       'must' => 'on',
       'width' => NULL,
       'height' => NULL,
+      'method' => NULL,
+    ),
+    'import' => 
+    array (
+      'text' => '导入',
+      'icon' => 'layui-icon-down',
+      'width' => '100%',
+      'height' => '100%',
+      'method' => NULL,
+    ),
+    'export' => 
+    array (
+      'text' => '导出',
+      'icon' => 'layui-icon-up',
+      'width' => '100%',
+      'height' => '100%',
+      'method' => NULL,
+    ),
+    'upload' => 
+    array (
+      'text' => '上传',
+      'icon' => 'layui-icon-upload-drag',
+      'width' => '100%',
+      'height' => '100%',
       'method' => NULL,
     ),
     'recycle' => 

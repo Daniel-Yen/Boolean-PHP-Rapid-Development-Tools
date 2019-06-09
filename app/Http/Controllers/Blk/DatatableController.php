@@ -46,9 +46,9 @@ class DatatableController extends Controller
 	 *			'field1' => 'value1',
 	 *		]
 	 *		7、【已实现】自定义data数据来源,返回数据为二维数组，每行记录的key与数据表格生成器datatable_set中字段的field属性一致
-	 *		'data_source_method' => 'dataSource',
+	 *		'data_source_from_method' => 'dataSource[|join]',
 	 *		8、【未实现】自定义删除页面，操作成功返回：json_encode(['code' => 0, 'msg' => "删除成功"])
-	 *		'delete_page' => url('data_source_method'),
+	 *		'delete_page' => url('data_source_from_method'),
 	 *		9、【已实现】自定义新增页面
 	 *		'create_page' => 'blk.datatable.form',  
 	 *		10、【已实现】自定义修改页面
@@ -64,6 +64,14 @@ class DatatableController extends Controller
     	//dd($datatable_config);
 		if(empty($datatable_config)){
 			exception_thrown(1001, '配置文件不存在');
+		}
+		
+		//判断数据表格配置是否没有主表
+		if(!isset($datatable_config['main_table']) || isset($datatable_config['main_table'])?empty($datatable_config['main_table']):false){
+			//当数据表格配置没有主表时判断是否有自定义数据来源
+			if(!isset($datatable_config['data_source_from_method']) || isset($datatable_config['data_source_from_method'])?empty($datatable_config['data_source_from_method']):false){
+				echo "请设置自定义数据来源（'data_source_from_method' => 'dataSource[|join]'）"; die();
+			}
 		}
 		
 		if( $request->do == "create") {
@@ -249,16 +257,19 @@ class DatatableController extends Controller
 						$data = json_decode($_POST['DATA'], true);
 						$num_insert = 0;
 						foreach($data as $k=>$v){
+							//5、附加的新增数据
+							if(isset($additional_config['create_param'])?$additional_config['create_param']:false){
+								foreach($additional_config['create_param'] as $key=>$value){
+									$v[$key] = $value;
+								}
+							}
+							
 							$datatable_config['modelClass']::insert($v);
 							//echo $zhibiao->getLastSql();
 							$num_insert++;
 						}
 						
-						view()->share([
-							'data' 			=> $data,
-							'num_insert' 	=> $num_insert,
-							'step'			=> 3
-						]);
+						datatable_success("导入完毕");
 						break;
 				}
 			}else{
@@ -268,11 +279,23 @@ class DatatableController extends Controller
 				]);
 			}
 			
-			echo view('blk.datatable.import');
+			//获得要传递的url参数
+			$url_with_query = $request->fullUrl();
+			$parse_url = parse_url($url_with_query);
+			if(isset($parse_url['query'])?$parse_url['query']:false){
+				$parse_url_query = $parse_url['query'].'&';
+			}else{
+				$parse_url_query = '';
+			}
+			
+			echo view('blk.datatable.import', [
+				'parse_url_query' => $parse_url_query,
+			]);
 		}elseif( $request->do == "data") {
 			//如果有外部数据源,则读取
-			if($datatable_config['data_source_method']){
-				$result = $this->getDataByMethod($datatable_config['data_source_method'], $datatable_config);
+			if($datatable_config['data_source_from_method'] && count(explode('|',$datatable_config['data_source_from_method'])) == 1){
+				$result = $this->getDataByMethod($datatable_config['data_source_from_method'], $datatable_config);
+				//dd($result);
 				if($result['code'] == 0){
 					return datatable_callback_json(0, '数据读取成功', count($result['data']), $result['data']);
 				}else{
@@ -280,7 +303,6 @@ class DatatableController extends Controller
 				}
 			}else{
 				//DB::connection()->enableQueryLog();
-				
 				//获得要查询的字段
 				$read = $this->getDataFieldSet($datatable_config, 'read', $additional_config);
 				//dd($read);
@@ -290,7 +312,9 @@ class DatatableController extends Controller
 					$fields_arr['title'] = 'title';
 				}
 				foreach($read as $k=>$v){
-					$fields_arr[$k] = $k;
+					if($v['field_from'] == 'main_table'){
+						$fields_arr[$k] = $k;
+					}
 				}
 				$fields = join(',', $fields_arr);
 				//dd($fields);
@@ -391,6 +415,13 @@ class DatatableController extends Controller
 				}
 				//dd($data->toSql());
 				
+				//数据排序
+				if(!empty($datatable_config['order'])){
+					foreach($datatable_config['order'] as $k=>$v){
+						$data = $data->orderBy($k, $v);
+					}
+				}
+				
 				//处理回收站查询已删除记录
 				if($request->ac == "recycle"){
 					$data = $data->onlyTrashed();
@@ -428,6 +459,18 @@ class DatatableController extends Controller
 					}
 				}
 				//print_r(DB::getQueryLog());die();
+				//数据表格对接数据
+				if($datatable_config['data_source_from_method']){
+					$data_source_from_method = explode('|', $datatable_config['data_source_from_method']);
+					if(count($data_source_from_method) == 2){
+						$controller = $datatable_config['route']['controller'];
+						$method = $data_source_from_method[0];
+						//dd($controller, $method);
+						$newClass = new $controller;
+						//dd($data);
+						$data = $newClass->$method($data);
+					}
+				}	
 				
 				return datatable_callback_json(0, '数据读取成功', $count, $data);
 			}
@@ -502,12 +545,16 @@ class DatatableController extends Controller
 			
 			//执行按钮关联的方法
 			$result = $this->getDataByMethod($method, $datatable_config);
-			//dd($result);
-			if($result['code'] == 0){
-				echo $result['data'];
+			if(is_array($result)){
+				echo json_encode($result);
 			}else{
-				echo $result['msg'];
+				echo $result;
 			}
+			// if($result['code'] == 0){
+			// 	echo $result['data'];
+			// }else{
+			// 	echo $result['msg'];
+			// }
 		}
     }
 	
@@ -515,15 +562,16 @@ class DatatableController extends Controller
 	 * 将数据表格配置与数据表格附加配置合并并取得字典数据字典
 	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
-	 * @access 		private
+	 * @access 		public
 	 * @param  		string 		$config_name 			数据表格配置名称
 	 * @param 		array 		$additional_config		代码中定义的数据表格附加配置
 	 * @return 		array       返回处理后的Datatable数据表格的配置文件
 	 */
-	private function getDatatableConfig($config_name, $additional_config = [])
+	public function getDatatableConfig($config_name, $additional_config = [])
 	{
 		$datatable_config = get_blk_config($config_name);
 		//dd($datatable_config);
+		
 		if(!empty($datatable_config)){
 			//处理模型中的继承关系
 			if(isset($datatable_config['inheritance'])?$datatable_config['inheritance']:false){
@@ -557,10 +605,10 @@ class DatatableController extends Controller
 			// }
 			
 			//7、更换数据源
-			if(isset($additional_config['data_source_method'])){
-				$datatable_config['data_source_method'] = $additional_config['data_source_method'];
+			if(isset($additional_config['data_source_from_method'])){
+				$datatable_config['data_source_from_method'] = $additional_config['data_source_from_method'];
 			}else{
-				$datatable_config['data_source_method'] = '';
+				$datatable_config['data_source_from_method'] = '';
 			}
 			
 			//8、自定义删除页面
@@ -580,9 +628,17 @@ class DatatableController extends Controller
 			//附加标题
 			$additional_window_title = [];
 			
+			//排序
+			$datatable_config['order'] = [];
+			
 			//获取字段属性设置
 			foreach($datatable_config['datatable_set'] as $k=>$v){
 				if(isset($v['attribute'])){
+					//数据排序
+					if(isset($v['attribute']['order_type'])?$v['attribute']['order_type']:false){
+						$datatable_config['order'][$v['field']] = $v['attribute']['order_type'];
+					}
+					
 					$attribute = $v['attribute'];
 					//$attribute_arr = $attribute_arr->toArray();
 					//$attribute = json_decode($attribute_arr['attribute'], true);
@@ -666,15 +722,15 @@ class DatatableController extends Controller
 			//行内菜单权限
 			if(isset($datatable_config['line_button'])){
 				foreach($datatable_config['line_button'] as $k=>$v){
-					//根据权限判断可用按钮
-					if(!in_array($k, $lazykit_rules) && $k != 'search'){
-						unset($datatable_config['line_button'][$k]);
-					}
-					
 					//判断按钮对应的操作地址
 					if(strpos($v['method'], '@')){
 						$arr = explode('@',$v['method']);
 						$datatable_config['line_button'][$k]['route'] = '/'.$arr['1'];
+					}
+					
+					//根据权限判断可用按钮
+					if(!in_array($k, $lazykit_rules) && $k != 'search'){
+						unset($datatable_config['line_button'][$k]);
 					}
 				}
 			}
@@ -878,12 +934,13 @@ class DatatableController extends Controller
 	 * 字典转换
 	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
-	 * @access 		private
+	 * @access 		public
 	 * @param 		array 		$rows_arr 		待处理的数据集
 	 * @param  		array 		$datatable_config 	数据表格的配置文件
 	 * @return 		array
 	 */
-	private function dicToChar($rows_arr, $datatable_config){
+	public function dicToChar($rows_arr, $datatable_config){
+		//dd($rows_arr, $datatable_config);
 		$dic_arr = $this->getDicList($datatable_config);
 		//dd($dic_arr);
 		//循环替换数组元素键值
@@ -891,6 +948,7 @@ class DatatableController extends Controller
 			foreach($v as $key=>$value){
 				//判断字段是否在字典数组中,如果有则替换字段为在字典中的值
 				if(isset($dic_arr[$key])?!empty($dic_arr[$key]):false){
+					$v['booleandic_'.$key] = $value;
 					//字典在数据库中存储格式 1、 1,2、 1/2/3 
 					if(strpos($value, ',')){
 						$arr = explode(',',$value);
@@ -1006,14 +1064,23 @@ class DatatableController extends Controller
 			
 			//判断方法是否存在
 			if(method_exists($class, $method)){
-				$data = ['code' => 0, 'msg' => '数据获取成功', 'data'=>$class->$method()];
+				//判断方法是否返回数据
+				$result = $class->$method();
+				if(isset($result)){
+					if(is_array($result)){
+						$data = ['code' => 0, 'msg' => '数据获取成功', 'data' => $result];
+					}else{
+						$data = $result;
+					}
+				}else{
+					$data = ['code' => 1, 'msg' => '数据源方法“'.$controller.'->'.$method.'()”未返回（return）数据'];
+				}
+				
 			}else{
-				$msg = "请在控制器“".$controller."”中创建方法“".$method."”";
-				$data = ['code' => 1, 'msg' => $msg];
+				$data = ['code' => 1, 'msg' => "请在控制器“".$controller."”中创建方法“".$method."”"];
 			}
 		}else{
-			$msg = "控制器“".$controller."”不存在，请创建并添加“".$method."”方法";
-			$data = ['code' => 1, 'msg' => $msg];
+			$data = ['code' => 1, 'msg' => "控制器“".$controller."”不存在，请创建并添加“".$method."”方法"];
 		}
 		
 		//dd($data);
@@ -1035,7 +1102,7 @@ class DatatableController extends Controller
 		//显示复选的条件,1、非外部数据源;2、有修改、新增按钮
 		$isupdate = isset($datatable_config['head_menu']['update']['must'])?$datatable_config['head_menu']['update']['must'] == 'on':false;
 		$isdelete = isset($datatable_config['head_menu']['delete']['must'])?$datatable_config['head_menu']['delete']['must'] == 'on':false;
-		if($datatable_config['data_source_method'] == '' && ( $isupdate || $isdelete ) ){
+		if($datatable_config['data_source_from_method'] == '' && ( $isupdate || $isdelete ) ){
 			$cols_arr[] = array('type' => 'checkbox', 'fixed' => 'left');
 		}
 		//dd($datatable_config);

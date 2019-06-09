@@ -166,8 +166,8 @@ trait SetDic
     		  'text' => '搜索',
     		  'must' => 'on',
     		  'new_action' => '',
-    		  'width' => '800px',
-    		  'height' => '90%',
+    		  'width' => '100%',
+    		  'height' => '100%',
     		  'route' => '',
     		  'icon' => 'layui-icon-search'
     		],
@@ -261,8 +261,8 @@ trait SetDic
     			  'text' => '搜索',
     			  'must' => 'on',
     			  'new_action' => '',
-    			  'width' => '800px',
-    			  'height' => '90%',
+    			  'width' => '100%',
+    			  'height' => '100%',
     			  'route' => '',
     			  'icon' => 'layui-icon-search'
     			]

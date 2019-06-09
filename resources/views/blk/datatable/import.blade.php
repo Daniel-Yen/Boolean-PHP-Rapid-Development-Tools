@@ -13,8 +13,9 @@
 		<div class="layui-col-md12">
 			<div id="import_step"></div>
 			@if ($step == '1')
-			<form class="layui-form" method="post" enctype="multipart/form-data" action="/{{request()->path().'?do=import&ac=data'}}">
+			<form class="layui-form" method="post" enctype="multipart/form-data" action="">
 				@csrf
+				<input name="ac" type="hidden" value="data"/>
 				<table class="layui-table">
 					<colgroup>
 					  <col width="200">
@@ -22,7 +23,7 @@
 					<thead>
 					  <tr>
 						<th style="text-align:right;">下载导入模版</th>
-						<th><a style="color:#06F; font-weight:bolder;" href="/{{request()->path()}}?do=import&ac=download">“{{$title}}”导入摸板下载</a></th>
+						<th><a style="color:#06F; font-weight:bolder;" href="{{env('APP_URL')}}/{{request()->path()}}?do=import&ac=download">“{{$title}}”导入摸板下载</a></th>
 					  </tr> 
 					</thead>
 					<tbody>
@@ -37,13 +38,11 @@
 				</div>
 			</form>
 			@elseif ($step == '2')
-			<form class="layui-form" method="post" action="/{{request()->path()}}?do=import&ac=save">
+			<form class="layui-form" method="post" action="">
 				@csrf
+				<input name="ac" type="hidden" value="save"/>
 				<textarea class="layui-hide" name="DATA">{{json_encode($data)}}</textarea>
 			    <table class="layui-table">
-					<colgroup>
-					  <col width="200">
-					</colgroup>
 					<thead>
 					  <tr>
 						@foreach ($datatable_set as $v)
@@ -67,21 +66,20 @@
 				</table>
 				<div class="layui-form-item">
 					<button class="layui-btn" lay-submit="" lay-filter="demo2">提交</button>
-					<a href="/{{request()->path()}}?do=import" class="layui-btn layui-btn-normal">返回</a>
+					<a href="{{request()->fullUrl()}}" class="layui-btn layui-btn-normal">返回</a>
 				</div>
 			</form>
 			@elseif ($step == '3')
-			<form class="layui-form" method="post" action="/{{request()->path()}}?do=import&ac=save">
-				<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-					<legend>导入结果</legend>
-					<div style="padding-top:15px;">
-						新增了<span style="font-size:24px; color:green;">{{$num_insert}}</span>条记录;
-					</div>
-				</fieldset>
-				<div class="layui-form-item">
-					<a href="/{{request()->path()}}?do=import" class="layui-btn layui-btn-normal">继续导入</a>
+			<input name="ac" type="hidden" value="save"/>
+			<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+				<legend>导入结果</legend>
+				<div style="padding-top:15px;">
+					新增了<span style="font-size:24px; color:green;">{{$num_insert}}</span>条记录;
 				</div>
-			</form>
+			</fieldset>
+			<div class="layui-form-item">
+				<a href="{{request()->fullUrl()}}" class="layui-btn layui-btn-normal">继续导入</a>
+			</div>
 			@endif
 		</div>
 	</div>
