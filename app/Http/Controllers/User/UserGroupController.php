@@ -130,6 +130,7 @@ class UserGroupController extends Controller
 		}else{
 			$rules = '';
 		}
+		//dd($rules);
 		
 		return view('user.permissions', [
 			'view' => $view,

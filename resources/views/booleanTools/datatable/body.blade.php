@@ -111,6 +111,7 @@ layui.config({
 		laydate = layui.laydate,
 		formSelects = layui.formSelects;
 	
+	
 	var rand = Math.floor(Math.random()*10000+1);
 	@if ($do == "recycle")
 	var ac = '&ac=recycle';
@@ -547,6 +548,7 @@ layui.config({
 	@endforeach
 	@endif
 	
+	
 	var _tools = {
 		layerCloseAll: function(){
 			layer.closeAll();
@@ -560,9 +562,15 @@ layui.config({
 				}
 				,where: $('#where').serializeObject()
 			});
+			tools.refresh_table();
+		},
+		refresh_table: function(){
+			//添加刷新按钮
+			$(".layui-table-tool-self").append('<div class="layui-inline" title="刷新" onclick="tools.reload();" lay-event="LAYTABLE_REFRESH"><i class="layui-icon layui-icon-refresh"></i></div>');
 		}
 	}
 	window.tools = _tools;
+	tools.refresh_table();
 });
 </script>
 @endpush
