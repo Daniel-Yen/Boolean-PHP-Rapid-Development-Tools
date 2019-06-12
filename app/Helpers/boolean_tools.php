@@ -188,6 +188,34 @@ if (!function_exists('hump_name')) {
 	}
 }
 
+if (!function_exists('get_boolean_tools_config_by_file_path')) {
+	/**
+	 * 按文件路径返回配置，进开发工具中使用
+	 * @auther 		杨鸿<yh15229262120@qq.com> 
+	 * @access 		private
+	 * @param  		string 		$config_path 			配置文件路径
+	 * @return 		array                      			返回配置文件
+	 */
+	function get_boolean_tools_config_by_file_path($path)
+	{
+		if(file_exists($path)){
+			$config_json = file_get_contents($path);
+			$datatable_config = json_decode($config_json, true);
+			if(!is_array($datatable_config)){
+				exception_thrown(1002, '页面配置文件不是标准json数据');
+			}
+		}else{
+			$datatable_config = [];
+		}
+		
+		if(empty($datatable_config)){
+			exception_thrown(1001, '配置文件不存在');
+		}
+		
+		return $datatable_config;
+	}
+}
+
 if (!function_exists('get_boolean_tools_config')) {
 	/**
 	 * 返回

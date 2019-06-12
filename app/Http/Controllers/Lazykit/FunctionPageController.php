@@ -223,8 +223,7 @@ class FunctionPageController extends Controller
 			return success("操作成功");
 		}else{
 			if(file_exists($config_path)){
-				$config = file_get_contents($config_path);
-				$config = json_decode($config, true);
+				$config = get_boolean_tools_config_by_file_path($config_path);
 			}else{
 				$auto_generate = AutoGenerateRepository::where('function_page_id', $function_page['id'])->first();
 				if($auto_generate){
@@ -322,10 +321,7 @@ class FunctionPageController extends Controller
 	{
 		//去取配置文件
 		if(file_exists($config_path)){
-			$config = include($config_path);
-			if(!is_array($config)){
-				$config = [];
-			}
+			$config = get_boolean_tools_config_by_file_path($config_path);
 		}else{
 			$config = [];
 		}
@@ -533,7 +529,7 @@ class FunctionPageController extends Controller
 		}
 		
 		if(file_exists($config_path)){
-			$config = include($config_path);
+			$config = get_boolean_tools_config_by_file_path($config_path);
 		}else{
 			return view('booleanTools.msg', [
 				'msg' => "配置文件不存在！"
