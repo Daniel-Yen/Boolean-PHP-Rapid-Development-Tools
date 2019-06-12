@@ -57,7 +57,7 @@
 								</tr>
 								<tr>
 									<td>配置路径：</td>
-									<td>{{$system->file_path}}{{DIRECTORY_SEPARATOR}}app{{DIRECTORY_SEPARATOR}}Datatable{{DIRECTORY_SEPARATOR}}datatable_{{$design_id}}.php  &nbsp; 
+									<td>{{$system->file_path}}{{DIRECTORY_SEPARATOR}}app{{DIRECTORY_SEPARATOR}}BooleanTools{{DIRECTORY_SEPARATOR}}datatable_{{$design_id}}.php  &nbsp; 
 									<a id="preview" class="layui-btn layui-btn-primary layui-btn-sm">预览配置文件</a></td>
 								</tr>
 								<tr>

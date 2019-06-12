@@ -22,6 +22,6 @@ class AddressTest extends TestCase
 
     public function testBlockNumber()
     {
-        $this->assertRegExp('/^Blk\s*\d{2,3}[A-H]*$/i', $this->faker->blockNumber());
+        $this->assertRegExp('/^booleanTools\s*\d{2,3}[A-H]*$/i', $this->faker->blockNumber());
     }
 }

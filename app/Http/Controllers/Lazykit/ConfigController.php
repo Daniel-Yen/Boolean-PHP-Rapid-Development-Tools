@@ -3,7 +3,7 @@
  | 配置文件：单个配置文件 
  | 该控制器类由 Boolean Lazyer Kit 页面设计器自动生成
  |
- | @auther 		BLK
+ | @auther 		Boolean-PHP-Rapid-Development-Tools
  | @datetime 	2019-05-02 17:57:30
  */
 

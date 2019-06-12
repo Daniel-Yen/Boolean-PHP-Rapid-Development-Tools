@@ -9,8 +9,8 @@ namespace App\Http\Controllers\Lazykit;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Lazykit\CreateRouteMenu;
-use App\Repositories\BlkSystemRepository;
-use App\Repositories\BlkMenuRepository;
+use App\Repositories\SystemRepository;
+use App\Repositories\MenuRepository;
 
 class SystemController extends Controller
 {

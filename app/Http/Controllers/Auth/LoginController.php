@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use App\Repositories\BlkUsersRepository;
+use App\Repositories\UsersRepository;
 
 class LoginController extends Controller
 {
@@ -51,7 +51,7 @@ class LoginController extends Controller
     public function checkLogin($request)
     {
         //\Illuminate\Support\Facades\DB::connection()->enableQueryLog();
-		$user = BlkUsersRepository::where('status', '=', '1')
+		$user = UsersRepository::where('status', '=', '1')
 				->where(function ($query) use ($request) {
 					$query->where('phone', '=', $request->username)
 						  ->orWhere('email', '=', $request->username)
@@ -69,7 +69,7 @@ class LoginController extends Controller
 			if(password_verify($request->password, $user->password)) {
 				Auth::login($user);
 				//记录登录时间
-				BlkUsersRepository::where('status', '=', '1')
+				UsersRepository::where('status', '=', '1')
 					->update(['login_time' => date('Y-m-d H:i:s', time())]);
 				return redirect('/');
 				//$user = $request->user();

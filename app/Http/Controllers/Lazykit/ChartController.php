@@ -3,7 +3,7 @@
  | 统计图表：统计图表演示 
  | 该控制器类由 Boolean Lazyer Kit 页面设计器自动生成
  |
- | @auther 		BLK
+ | @auther 		Boolean-PHP-Rapid-Development-Tools
  | @datetime 	2019-04-29 06:12:50
  */
 

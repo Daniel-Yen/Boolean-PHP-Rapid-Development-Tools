@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use App\Repositories\BlkUsersRepository;
+use App\Repositories\UsersRepository;
 
 class RegisterController extends Controller
 {
@@ -86,7 +86,7 @@ class RegisterController extends Controller
 			Auth::login($user);
 			
 			//记录登录时间
-			BlkUsersRepository::where('id', '=', $request->user()->id)
+			UsersRepository::where('id', '=', $request->user()->id)
 				->update(['login_time' => date('Y-m-d H:i:s', time())]);
 				
 			return redirect('/');
@@ -105,8 +105,8 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' 		=> ['required', 'string', 'max:255'],
-            'email' 	=> ['required', 'string', 'email', 'max:255', 'unique:blk_users'],
-            'phone' 	=> ['required', 'string', 'max:20', 'unique:blk_users'],
+            'email' 	=> ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' 	=> ['required', 'string', 'max:20', 'unique:users'],
             'password' 	=> ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -115,11 +115,11 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  	array  $data
-     * @return 	App\Repositories\BlkUsersRepository
+     * @return 	App\Repositories\UsersRepository
      */
     protected function create(array $data)
     {
-        return BlkUsersRepository::create([
+        return UsersRepository::create([
             'name' => $data['name'],
             'phone' => $data['phone'],
             'email' => $data['email'],

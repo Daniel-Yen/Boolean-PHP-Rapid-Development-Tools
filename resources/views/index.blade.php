@@ -153,7 +153,7 @@
 @push('scripts')
 <script>
 layui.config({
-    base: '{{file_path('/include/blk/lib/')}}',
+    base: '{{file_path('/include/booleanTools/lib/')}}',
 }).extend({
     index: 'index',
 }).use('index');

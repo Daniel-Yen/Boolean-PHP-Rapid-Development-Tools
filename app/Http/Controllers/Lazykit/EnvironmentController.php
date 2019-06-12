@@ -1,9 +1,9 @@
 <?php
 /**
  * 数据表格：系统信息 
- * 该控制器类由 Boolean Lazy Kit 页面设计器自动生成
+ * 该控制器类由 Boolean-PHP-Rapid-Development-Tools 页面设计器自动生成
  *
- * @auther 	Blk
+ * @auther 	Brdt
  */
 
 namespace App\Http\Controllers\Lazykit;

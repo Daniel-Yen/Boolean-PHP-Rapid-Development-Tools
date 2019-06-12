@@ -9,7 +9,7 @@ namespace App\Http\Controllers\Lazykit;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Repositories\BlkDemoTreeRepository;
+use App\Repositories\DemoTreeRepository;
 
 class DemoController extends Controller
 {
@@ -114,11 +114,11 @@ class DemoController extends Controller
 	
 	//pid字段的下拉选择
 	public function attribute_pid(){
-		$data = BlkDemoTreeRepository::select('id as value', 'title as name', 'pid')->get();
+		$data = DemoTreeRepository::select('id as value', 'title as name', 'pid')->get();
 		if($data->count()){
 			$data = $data->toArray();
 			//转换为树结构
-			$tree = new \App\Http\Controllers\Blk\TreeController($data);
+			$tree = new \App\Http\Controllers\BooleanTools\TreeController($data);
 			$data = $tree->listToSelectTree();
 		}else{
 			$data = [];

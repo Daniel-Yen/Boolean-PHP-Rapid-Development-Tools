@@ -3,7 +3,7 @@
 @section('title', 'Chart配置生成')
 
 @push('css')
-<link rel="stylesheet" href="{{file_path('/include/blk/style/template.css')}}" media="all">
+<link rel="stylesheet" href="{{file_path('/include/booleanTools/style/template.css')}}" media="all">
 <style>
 	.create td{padding: 0;}
 	.create td input{border: 0;}
@@ -45,7 +45,7 @@
 								</tr>
 								<tr>
 									<td>配置路径：</td>
-									<td>{{$system->file_path}}{{DIRECTORY_SEPARATOR}}app{{DIRECTORY_SEPARATOR}}Blk{{DIRECTORY_SEPARATOR}}config_{{$design_id}}.php  &nbsp; 
+									<td>{{$system->file_path}}{{DIRECTORY_SEPARATOR}}app{{DIRECTORY_SEPARATOR}}booleanTools{{DIRECTORY_SEPARATOR}}config_{{$design_id}}.php  &nbsp; 
 									<a id="preview" class="layui-btn layui-btn-primary layui-btn-sm">预览配置文件</a></td>
 								</tr>
 								<tr>
@@ -81,7 +81,7 @@
 @push('scripts')
 <script>
 layui.config({
-    base: '{{file_path('/include/blk/lib/')}}',
+    base: '{{file_path('/include/booleanTools/lib/')}}',
 }).use(['jquery', 'form', 'layer', 'element'], function() {
 		var $ = layui.$,
 			form = layui.form,

@@ -6,7 +6,7 @@
 
 namespace App\Http\Controllers\Lazykit;
 
-//use App\Repositories\BlkSystemRepository;
+//use App\Repositories\SystemRepository;
 
 trait SystemPath
 {
@@ -15,14 +15,14 @@ trait SystemPath
      *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		private
-     * @param  		App\Repositories\BlkSystemRepository $system
+     * @param  		App\Repositories\SystemRepository $system
      * @return 		array                       
      */
     private function getPath($system){
 		//dd($menu_data);routes
 		$path = [
 			'laravel' => [
-				'blk_config' => $system->file_path.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Blk'.DIRECTORY_SEPARATOR,
+				'brdt' => $system->file_path.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'BooleanTools'.DIRECTORY_SEPARATOR,
 				'repository' => $system->file_path.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Repositories'.DIRECTORY_SEPARATOR,
 				'repository_tpl' => $this->getRepositoryTpl('laravel'),
 				'request' => $system->file_path.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Requests'.DIRECTORY_SEPARATOR,
@@ -51,7 +51,7 @@ trait SystemPath
  | 配置文件：{menu_title} 
  | 该控制器类由 Boolean Lazyer Kit 页面设计器自动生成
  |
- | @auther 		BLK
+ | @auther 		Boolean-PHP-Rapid-Development-Tools
  | @datetime 	'.date('Y-m-d H:i:s', time()).'
  */
 
@@ -92,7 +92,7 @@ class {NewController} extends Controller
  | 统计图表：{menu_title} 
  | 该控制器类由 Boolean Lazyer Kit 页面设计器自动生成
  |
- | @auther 		BLK
+ | @auther 		Boolean-PHP-Rapid-Development-Tools
  | @datetime 	'.date('Y-m-d H:i:s', time()).'
  */
 
@@ -137,7 +137,7 @@ class {NewController} extends Controller
  | 数据表格：{menu_title} 
  | 该控制器类由 Boolean Lazyer Kit 页面设计器自动生成
  |
- | @auther 		BLK
+ | @auther 		Boolean-PHP-Rapid-Development-Tools
  | @datetime 	'.date('Y-m-d H:i:s', time()).'
  */
 
@@ -183,7 +183,7 @@ class {NewController} extends Controller
  | 数据表：{table_name}
  | 该控制器类由 Boolean Lazyer Kit 页面设计器自动生成
  |
- | @auther 		BLK
+ | @auther 		Boolean-PHP-Rapid-Development-Tools
  | @datetime 	'.date('Y-m-d H:i:s', time()).'
  */
 

@@ -10,7 +10,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\BlkUserGroupRepository;
+use App\Repositories\UserGroupRepository;
 
 class UserGroupController extends Controller
 {
@@ -37,14 +37,14 @@ class UserGroupController extends Controller
 			return success("用户组权限设置成功");
 		}
 		
-		$data = DB::table('blk_permissions')
+		$data = DB::table('permissions')
 					->get()
 					->map(function ($value) {return (array)$value;})
 					->toArray();
 		//dump($data);
 		if($data){
 			//转换为树结构
-			$tree = new \App\Http\Controllers\Blk\TreeController($data);
+			$tree = new \App\Http\Controllers\BooleanTools\TreeController($data);
 			$data = $tree->listToDatatableTree();
 		}else{
 			$data = [];
@@ -59,7 +59,7 @@ class UserGroupController extends Controller
 			$button = [];
 			
 			if($v['model'] == '2' || $v['model'] == '5'){
-				$datatable_config = get_blk_config('datatable_'.$v['id']);
+				$datatable_config = get_boolean_tools_config('datatable_'.$v['id']);
 				if($datatable_config){
 					//dd($datatable_config);
 					//头部菜单按钮
@@ -123,7 +123,7 @@ class UserGroupController extends Controller
 		}
 		//dd($data);
 		
-		$user_group = BlkUserGroupRepository::where('id', request()->user_group_id)->first();
+		$user_group = UserGroupRepository::where('id', request()->user_group_id)->first();
 		//dd(json_decode($user_group->rules, true));
 		if($user_group){
 			$rules = json_decode($user_group->rules, true);
@@ -166,6 +166,6 @@ class UserGroupController extends Controller
 			'rules' => json_encode($rules_arr),
 		];
 		//dd($param);
-		BlkUserGroupRepository::where('id', request()->user_group_id)->update($param);
+		UserGroupRepository::where('id', request()->user_group_id)->update($param);
 	}
 }

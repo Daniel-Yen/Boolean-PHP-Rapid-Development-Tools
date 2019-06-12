@@ -1,8 +1,8 @@
-@extends('blk.datatable.base')
+@extends('booleanTools.datatable.base')
 
 @push('css')
 <link rel="stylesheet" href="{{file_path('/include/editormd/css/editormd.css')}}" media="all">
-<link rel="stylesheet" href="{{file_path('/include/blk/style/formSelects-v4.css')}}" media="all">
+<link rel="stylesheet" href="{{file_path('/include/booleanTools/style/formSelects-v4.css')}}" media="all">
 <style type="text/css">
 	.layui-table-tool {background-color: #FFFFFF;}
 	.layui-table-view {margin: 0;}
@@ -52,7 +52,7 @@
 @push('scripts')
 <script>
 	layui.config({
-		base: '{{file_path('/include/blk/lib/')}}',
+		base: '{{file_path('/include/booleanTools/lib/')}}',
 	}).use(['jquery', 'form', 'element'], function() {
 			var $ = layui.$,
 				form = layui.form,

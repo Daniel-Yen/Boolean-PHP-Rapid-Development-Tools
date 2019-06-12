@@ -9,11 +9,11 @@ namespace App\Http\Controllers\Lazykit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\BlkFunctionPageRepository;
-use App\Repositories\BlkMiddlewareRepository;
-use App\Repositories\BlkModuleRepository;
-use App\Repositories\BlkSystemRepository;
-use App\Repositories\BlkMenuRepository;
+use App\Repositories\FunctionPageRepository;
+use App\Repositories\MiddlewareRepository;
+use App\Repositories\ModuleRepository;
+use App\Repositories\SystemRepository;
+use App\Repositories\MenuRepository;
 
 trait Create
 {
@@ -77,7 +77,7 @@ trait Create
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access    	public
-	 * @param 		App\Repositories\BlkSystemRepository 	$system 	//要重连的系统
+	 * @param 		App\Repositories\SystemRepository 	$system 	//要重连的系统
 	 * @return 		void
 	 */
 	public function reconnectDB($system)
@@ -97,10 +97,10 @@ trait Create
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access    	public
-	 * @param 		App\Repositories\BlkSystemRepository 	$system 	//要重连的系统
+	 * @param 		App\Repositories\SystemRepository 	$system 	//要重连的系统
 	 * @return 		void
 	 */
-	public function reconnectBlkDB()
+	public function reconnectBrdtDB()
 	{
 		config(['database.connections.mysql.host' 		=> env('DB_HOST')]);
 		config(['database.connections.mysql.port' 		=> env('DB_PORT')]);
@@ -128,22 +128,22 @@ trait Create
 	
 	protected function createPermissionsDo()
 	{
-		$data = BlkFunctionPageRepository::where('system_id', request()->system_id)
+		$data = FunctionPageRepository::where('system_id', request()->system_id)
 					//->where('function_type', 1) 			//function_type = 1 取的所有"系统菜单"的页面记录
 					->get();
 		if($data->count()){
 			$data = $data->toArray();
 			
 			//要生成菜单的系统
-			$system = BlkSystemRepository::where('id', request()->system_id)->first();
+			$system = SystemRepository::where('id', request()->system_id)->first();
 			
 			//根据系统数据中的数据库信息动态改变数据库配置重连数据库
 			$this->reconnectDB($system);
 			
 			//清除菜单表中已有的数据
-			DB::table('blk_permissions')->truncate();
+			DB::table('permissions')->truncate();
 			
-			//将"BlkFunctionPageRepository"中查询到的数据转换为blk_menu表的数据并插入
+			//将"FunctionPageRepository"中查询到的数据转换为menu表的数据并插入
 			$permissions = [];
 			foreach($data as $k=>$v){
 				$permissions[$k] = [
@@ -155,10 +155,10 @@ trait Create
 				];
 			}
 			
-			$result = DB::table('blk_permissions')->insert($permissions);
+			$result = DB::table('permissions')->insert($permissions);
 			
 			//将数据库重连回boolean lazykit
-			$this->reconnectBlkDB();
+			$this->reconnectBrdtDB();
 			
 			if($result){
 				$callback = ['code' => 0, 'msg' => "可授权页面生成成功", 'refresh' => 'no'];
@@ -188,7 +188,7 @@ trait Create
 	
 	protected function createMenuDo()
 	{
-		$data = BlkFunctionPageRepository::where('system_id', request()->system_id)
+		$data = FunctionPageRepository::where('system_id', request()->system_id)
 					->where('function_type', 1) 			//function_type = 1 取的所有"系统菜单"的页面记录
 					->get();
 		
@@ -197,17 +197,17 @@ trait Create
 			$data = $data->toArray();
 			
 			//要生成菜单的系统
-			$system = BlkSystemRepository::where('id', request()->system_id)->first();
+			$system = SystemRepository::where('id', request()->system_id)->first();
 			
 			//根据系统数据中的数据库信息动态改变数据库配置重连数据库
 			$this->reconnectDB($system);
 			
 			//清除菜单表中已有的数据
 			//DB::connection()->enableQueryLog();
-			DB::table('blk_menu')->truncate();
+			DB::table('menu')->truncate();
 			//dd(DB::getQueryLog());
 			
-			//将"BlkFunctionPageRepository"中查询到的数据转换为blk_menu表的数据并插入
+			//将"FunctionPageRepository"中查询到的数据转换为menu表的数据并插入
 			$menu = [];
 			foreach($data as $k=>$v){
 				$menu[$k] = [
@@ -218,10 +218,10 @@ trait Create
 				];
 			}
 			
-			$result = DB::table('blk_menu')->insert($menu);
+			$result = DB::table('menu')->insert($menu);
 			
 			//将数据库重连回boolean lazykit
-			$this->reconnectBlkDB();
+			$this->reconnectBrdtDB();
 		}
 		
 		if($result){
@@ -250,13 +250,13 @@ trait Create
 	protected function createRouteDo()
 	{
 		//获得系统信息
-		$system = BlkSystemRepository::where('id', request()->system_id)->first();
+		$system = SystemRepository::where('id', request()->system_id)->first();
 		
 		//获得当前系统对应的各类路径
 		$path = $this->getPath($system);
 		
 		//获得菜单中要生成的路由
-		$data = BlkFunctionPageRepository::orderBy('module_id', 'asc')
+		$data = FunctionPageRepository::orderBy('module_id', 'asc')
 					->where('system_id', $system->id)
 					->where('method', '!=', '')
 					->get();
@@ -280,7 +280,7 @@ trait Create
 			$route .= PHP_EOL;
 			foreach($data_arr as $key=>$value){
 				//获得中间件
-				$middleware = BlkMiddlewareRepository::whereIn('id',explode(',',$key))->get();
+				$middleware = MiddlewareRepository::whereIn('id',explode(',',$key))->get();
 				$data = [];
 				if($middleware->count()){
 					$middleware = $middleware->toArray();
@@ -292,7 +292,7 @@ trait Create
 				$route .= "Route::group(['middleware' => [".join(',', $data)."]], function(){".PHP_EOL;
 				//dd($data);
 				foreach($value as $k=>$v){
-					$module = BlkModuleRepository::where('id',$v['module_id'])->get();
+					$module = ModuleRepository::where('id',$v['module_id'])->get();
 					if($module->first()){
 						$module = $module->toArray()[0];
 					}else{
@@ -322,7 +322,7 @@ trait Create
 						}
 					}else{
 						//删除没有对应模块跟系统的菜单
-						//BlkMenuRepository::where('id',$v['id'])->delete();
+						//MenuRepository::where('id',$v['id'])->delete();
 					}
 				}
 				//dd($route);
@@ -330,7 +330,7 @@ trait Create
 				$route .= PHP_EOL;
 			}
 			create_dir($path['route']);
-			$route_path = $path['route'].'blk.php';
+			$route_path = $path['route'].'boolean_tools.php';
 			//dd($route_path);
 			file_put_contents($route_path, $route);
 			
@@ -359,6 +359,6 @@ trait Create
 		$callback = $this->createPermissionsDo();
 		
 		//将数据库重连回boolean lazykit
-		$this->reconnectBlkDB();
+		$this->reconnectBrdtDB();
 	}
 }

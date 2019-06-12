@@ -3,7 +3,7 @@
 @section('title', 'Chart配置生成')
 
 @push('css')
-<link rel="stylesheet" href="{{file_path('/include/blk/style/template.css')}}" media="all">
+<link rel="stylesheet" href="{{file_path('/include/booleanTools/style/template.css')}}" media="all">
 <style>
 	.main{min-height:350px;border:1px solid #e2e2e2; margin:0 10px 20px 0;}
 	.mark{width:120px; float:left; margin-right:10px;}
@@ -46,7 +46,7 @@
 								</tr>
 								<tr>
 									<td>配置路径：</td>
-									<td>{{$system->file_path}}{{DIRECTORY_SEPARATOR}}app{{DIRECTORY_SEPARATOR}}Blk{{DIRECTORY_SEPARATOR}}chart_{{$design_id}}.php  &nbsp; 
+									<td>{{$system->file_path}}{{DIRECTORY_SEPARATOR}}app{{DIRECTORY_SEPARATOR}}booleanTools{{DIRECTORY_SEPARATOR}}chart_{{$design_id}}.php  &nbsp; 
 									<a id="preview" class="layui-btn layui-btn-primary layui-btn-sm">预览配置文件</a></td>
 								</tr>
 								<tr>
@@ -77,11 +77,11 @@
 @endsection
 
 @push('scripts')
-<script src="{{file_path('/include/blk/plugin/jquery.min.js')}}"></script>
-<script src="{{file_path('/include/blk/plugin/drag-arrange.js')}}"></script>
+<script src="{{file_path('/include/booleanTools/plugin/jquery.min.js')}}"></script>
+<script src="{{file_path('/include/booleanTools/plugin/drag-arrange.js')}}"></script>
 <script>
 layui.config({
-    base: '{{file_path('/include/blk/lib/')}}',
+    base: '{{file_path('/include/booleanTools/lib/')}}',
 }).extend({
 	echarts: 'extend/echarts',
 	echartsTheme: 'extend/echartsTheme'
@@ -188,7 +188,7 @@ layui.config({
 				
 				var ech = []
 				,myOption = option
-				,myChart = $('#Blk-chart-'+key)
+				,myChart = $('#booleanTools-chart-'+key)
 				,renderchart = function(index){
 				  ech[index] = echarts.init(myChart[index], layui.echartsTheme);
 				  ech[index].setOption(myOption);

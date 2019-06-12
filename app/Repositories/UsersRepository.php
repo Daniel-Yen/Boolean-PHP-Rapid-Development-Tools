@@ -7,11 +7,14 @@
 
 namespace App\Repositories;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class UsersRepository extends Model 
+class UsersRepository extends Authenticatable 
 {
+	use Notifiable;
 	//软删除Trait
 	use SoftDeletes;
 	//表名称
@@ -20,4 +23,31 @@ class UsersRepository extends Model
 	protected $primaryKey = 'id';
 	
 	protected $datas = ['deleted_at'];
+	
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
+	    'name', 'phone', 'email', 'password',
+	];
+	
+	/**
+	 * The attributes that should be hidden for arrays.
+	 *
+	 * @var array
+	 */
+	protected $hidden = [
+	    'password', 'remember_token',
+	];
+	
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+	    'email_verified_at' => 'datetime',
+	];
 }

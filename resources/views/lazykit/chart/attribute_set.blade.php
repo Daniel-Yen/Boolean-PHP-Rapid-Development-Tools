@@ -3,7 +3,7 @@
 @section('title', 'Databale配置生成')
 
 @push('css')
-<link rel="stylesheet" href="{{file_path('/include/blk/style/formSelects-v4.css')}}" media="all">
+<link rel="stylesheet" href="{{file_path('/include/booleanTools/style/formSelects-v4.css')}}" media="all">
 <style>
 	.create td{padding: 0;}
 	.create td input{border: 0;}
@@ -91,7 +91,7 @@
 @push('scripts')
 <script>
 	layui.config({
-		base: '{{file_path('/include/blk/lib/')}}',
+		base: '{{file_path('/include/booleanTools/lib/')}}',
 	}).extend({
 		index: 'index',
 		formSelects: 'modules/formSelects-v4'

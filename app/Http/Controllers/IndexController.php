@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-use App\Repositories\BlkMenuRepository;
-use App\Repositories\BlkUserGroupRepository;
+use App\Repositories\MenuRepository;
+use App\Repositories\UserGroupRepository;
 
 class IndexController extends Controller
 {
@@ -25,7 +25,7 @@ class IndexController extends Controller
 		$user = request()->user();
 		//dd($user);
 		//获得当前登录用户的用户组
-		$user_group = BlkUserGroupRepository::whereIn('id', explode(',', $user->user_group))->get();
+		$user_group = UserGroupRepository::whereIn('id', explode(',', $user->user_group))->get();
 		//取的当前登录用户所属用户组的权限
 		$menu = [];
 		if($user_group->count()){
@@ -38,7 +38,7 @@ class IndexController extends Controller
 				$menu = $this->getMenu($rules_arr);
 				
 				//获得菜单的树结构
-				$tree = new \App\Http\Controllers\Blk\TreeController($menu);
+				$tree = new \App\Http\Controllers\BooleanTools\TreeController($menu);
 				$menu = $tree->listToTree();
 				//dd($menu);
 			}else{
@@ -65,7 +65,7 @@ class IndexController extends Controller
 	
 	public function getMenu($rules_arr){
 		//dd($rules_arr);
-		$menu_arr = DB::table('blk_menu')
+		$menu_arr = DB::table('menu')
 						->whereIn('url', $rules_arr)
 						->get()
 						->map(function ($value) {return (array)$value;})
@@ -80,7 +80,7 @@ class IndexController extends Controller
 				}
 			}
 			//获取上级菜单
-			$menu_arr_1 = DB::table('blk_menu')
+			$menu_arr_1 = DB::table('menu')
 								->whereIn('id', $ids)
 								->get()
 								->map(function ($value) {return (array)$value;})
@@ -94,7 +94,7 @@ class IndexController extends Controller
 					}
 				}
 				//获取上级菜单的上级菜单
-				$menu_arr_2 = DB::table('blk_menu')
+				$menu_arr_2 = DB::table('menu')
 									->whereIn('id', $ids)
 									->get()
 									->map(function ($value) {return (array)$value;})

@@ -10,16 +10,16 @@ class Address extends \Faker\Provider\Address
 
     // http://en.wikipedia.org/wiki/Singapore_Post#Address_format
     protected static $blockNumber = array(
-        'Blk ##',
-        'Blk ###',
-        'Blk ###A',
-        'Blk ###B',
-        'Blk ###C',
-        'Blk ###D',
-        'Blk ###E',
-        'Blk ###F',
-        'Blk ###G',
-        'Blk ###H',
+        'booleanTools ##',
+        'booleanTools ###',
+        'booleanTools ###A',
+        'booleanTools ###B',
+        'booleanTools ###C',
+        'booleanTools ###D',
+        'booleanTools ###E',
+        'booleanTools ###F',
+        'booleanTools ###G',
+        'booleanTools ###H',
     );
 
     // http://www.streetdirectory.com/asia_travel/travel/street/alphabet2/

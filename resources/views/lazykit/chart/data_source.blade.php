@@ -20,7 +20,7 @@
 								</div>
 							</div>
 						</div>
-						<div id="Blk-chart-{{$key}}" class="main dragsort">
+						<div id="booleanTools-chart-{{$key}}" class="main dragsort">
 							<div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
 						</div>
 					</div>

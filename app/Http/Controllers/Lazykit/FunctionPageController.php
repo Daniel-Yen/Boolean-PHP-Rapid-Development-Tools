@@ -9,13 +9,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\BlkFunctionPageRepository;
-use App\Repositories\BlkMiddlewareRepository;
-use App\Repositories\BlkModuleRepository;
-use App\Repositories\BlkSystemRepository;
-use App\Repositories\BlkMenuRepository;
-use App\Repositories\BlkAttributeRepository;
-use App\Repositories\BlkAutoGenerateRepository;
+use App\Repositories\FunctionPageRepository;
+use App\Repositories\MiddlewareRepository;
+use App\Repositories\ModuleRepository;
+use App\Repositories\SystemRepository;
+use App\Repositories\MenuRepository;
+use App\Repositories\AttributeRepository;
+use App\Repositories\AutoGenerateRepository;
 use App\Http\Controllers\Lazykit\SetDic;
 use App\Http\Controllers\Lazykit\SystemPath;
 use App\Http\Controllers\Lazykit\ChartDic;
@@ -95,7 +95,7 @@ class FunctionPageController extends Controller
 	}
 	
 	/**
-	 * 获得"buer_Blk_datatable"表中的路由信息，并判断类跟方法是否存在
+	 * 获得"buer_function_page"表中的路由信息，并判断类跟方法是否存在
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		public
@@ -105,7 +105,7 @@ class FunctionPageController extends Controller
 	public function getRouteMessage($datatable_arr, $path)
 	{
 		//获得控制器及方法名称
-		$module_path = BlkModuleRepository::where('id', $datatable_arr['module_id'])->first(['module']);
+		$module_path = ModuleRepository::where('id', $datatable_arr['module_id'])->first(['module']);
 		
 		//只有当控制器方法存在且不为空才能进行以下路由信息的计算并判断控制器是否存在,方法是否存在
 		if($datatable_arr['method']){
@@ -162,16 +162,16 @@ class FunctionPageController extends Controller
 	public function set()
 	{
 		$request = request();
-		$function_page = BlkFunctionPageRepository::where('id', $request->design_id)->first();
+		$function_page = FunctionPageRepository::where('id', $request->design_id)->first();
 		
 		if($function_page){
 			$function_page = $function_page->toArray();
 			
 			//判断当前页面是存在对应的模型
-			$module = BlkModuleRepository::where('id', $function_page['module_id'])->first();
+			$module = ModuleRepository::where('id', $function_page['module_id'])->first();
 			if($module){
 				//判断当前页面是存在对应的系统
-				$system = BlkSystemRepository::where('id', $function_page['system_id'])->first();
+				$system = SystemRepository::where('id', $function_page['system_id'])->first();
 				if($system){
 					$path = $this->getPath($system);
 					
@@ -180,12 +180,12 @@ class FunctionPageController extends Controller
 					unset($function_page['updated_at']);
 					unset($function_page['deleted_at']);
 				}else{
-					return view('blk.msg', [
+					return view('booleanTools.msg', [
 						'msg' => "当前页面没有对应的系统！"
 					]);
 				}
 			}else{
-				return view('blk.msg', [
+				return view('booleanTools.msg', [
 					'msg' => "当前页面没有对应的系统模块！"
 				]);
 			}
@@ -196,9 +196,9 @@ class FunctionPageController extends Controller
 		//配置在对应系统中的文件路径
 		if(isset($function_page['model'])?$function_page['model']:false){
 			$model = $this->getModel($function_page['model']);
-			$config_path = $path['blk_config'].$model.$function_page['id'].'.php';
+			$config_path = $path['brdt'].$model.$function_page['id'].'.php';
 		}else{
-			return view('blk.msg', [
+			return view('booleanTools.msg', [
 				'msg' => "当前记录功能模型不存在"
 			]);
 		}
@@ -209,7 +209,7 @@ class FunctionPageController extends Controller
 		//获得datatable配置名称
 		if($request->isMethod('post')){
 			//创建配置文件目录
-			create_dir($path['blk_config']);
+			create_dir($path['brdt']);
 			
 			if(in_array($function_page['model'], [2, 5])){
 				$this->datatable_set($function_page, $request, $route_message, $path, $config_path);
@@ -224,7 +224,7 @@ class FunctionPageController extends Controller
 			if(file_exists($config_path)){
 				$config = require($config_path);
 			}else{
-				$auto_generate = BlkAutoGenerateRepository::where('function_page_id', $function_page['id'])->first();
+				$auto_generate = AutoGenerateRepository::where('function_page_id', $function_page['id'])->first();
 				if($auto_generate){
 					$config = json_decode($auto_generate['config'], true);
 				}else{
@@ -370,7 +370,7 @@ class FunctionPageController extends Controller
 							['design_id', '=', $request->design_id],
 							['field', '=', $v1['field']],
 						];
-						$attribute_arr = BlkAttributeRepository::where($conditions)->first();
+						$attribute_arr = AttributeRepository::where($conditions)->first();
 						if($attribute_arr){
 							$fields[$k1]['attribute'] = json_decode($attribute_arr['attribute'], true);
 						}else{
@@ -489,16 +489,16 @@ class FunctionPageController extends Controller
 	 * @return  	void
 	 */
 	public function chartAttributeSet(Request $request){
-		$function_page = BlkFunctionPageRepository::where('id', $request->design_id)->first();
+		$function_page = FunctionPageRepository::where('id', $request->design_id)->first();
 		
 		if($function_page){
 			$function_page = $function_page->toArray();
 			
 			//判断当前页面是存在对应的模型
-			$module = BlkModuleRepository::where('id', $function_page['module_id'])->first();
+			$module = ModuleRepository::where('id', $function_page['module_id'])->first();
 			if($module){
 				//判断当前页面是存在对应的系统
-				$system = BlkSystemRepository::where('id', $function_page['system_id'])->first();
+				$system = SystemRepository::where('id', $function_page['system_id'])->first();
 				if($system){
 					$path = $this->getPath($system);
 					
@@ -507,12 +507,12 @@ class FunctionPageController extends Controller
 					unset($function_page['updated_at']);
 					unset($function_page['deleted_at']);
 				}else{
-					return view('blk.msg', [
+					return view('booleanTools.msg', [
 						'msg' => "当前页面没有对应的系统！"
 					]);
 				}
 			}else{
-				return view('blk.msg', [
+				return view('booleanTools.msg', [
 					'msg' => "当前页面没有对应的系统模块！"
 				]);
 			}
@@ -521,9 +521,9 @@ class FunctionPageController extends Controller
 		//配置在对应系统中的文件路径
 		if(isset($function_page['model'])?$function_page['model']:false){
 			$model = $this->getModel($function_page['model']);
-			$config_path = $path['blk_config'].$model.$function_page['id'].'.php';
+			$config_path = $path['brdt'].$model.$function_page['id'].'.php';
 		}else{
-			return view('blk.msg', [
+			return view('booleanTools.msg', [
 				'msg' => "当前配置没有对应的页面模型！"
 			]);
 		}
@@ -531,7 +531,7 @@ class FunctionPageController extends Controller
 		if(file_exists($config_path)){
 			$config = include($config_path);
 		}else{
-			return view('blk.msg', [
+			return view('booleanTools.msg', [
 				'msg' => "配置文件不存在！"
 			]);
 		}
@@ -544,7 +544,7 @@ class FunctionPageController extends Controller
 			}
 			
 			//将页面设计对应的统计图表 配置文件保存到数据库
-			BlkAutoGenerateRepository::updateOrInsert(
+			AutoGenerateRepository::updateOrInsert(
 					['function_page_id' => $request->design_id],
 					['config' => json_encode($config)]
 				);
@@ -594,17 +594,17 @@ class FunctionPageController extends Controller
 			];
 			
 			//新增字段属性设置记录，如果已存在，则修改
-			$result = BlkAttributeRepository::updateOrInsert($conditions, $param);
+			$result = AttributeRepository::updateOrInsert($conditions, $param);
 			if($result){
 				//获得当前页面信息
-				$function_page = BlkFunctionPageRepository::where('id', $request->design_id)->first();
+				$function_page = FunctionPageRepository::where('id', $request->design_id)->first();
 				
 				//将字段属性设置写入Datatable配置文件
-				$system = BlkSystemRepository::where('id', $request->system_id)->first();
+				$system = SystemRepository::where('id', $request->system_id)->first();
 				
 				if($system){
 					$path = $this->getPath($system);
-					$config_path = $path['blk_config'].$this->getModel($function_page['model']).$request->design_id.'.php';
+					$config_path = $path['brdt'].$this->getModel($function_page['model']).$request->design_id.'.php';
 					
 					if(file_exists($config_path)){
 						$config = require($config_path);
@@ -612,7 +612,7 @@ class FunctionPageController extends Controller
 						//dd($config);
 						
 						//将页面设计对应的统计图表 配置文件保存到数据库
-						BlkAutoGenerateRepository::updateOrInsert(
+						AutoGenerateRepository::updateOrInsert(
 							['function_page_id' => $request->design_id],
 							['config' 			=> json_encode($config)]
 						);
@@ -634,7 +634,7 @@ class FunctionPageController extends Controller
 			['field', '=', $request->field],
 		];
 		
-		$attribute_arr = BlkAttributeRepository::where($conditions)->get();
+		$attribute_arr = AttributeRepository::where($conditions)->get();
 		if($attribute_arr->first()){
 			$attribute_arr = $attribute_arr->toArray();
 			$attribute = json_decode($attribute_arr[0]['attribute'], true);
@@ -709,7 +709,7 @@ class FunctionPageController extends Controller
 			];
 		}
 		
-		BlkFunctionPageRepository::where('id', '=', $request->design_id)->update($param);
+		FunctionPageRepository::where('id', '=', $request->design_id)->update($param);
 		
 		//datatable 字段配置:排序
 		$datatable_arr['datatable_set'] = array_sort($request->datatable_set,'sorting');
@@ -719,7 +719,7 @@ class FunctionPageController extends Controller
 				['design_id', '=', $datatable_arr['id']],
 				['field', '=', $v['field']],
 			];
-			$attribute_arr = BlkAttributeRepository::where($conditions)->first();
+			$attribute_arr = AttributeRepository::where($conditions)->first();
 			if($attribute_arr){
 				$datatable_arr['datatable_set'][$k]['attribute'] = json_decode($attribute_arr['attribute'], true);
 			}else{
@@ -789,7 +789,7 @@ class FunctionPageController extends Controller
 		}
 		
 		//将页面设计对应的datatable 配置文件保存到数据库
-		BlkAutoGenerateRepository::updateOrInsert(
+		AutoGenerateRepository::updateOrInsert(
 			['function_page_id' => $datatable_arr['id']],
 			['config' 			=> json_encode($datatable_arr)]
 		);
@@ -811,11 +811,11 @@ class FunctionPageController extends Controller
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access    	public
-	 * @param 		App\Repositories\BlkSystemRepository 	$system 	//当前操作的系统
+	 * @param 		App\Repositories\SystemRepository 	$system 	//当前操作的系统
 	 * @return 		array          	返回可继承的数据表格
 	 */
 	public function getInheritanceDatatable($system){
-		$data = BlkFunctionPageRepository::where('system_id', $system->id)
+		$data = FunctionPageRepository::where('system_id', $system->id)
 					->where('model', 2)
 					->get();
 		if($data->count()){
@@ -848,7 +848,7 @@ class FunctionPageController extends Controller
 	// 	$param = $request->post();
 	// 	unset($param['_token']);
 	// 	//DB::connection()->enableQueryLog();
-	// 	BlkFunctionPageRepository::where('id', '=', $request->id)->update($param);
+	// 	FunctionPageRepository::where('id', '=', $request->id)->update($param);
 	// 	//dd(DB::getQueryLog());
 	// 	return success("数据源设置成功");
 	// }
@@ -860,7 +860,7 @@ class FunctionPageController extends Controller
 	 * @access 		private
 	 * @param 		array 		$datatable_arr 			数据表格记录
 	 * @param 		array 		$datatable_config 		数据表格配置
-	 * @param 		App\Repositories\BlkSystemRepository 	$system 	//要重连的系统
+	 * @param 		App\Repositories\SystemRepository 	$system 	//要重连的系统
 	 * @return 		array
 	 */
 	private function getFieldRow($datatable_arr, $datatable_config, $system)
@@ -884,7 +884,7 @@ class FunctionPageController extends Controller
 				$sql = 'SHOW FULL COLUMNS FROM `'.$main_table.'`';
 				$this->reconnectDB($system);
 				$result = DB::select($sql);
-				$this->reconnectBlkDB();
+				$this->reconnectBrdtDB();
 				//dd($result);
 				
 				if(count($result)){
@@ -901,7 +901,7 @@ class FunctionPageController extends Controller
 						$sql_2 = 'SHOW FULL COLUMNS FROM `'.$associated_table.'`';
 						$this->reconnectDB($system);
 						$result_2 = DB::select($sql_2);
-						$this->reconnectBlkDB();
+						$this->reconnectBrdtDB();
 						//dd($result_2);
 						
 						if(count($result_2)){
@@ -999,7 +999,7 @@ class FunctionPageController extends Controller
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access    	public
-	 * @param 		App\Repositories\BlkSystemRepository 	$system 	//要重连的系统
+	 * @param 		App\Repositories\SystemRepository 	$system 	//要重连的系统
 	 * @return 		array          	返回数据库表数组
 	 */
 	public function getTables($system)
@@ -1013,7 +1013,7 @@ class FunctionPageController extends Controller
 		$result = DB::select('show tables');
 		
 		//将数据库重连回boolean lazykit
-		$this->reconnectBlkDB();
+		$this->reconnectBrdtDB();
 		
 		$tables_arr = [];
 		
@@ -1057,16 +1057,16 @@ class FunctionPageController extends Controller
 			];
 			
 			//新增字段属性设置记录，如果已存在，则修改
-			$result = BlkAttributeRepository::updateOrInsert($conditions, $param);
+			$result = AttributeRepository::updateOrInsert($conditions, $param);
 			if($result){
 				//获得当前页面信息
-				$datatable_arr = BlkFunctionPageRepository::where('id', $request->design_id)->first();
+				$datatable_arr = FunctionPageRepository::where('id', $request->design_id)->first();
 				
 				//将字段属性设置写入Datatable配置文件
-				$system = BlkSystemRepository::where('id', $request->system_id)->first();
+				$system = SystemRepository::where('id', $request->system_id)->first();
 				if($system){
 					$path = $this->getPath($system);
-					$config_path = $path['blk_config'].$this->getModel($datatable_arr['model']).$request->design_id.'.php';
+					$config_path = $path['brdt'].$this->getModel($datatable_arr['model']).$request->design_id.'.php';
 					
 					if(file_exists($config_path)){
 						$datatable_arr = require($config_path);
@@ -1078,7 +1078,7 @@ class FunctionPageController extends Controller
 					}
 					
 					//将页面设计对应的datatable 配置文件保存到数据库
-					BlkAutoGenerateRepository::updateOrInsert(
+					AutoGenerateRepository::updateOrInsert(
 						['function_page_id' => $request->design_id],
 						['config' 			=> json_encode($datatable_arr)]
 					);
@@ -1096,7 +1096,7 @@ class FunctionPageController extends Controller
 			['field', '=', $request->field],
 		];
 		
-		$attribute_arr = BlkAttributeRepository::where($conditions)->get();
+		$attribute_arr = AttributeRepository::where($conditions)->get();
 		if($attribute_arr->first()){
 			$attribute_arr = $attribute_arr->toArray();
 			$attribute = json_decode($attribute_arr[0]['attribute'], true);
@@ -1161,13 +1161,13 @@ class FunctionPageController extends Controller
 	 */
 	public function attributePid()
 	{
-		$data = BlkFunctionPageRepository::select('id as value', 'title as name', 'pid')
+		$data = FunctionPageRepository::select('id as value', 'title as name', 'pid')
 					->where('system_id', request()->system_id)
 					->get();
 		if($data->count()){
 			$data = $data->toArray();
 			//转换为树结构
-			$tree = new \App\Http\Controllers\Blk\TreeController($data);
+			$tree = new \App\Http\Controllers\BooleanTools\TreeController($data);
 			$data = $tree->listToSelectTree();
 		}else{
 			$data = [];
@@ -1185,7 +1185,7 @@ class FunctionPageController extends Controller
 	 */
 	public function attributeModule()
 	{
-		$data = BlkModuleRepository::select('id as value', 'module_name as name')
+		$data = ModuleRepository::select('id as value', 'module_name as name')
 					->where('system_id', request()->system_id)
 					->get();
 		if($data->count()){
@@ -1206,7 +1206,7 @@ class FunctionPageController extends Controller
 	 */
 	public function leftDirectory()
 	{
-		$system = BlkSystemRepository::select('system_name', 'id')->get();
+		$system = SystemRepository::select('system_name', 'id')->get();
 		
 		$data = [];
 		
@@ -1221,7 +1221,7 @@ class FunctionPageController extends Controller
 				$data[$k]['condition'] = [$system[$k]['id']];
 				$data[$k]['spread'] = 'true';
 				
-				$module = BlkModuleRepository::select('module_name', 'id')
+				$module = ModuleRepository::select('module_name', 'id')
 							->where('system_id', $v['id'])
 							->get();
 							
@@ -1253,7 +1253,7 @@ class FunctionPageController extends Controller
 	 * @return 		array                       
 	 */
 	public function attributeSystem(){
-		$data = BlkSystemRepository::select('id as value', 'system_name as name')->get();
+		$data = SystemRepository::select('id as value', 'system_name as name')->get();
 		if($data->count()){
 			$data = $data->toArray();
 		}else{
@@ -1308,7 +1308,7 @@ class FunctionPageController extends Controller
 	 * @return 		array                       
 	 */
 	public function attributeInheritance(){
-		$function_page = BlkFunctionPageRepository::get();
+		$function_page = FunctionPageRepository::get();
 		
 		$data = [];
 		if($function_page->count()){
@@ -1324,7 +1324,7 @@ class FunctionPageController extends Controller
 	}
 	
 	public function preview(Request $request){
-		$datatable_config = get_blk_config('datatable_'.$request->design_id);
+		$datatable_config = get_boolean_tools_config('datatable_'.$request->design_id);
 		echo "<style>
 				body{margin:0;}
 				.sf-dump{min-height:100%;}
@@ -1340,7 +1340,7 @@ class FunctionPageController extends Controller
 	 * @return 		array                       
 	 */
 	public function attributeMiddleware(){
-		$middleware = BlkMiddlewareRepository::get();
+		$middleware = MiddlewareRepository::get();
 		
 		$data = [];
 		if($middleware->count()){

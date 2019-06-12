@@ -1,19 +1,12 @@
 <div class="layui-layout layui-layout-admin">
 	<div class="layui-header">
 		<!-- 头部区域 -->
-		<ul class="layui-nav">
-			<li class="layui-nav-item layadmin-flexible" lay-unselect>
-				<span>
-					<h2 style="font-size: 20px;">Boolean Lazy Kit</h2>
-				</span>
-			</li>
+		<ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
 			<li class="layui-nav-item layui-hide-xs">
-				<a href="http://www.layui.com/admin/" target="_blank" title="前台">
+				<a href="http://www.buersoft.cn/" target="_blank" title="前台">
 					<i class="layui-icon layui-icon-website"></i>
 				</a>
 			</li>
-		</ul>
-		<ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
 			<li class="layui-nav-item layui-hide-xs" lay-unselect>
 				<a href="javascript:;" layadmin-event="theme">
 					<i class="layui-icon layui-icon-theme"></i>

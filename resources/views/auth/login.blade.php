@@ -3,7 +3,7 @@
 @section('title', '登录')
 
 @push('css')
-<link rel="stylesheet" href="{{file_path('/include/blk/style/login.css')}}" media="all">
+<link rel="stylesheet" href="{{file_path('/include/booleanTools/style/login.css')}}" media="all">
 @endpush
 
 @section('content')
@@ -11,13 +11,13 @@
 <div style="margin-top: 100px;">
 	<div class="layadmin-user-login-main">
 		<div class="layadmin-user-login-box layadmin-user-login-header">
-			<h2>布尔懒人工具包<span class="layui-badge" style="position: relative;top:-30px;">BLZ 3.0 beta</span></h2>
+			<h2>布尔懒人工具包<span class="layui-badge" style="position: relative;top:-30px;">3.0.0 alpha</span></h2>
 		</div>
 		<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
 			<form action="" method="post">
 				@csrf
 				<div class="layui-form-item">
-					<label class="layadmin-user-login-icon layui-icon layui-icon-email" for="email"></label>
+					<label class="layadmin-user-login-icon layui-icon layui-icon-username" for="email"></label>
 					<input type="text" name="username" id="username" lay-verify="required" value="{{ old('email') }}" placeholder="邮箱" autocomplete="new-password" class="layui-input">
 				</div>
 				<div class="layui-form-item">
@@ -63,7 +63,7 @@
 		top.location.href =window.location.href;
 	}
 	layui.config({
-	    base: '{{file_path('/include/blk/lib/')}}',
+	    base: '{{file_path('/include/booleanTools/lib/')}}',
 	}).extend({
 	    index: 'index',
 	}).use(['index', 'jquery', 'form', 'element'], function(){

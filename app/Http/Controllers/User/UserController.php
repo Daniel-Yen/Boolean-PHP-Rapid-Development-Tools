@@ -10,7 +10,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-use App\Repositories\BlkUsersRepository;
+use App\Repositories\UsersRepository;
 
 class UserController extends Controller
 {
@@ -50,7 +50,7 @@ class UserController extends Controller
 			//判断原密码是否正确
 			if(password_verify($request->password, $request->user()->password)) {
 				//记录登录时间
-				BlkUsersRepository::where('id', '=', $request->user()->id)
+				UsersRepository::where('id', '=', $request->user()->id)
 					->update(['password' => Hash::make($request->new_password)]);
 				
 				return success("密码修改成功");

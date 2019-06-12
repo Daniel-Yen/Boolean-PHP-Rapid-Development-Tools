@@ -68,7 +68,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Repositories\BlkUsersRepository::class,
+            'model' => App\Repositories\UsersRepository::class,
         ],
 
         // 'users' => [
