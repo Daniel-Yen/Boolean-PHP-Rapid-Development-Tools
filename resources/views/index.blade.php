@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', '布尔懒人工具包')
+@section('title', '布尔快速开发工具')
 
 @push('css')
 
@@ -79,7 +79,7 @@
 			<div class="layui-side-scroll">
 				<div class="layui-logo" lay-href="{{url('/welcome')}}">
 					<span>
-						<h3>Boolean Lazyer Kit</h3>
+						<h3>布尔快速开发工具</h3>
 					</span>
 				</div>
 

@@ -164,6 +164,7 @@ class FunctionPageController extends Controller
 		$request = request();
 		$function_page = FunctionPageRepository::where('id', $request->design_id)->first();
 		
+		//判断当前页面是否已有配置
 		if($function_page){
 			$function_page = $function_page->toArray();
 			
@@ -222,7 +223,8 @@ class FunctionPageController extends Controller
 			return success("操作成功");
 		}else{
 			if(file_exists($config_path)){
-				$config = require($config_path);
+				$config = file_get_contents($config_path);
+				$config = json_decode($config, true);
 			}else{
 				$auto_generate = AutoGenerateRepository::where('function_page_id', $function_page['id'])->first();
 				if($auto_generate){
@@ -402,7 +404,8 @@ class FunctionPageController extends Controller
 		];
 		//dd($config);
 		
-		$config = '<?php return '.var_export($config, true).';?>';
+		/*$config = '<?php return '.var_export($config, true).';?>'; */
+		$config = json_encode($config);
 		file_put_contents($config_path, $config);
 	}
 	
@@ -472,7 +475,8 @@ class FunctionPageController extends Controller
 		
 		$chart_arr['chart_set'] = $chart_set;
 		
-		$chart_config = '<?php return '.var_export($chart_arr, true).';?>';
+		/*$chart_config = '<?php return '.var_export($chart_arr, true).';?>';*/
+		$chart_config = json_encode($chart_arr);
 		file_put_contents($config_path, $chart_config);
 	}
 	
@@ -521,7 +525,7 @@ class FunctionPageController extends Controller
 		//配置在对应系统中的文件路径
 		if(isset($function_page['model'])?$function_page['model']:false){
 			$model = $this->getModel($function_page['model']);
-			$config_path = $path['brdt'].$model.$function_page['id'].'.php';
+			$config_path = $path['brdt'].$model.$function_page['id'].'.json';
 		}else{
 			return view('booleanTools.msg', [
 				'msg' => "当前配置没有对应的页面模型！"
@@ -604,10 +608,10 @@ class FunctionPageController extends Controller
 				
 				if($system){
 					$path = $this->getPath($system);
-					$config_path = $path['brdt'].$this->getModel($function_page['model']).$request->design_id.'.php';
+					$config_path = $path['brdt'].$this->getModel($function_page['model']).$request->design_id.'.json';
 					
 					if(file_exists($config_path)){
-						$config = require($config_path);
+						$config = get_boolean_tools_config($config_path);
 						$config['config_set'][$request->field_from]['fields'][$request->field]['attribute'] = $data;
 						//dd($config);
 						
@@ -670,7 +674,7 @@ class FunctionPageController extends Controller
 	}
 	
 	/**
-	 * 设置菜单模型
+	 * 生成数据表格配置
 	 *
 	 * @auther 		倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access 		public
@@ -797,7 +801,8 @@ class FunctionPageController extends Controller
 		//生成对应系统的改页面设计对应的datatable 配置文件
 		unset($datatable_arr['module_id']);
 		unset($datatable_arr['system_id']);
-		$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';
+		/*$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';*/
+		$datatable_config = json_encode($datatable_arr);
 		file_put_contents($config_path, $datatable_config);
 		
 		//生成主表对应的模型类及验证器类

@@ -11,7 +11,7 @@
 <div style="margin-top: 100px;">
 	<div class="layadmin-user-login-main">
 		<div class="layadmin-user-login-box layadmin-user-login-header">
-			<h2>布尔懒人工具包<span class="layui-badge" style="position: relative;top:-30px;">3.0.0 alpha</span></h2>
+			<h2>布尔快速开发工具<span class="layui-badge" style="position: relative;top:-30px;">3.0.0 alpha</span></h2>
 		</div>
 		<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
 			<form action="" method="post">

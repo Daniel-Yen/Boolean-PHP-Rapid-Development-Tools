@@ -93,7 +93,7 @@ trait Create
 	}
 	
 	/**
-	 * 动态改变数据库配置重连回布尔懒人工具包的数据库
+	 * 动态改变数据库配置重连回布尔快速开发工具的数据库
 	 *
 	 * @author    	倒车的螃蟹<yh15229262120@qq.com> 
 	 * @access    	public
@@ -117,13 +117,13 @@ trait Create
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		public
-     * @return  	void
+     * @return  	json
      */
     public function createPermissions()
     {
     	$callback = $this->createPermissionsDo();
 		
-		echo json_encode($callback);
+		return json_encode($callback);
     }
 	
 	protected function createPermissionsDo()
@@ -177,13 +177,13 @@ trait Create
      *
      * @author    	倒车的螃蟹<yh15229262120@qq.com> 
      * @access 		public
-     * @return  	void
+     * @return  	json
      */
     public function createMenu()
     {
     	$callback = $this->createMenuDo();
     	
-    	echo json_encode($callback);
+    	return json_encode($callback);
     }
 	
 	protected function createMenuDo()
@@ -244,7 +244,7 @@ trait Create
 	{
 		$callback = $this->createRouteDo();
 		
-		echo json_encode($callback);
+		return json_encode($callback);
 	}
 	
 	protected function createRouteDo()
@@ -273,7 +273,7 @@ trait Create
 |--------------------------------------------------------------------------
 | Datatable Routes
 |--------------------------------------------------------------------------
-| 此路由文件由布尔懒人工具包自动生成，包含DataTable生成器相关路由
+| 此路由文件由布尔快速开发工具自动生成，包含DataTable生成器相关路由
 | 生成日期：".date('Y-m-d H:i:s', time())."
 | 注    意：请不要在此文件手写路由
 */".PHP_EOL;

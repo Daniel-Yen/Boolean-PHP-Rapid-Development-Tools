@@ -198,12 +198,20 @@ if (!function_exists('get_boolean_tools_config')) {
 	 */
 	function get_boolean_tools_config($config_name)
 	{
-		$path = app_path('booleanTools'.DIRECTORY_SEPARATOR.$config_name.'.php');
+		$path = app_path('booleanTools'.DIRECTORY_SEPARATOR.$config_name.'.json');
 		
 		if(file_exists($path)){
-			$datatable_config = include($path);
+			$config_json = file_get_contents($path);
+			$datatable_config = json_decode($config_json, true);
+			if(!is_array($datatable_config)){
+				exception_thrown(1001, '页面配置文件不是标准json数据');
+			}
 		}else{
 			$datatable_config = [];
+		}
+		
+		if(empty($datatable_config)){
+			exception_thrown(1002, '配置文件不存在');
 		}
 		
 		return $datatable_config;

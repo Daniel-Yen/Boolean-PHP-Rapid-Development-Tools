@@ -37,7 +37,7 @@ class DemoController extends Controller
 	public function external(Request $request)
 	{
 		$additional_config = [
-			'data_source_method' => 'data_source',		//控制器类的方法:获得表格数据
+			'data_source_from_method' => 'data_source',		//控制器类的方法:获得表格数据
 		];
 		
 		create_datatable('datatable_22', $additional_config, $request);

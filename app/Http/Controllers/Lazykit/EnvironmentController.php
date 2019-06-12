@@ -25,7 +25,7 @@ class EnvironmentController extends Controller
     public function server(Request $request)
     {
     	$additional_config = [
-    		'data_source_method' => 'dataSource',		//控制器类的方法:获得表格数据
+    		'data_source_from_method' => 'dataSource',		//控制器类的方法:获得表格数据
     	];
 		
 		create_datatable('datatable_41', $additional_config, $request);

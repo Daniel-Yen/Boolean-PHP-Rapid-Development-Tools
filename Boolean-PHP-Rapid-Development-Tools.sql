@@ -663,7 +663,7 @@ CREATE TABLE IF NOT EXISTS `buer_blk_module` (
 DELETE FROM `buer_blk_module`;
 /*!40000 ALTER TABLE `buer_blk_module` DISABLE KEYS */;
 INSERT INTO `buer_blk_module` (`id`, `module_name`, `system_id`, `module`, `remark`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	(1, '布尔懒人工具包', 1, 'Lazykit', '开发工具包', '2019-04-12 07:18:40', '2019-04-19 19:32:13', NULL),
+	(1, '布尔快速开发工具', 1, 'Lazykit', '开发工具包', '2019-04-12 07:18:40', '2019-04-19 19:32:13', NULL),
 	(2, '用户管理', 1, 'User', '系统用户管理、用户授权、修改密码等。', '2019-04-12 07:18:40', '2019-05-06 08:27:14', NULL),
 	(5, '用户管理', 2, 'User', '', '2019-04-21 08:04:38', NULL, NULL),
 	(6, '订单管理', 2, 'Order', '', '2019-04-22 16:11:40', NULL, NULL),
@@ -743,7 +743,7 @@ CREATE TABLE IF NOT EXISTS `buer_blk_system` (
 DELETE FROM `buer_blk_system`;
 /*!40000 ALTER TABLE `buer_blk_system` DISABLE KEYS */;
 INSERT INTO `buer_blk_system` (`id`, `system_name`, `file_path`, `framework`, `host`, `port`, `database`, `username`, `password`, `prefix`, `remark`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	(1, '布尔快速开发工具', 'F:\\laragon\\www\\Boolean-PHP-Rapid-Development-Tools', 'laravel', '127.0.0.1', '3306', 'boolean-php-rapid-development-tools', 'root', 'root', 'buer_', '布尔懒人工具包', '2019-04-12 07:18:40', '2019-06-06 09:49:37', NULL),
+	(1, '布尔快速开发工具', 'F:\\laragon\\www\\Boolean-PHP-Rapid-Development-Tools', 'laravel', '127.0.0.1', '3306', 'boolean-php-rapid-development-tools', 'root', 'root', 'buer_', '布尔快速开发工具', '2019-04-12 07:18:40', '2019-06-06 09:49:37', NULL),
 	(2, '法务营销管理系统', 'D:\\www\\fawu', 'laravel', '127.0.0.1', '3306', 'lazykit_fawu', 'root', 'root', 'buer_', '', '2019-04-12 07:18:40', '2019-06-06 09:49:41', NULL),
 	(5, '绩效管理系统', 'F:\\laragon\\www\\Boolean-Performance-Appraisal', 'laravel', '127.0.0.1', '3306', 'boolean-performance-appraisal', 'root', 'root', 'buer_', '', '2019-04-12 07:18:40', '2019-06-06 09:49:45', NULL);
 /*!40000 ALTER TABLE `buer_blk_system` ENABLE KEYS */;

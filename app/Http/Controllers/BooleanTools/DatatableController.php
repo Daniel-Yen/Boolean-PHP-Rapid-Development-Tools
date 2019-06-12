@@ -62,9 +62,6 @@ class DatatableController extends Controller
     	//根据datatable名称获得模型配置
     	$datatable_config = $this->getDatatableConfig($config_name, $additional_config);
     	//dd($datatable_config);
-		if(empty($datatable_config)){
-			exception_thrown(1001, '配置文件不存在');
-		}
 		
 		//判断数据表格配置是否没有主表
 		if(!isset($datatable_config['main_table']) || isset($datatable_config['main_table'])?empty($datatable_config['main_table']):false){
