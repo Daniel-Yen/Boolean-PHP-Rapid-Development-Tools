@@ -26,8 +26,8 @@
 					<thead>
 						<tr style="background-color:#fff;">
 							<!-- <th width='20'></th> -->
-							<th width='230'>菜单</th>
-							<th width='60'>菜单权限</th>
+							<th width='230'>功能菜单</th>
+							<th width='60'>访问权限</th>
 							<th>节点操作权限</th>
 						</tr> 
 					</thead>

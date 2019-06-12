@@ -204,14 +204,14 @@ if (!function_exists('get_boolean_tools_config')) {
 			$config_json = file_get_contents($path);
 			$datatable_config = json_decode($config_json, true);
 			if(!is_array($datatable_config)){
-				exception_thrown(1001, '页面配置文件不是标准json数据');
+				exception_thrown(1002, '页面配置文件不是标准json数据');
 			}
 		}else{
 			$datatable_config = [];
 		}
 		
 		if(empty($datatable_config)){
-			exception_thrown(1002, '配置文件不存在');
+			exception_thrown(1001, '配置文件不存在');
 		}
 		
 		return $datatable_config;

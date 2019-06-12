@@ -20,13 +20,13 @@ class ModuleController extends Controller
     */
     public function index(Request $request)
     {
-    	create_datatable('datatable_19', [], $request);
+    	$additional_config = [
+    		//数据查询条件
+    		'conditions' => [
+    			['system_id', '=', $request->system_id],
+    		],
+    	];
+		
+		create_datatable('datatable_19', $additional_config, $request);
     }
-	
-// 	public function build(){
-// 		$module_name = 'test';
-// 		
-// 		Storage::makeDirectory('app'.DIRECTORY_SEPARATOR.'Http'.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR.$module_name);
-// 		Storage::makeDirectory('resources'.DIRECTORY_SEPARATOR.'views'.DIRECTORY_SEPARATOR.$module_name);
-// 	}
 }

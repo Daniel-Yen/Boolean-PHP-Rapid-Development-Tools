@@ -197,7 +197,7 @@ class FunctionPageController extends Controller
 		//配置在对应系统中的文件路径
 		if(isset($function_page['model'])?$function_page['model']:false){
 			$model = $this->getModel($function_page['model']);
-			$config_path = $path['brdt'].$model.$function_page['id'].'.php';
+			$config_path = $path['brdt'].$model.$function_page['id'].'.json';
 		}else{
 			return view('booleanTools.msg', [
 				'msg' => "当前记录功能模型不存在"
@@ -405,7 +405,7 @@ class FunctionPageController extends Controller
 		//dd($config);
 		
 		/*$config = '<?php return '.var_export($config, true).';?>'; */
-		$config = json_encode($config);
+		$config = json_encode($config, JSON_UNESCAPED_UNICODE);
 		file_put_contents($config_path, $config);
 	}
 	
@@ -476,7 +476,7 @@ class FunctionPageController extends Controller
 		$chart_arr['chart_set'] = $chart_set;
 		
 		/*$chart_config = '<?php return '.var_export($chart_arr, true).';?>';*/
-		$chart_config = json_encode($chart_arr);
+		$chart_config = json_encode($chart_arr, JSON_UNESCAPED_UNICODE);
 		file_put_contents($config_path, $chart_config);
 	}
 	
@@ -611,7 +611,8 @@ class FunctionPageController extends Controller
 					$config_path = $path['brdt'].$this->getModel($function_page['model']).$request->design_id.'.json';
 					
 					if(file_exists($config_path)){
-						$config = get_boolean_tools_config($config_path);
+						$config = file_get_contents($config_path);
+						$config = json_decode($config, true);
 						$config['config_set'][$request->field_from]['fields'][$request->field]['attribute'] = $data;
 						//dd($config);
 						
@@ -623,6 +624,8 @@ class FunctionPageController extends Controller
 						
 						$config = '<?php return '.var_export($config, true).';?>';
 						file_put_contents($config_path,$config);
+					}else{
+						exception_thrown(1001, '配置文件不存在');
 					}
 				}
 				
@@ -802,7 +805,7 @@ class FunctionPageController extends Controller
 		unset($datatable_arr['module_id']);
 		unset($datatable_arr['system_id']);
 		/*$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';*/
-		$datatable_config = json_encode($datatable_arr);
+		$datatable_config = json_encode($datatable_arr, JSON_UNESCAPED_UNICODE);
 		file_put_contents($config_path, $datatable_config);
 		
 		//生成主表对应的模型类及验证器类
@@ -1071,7 +1074,7 @@ class FunctionPageController extends Controller
 				$system = SystemRepository::where('id', $request->system_id)->first();
 				if($system){
 					$path = $this->getPath($system);
-					$config_path = $path['brdt'].$this->getModel($datatable_arr['model']).$request->design_id.'.php';
+					$config_path = $path['brdt'].$this->getModel($datatable_arr['model']).$request->design_id.'.json';
 					
 					if(file_exists($config_path)){
 						$datatable_arr = require($config_path);
