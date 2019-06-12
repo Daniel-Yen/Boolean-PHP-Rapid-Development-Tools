@@ -550,7 +550,7 @@ class FunctionPageController extends Controller
 			//将页面设计对应的统计图表 配置文件保存到数据库
 			AutoGenerateRepository::updateOrInsert(
 					['function_page_id' => $request->design_id],
-					['config' => json_encode($config)]
+					['config' => json_encode($config, JSON_UNESCAPED_UNICODE)]
 				);
 			
 			$chart_config = '<?php return '.var_export($config, true).';?>';
@@ -594,7 +594,7 @@ class FunctionPageController extends Controller
 			
 			$param = [
 				'field_from' => $request->field_from,
-				'attribute' => json_encode($data),
+				'attribute' => json_encode($data, JSON_UNESCAPED_UNICODE),
 			];
 			
 			//新增字段属性设置记录，如果已存在，则修改
@@ -614,15 +614,15 @@ class FunctionPageController extends Controller
 						$config = file_get_contents($config_path);
 						$config = json_decode($config, true);
 						$config['config_set'][$request->field_from]['fields'][$request->field]['attribute'] = $data;
+						$config = json_encode($config, JSON_UNESCAPED_UNICODE);
 						//dd($config);
 						
 						//将页面设计对应的统计图表 配置文件保存到数据库
 						AutoGenerateRepository::updateOrInsert(
 							['function_page_id' => $request->design_id],
-							['config' 			=> json_encode($config)]
+							['config' 			=> $config]
 						);
 						
-						$config = '<?php return '.var_export($config, true).';?>';
 						file_put_contents($config_path,$config);
 					}else{
 						exception_thrown(1001, '配置文件不存在');
@@ -654,7 +654,7 @@ class FunctionPageController extends Controller
 		//获得验证类型
 		$validate = isset($attribute['validate'])?explode(',',$attribute['validate']):[];
 		if($validate){
-			$attribute['validate'] = json_encode($validate);
+			$attribute['validate'] = json_encode($validate, JSON_UNESCAPED_UNICODE);
 		}else{
 			//没有验证规则，返回一个空的json
 			$attribute['validate'] = json_encode([]);
@@ -798,7 +798,7 @@ class FunctionPageController extends Controller
 		//将页面设计对应的datatable 配置文件保存到数据库
 		AutoGenerateRepository::updateOrInsert(
 			['function_page_id' => $datatable_arr['id']],
-			['config' 			=> json_encode($datatable_arr)]
+			['config' 			=> json_encode($datatable_arr, JSON_UNESCAPED_UNICODE)]
 		);
 		
 		//生成对应系统的改页面设计对应的datatable 配置文件
@@ -1061,34 +1061,35 @@ class FunctionPageController extends Controller
 			
 			$param = [
 				'field_from' => $request->field_from,
-				'attribute' => json_encode($data),
+				'attribute' => json_encode($data, JSON_UNESCAPED_UNICODE),
 			];
 			
 			//新增字段属性设置记录，如果已存在，则修改
 			$result = AttributeRepository::updateOrInsert($conditions, $param);
+			
 			if($result){
 				//获得当前页面信息
 				$datatable_arr = FunctionPageRepository::where('id', $request->design_id)->first();
+				$system = SystemRepository::where('id', $request->system_id)->first();
+				$path = $this->getPath($system);
+				$config_path = $path['brdt'].$this->getModel($datatable_arr['model']).$request->design_id.'.json';
+				$config = json_decode(file_get_contents($config_path), true);
 				
 				//将字段属性设置写入Datatable配置文件
-				$system = SystemRepository::where('id', $request->system_id)->first();
-				if($system){
-					$path = $this->getPath($system);
-					$config_path = $path['brdt'].$this->getModel($datatable_arr['model']).$request->design_id.'.json';
-					
+				if($config){
 					if(file_exists($config_path)){
-						$datatable_arr = require($config_path);
-						$datatable_arr['datatable_set'][$request->field]['attribute'] = $data;
+						$config['datatable_set'][$request->field]['attribute'] = $data;
 						//dd($datatable_config);
 						
-						$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';
+						/*$datatable_config = '<?php return '.var_export($datatable_arr, true).';?>';*/
+						$datatable_config = json_encode($config, JSON_UNESCAPED_UNICODE);
 						file_put_contents($config_path,$datatable_config);
 					}
-					
+				
 					//将页面设计对应的datatable 配置文件保存到数据库
 					AutoGenerateRepository::updateOrInsert(
 						['function_page_id' => $request->design_id],
-						['config' 			=> json_encode($datatable_arr)]
+						['config' 			=> json_encode($datatable_arr, JSON_UNESCAPED_UNICODE)]
 					);
 				}
 				
@@ -1117,7 +1118,7 @@ class FunctionPageController extends Controller
 		//获得验证类型
 		$validate = isset($attribute['validate'])?explode(',',$attribute['validate']):[];
 		if($validate){
-			$attribute['validate'] = json_encode($validate);
+			$attribute['validate'] = json_encode($validate, JSON_UNESCAPED_UNICODE);
 		}else{
 			//没有验证规则，返回一个空的json
 			$attribute['validate'] = '{}';
