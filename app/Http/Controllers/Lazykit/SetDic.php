@@ -309,7 +309,8 @@ trait SetDic
     		'编辑器' => [
     			'layui_editer' 			=> ['layui 编辑器', '100%'],
     			'layui_editer_simple' 	=> ['layui 编辑器精简版', '100%'],
-    			'editormd' 				=> ['Markdown 编辑器', '100%']
+    			//'editormd' 				=> ['Markdown 编辑器', '100%'],
+    			'kindediter' 			=> ['KindEditer 编辑器', '100%']
     		],
     		'上传' => [
     			'single_photo_upload' 	=> ['单图上传', ''],

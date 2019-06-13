@@ -335,7 +335,7 @@ if (!function_exists('file_path')) {
     }
 }
 
-if (!function_exists('array_sort')) {
+if (!function_exists('array_sort_by_value')) {
 	/**
 	 * 对二维数组按指定键值进行升序或者降序排列
 	 *
@@ -345,22 +345,31 @@ if (!function_exists('array_sort')) {
 	 * @param 		boolean 	$desc 		如果$desc 为 true 则对关联数组按照键值进行降序排序。
 	 * @return 		array
 	 */
-	function array_sort($arr,$keys,$type='asc')
+	function array_sort_by_value($arr,$key,$type='asc')
 	{
-		$keysvalue = $new_array = array();  
-		foreach ($arr as $k=>$v){  
-			$keysvalue[$k] = $v[$keys];  
-		}  
+		$arr_1 = $arr_2 = [];
+		//将被排序字段值为0的记录取出来放到$arr_1中
+		foreach($arr as $k=>$v){
+			if(isset($v[$key])?$v[$key]:false){
+				$arr_2[] = $v;
+			}else{
+				//如果$key为空或者null,则给他一个默认值0
+				$arr_1[] = $v;
+			}
+		}
+		//dd($arr_1, $arr_2);
+		//对$arr_2进行排序
+		$collection = collect($arr_2);
+		 
 		if($type == 'asc'){  
-			asort($keysvalue);  
+			$result = $collection->sortBy($key);
+			$merged = array_merge($arr_1, $result->values()->all());
 		}else{  
-			arsort($keysvalue);  
-		}  
-		reset($keysvalue);  
-		foreach ($keysvalue as $k=>$v){  
-			$new_array[$k] = $arr[$k];  
-		}  
-		return $new_array;  
+			$result = $collection->sortByDesc($key); 
+			$merged = array_merge($result->values()->all(), $arr_1);
+		} 
+		
+		return $merged;
 	}
 }
 

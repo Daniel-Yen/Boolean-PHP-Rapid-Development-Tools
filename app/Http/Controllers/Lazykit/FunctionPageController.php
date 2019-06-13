@@ -264,7 +264,7 @@ class FunctionPageController extends Controller
 					]);
 				}else if($function_page['model'] == 5){
 					view()->share([
-						'inheritance_datatable_arr' => $this->getInheritanceDatatable($system),		//可继承的数据表格
+						'inheritance_datatable_arr' => $this->getInheritanceDatatable($system),			//可继承的数据表格
 					]);
 				}
 				return view('lazykit.datatable.set', [
@@ -715,7 +715,12 @@ class FunctionPageController extends Controller
 		FunctionPageRepository::where('id', '=', $request->design_id)->update($param);
 		
 		//datatable 字段配置:排序
-		$datatable_arr['datatable_set'] = array_sort($request->datatable_set,'sorting');
+		$data = [];
+		foreach(array_sort_by_value($request->datatable_set,'sorting') as $k=>$v){
+			$data[$v['field']] = $v;
+		}
+		//dd($data);
+		$datatable_arr['datatable_set'] = $data;
 		foreach($datatable_arr['datatable_set'] as $k=>$v){
 			//取设置的字段属性,用于表单生成
 			$conditions = [
@@ -941,7 +946,9 @@ class FunctionPageController extends Controller
 		if(empty($datatable_config)){
 			$field_row_arr = $result;
 		}else{
-			$field_row_arr = array_sort($result,'sorting');
+			//dd($result);
+			$field_row_arr = array_sort_by_value($result,'sorting');
+			//$field_row_arr = $result;
 		}
 		
 		//dd($field_row_arr);
@@ -957,6 +964,7 @@ class FunctionPageController extends Controller
 	 */
 	public function mergeAttribute($datatable_config, $result, $field_from)
 	{
+		//dd($datatable_config, $result);
 		foreach($result as $k=>$v){
 			$v = object_array($v);
 			
@@ -976,10 +984,15 @@ class FunctionPageController extends Controller
 			$v['field_from'] = $field_from;
 			if( isset($datatable_config['datatable_set']) ){
 				$datatable_set = $datatable_config['datatable_set'];
+				//dd($datatable_set[$v['Field']]);
 				if(isset($v['Field'])?isset($datatable_set[$v['Field']]):false){
 					//将created_at、updated_at、deleted_at三个功能性字段放到队尾
 					if(in_array($v['Field'],["created_at", "updated_at", "deleted_at"])){
 						$datatable_set[$v['Field']]['sorting'] = 999;
+					}
+					//给字段默认加个sorting=0, 避免排序出错
+					if(isset($v['sorting'])?!$v['sorting']:false){
+						$datatable_set[$v['Field']]['sorting'] = 0;
 					}
 					unset($datatable_set[$v['Field']]['field_from']);
 					if($datatable_set[$v['Field']]){
