@@ -2,7 +2,7 @@
 namespace app\common\controller;
 
 use think\Controller;
-use app\common\model\ToolsAttachmentModel;
+use app\common\model\AttachmentRepository;
 
 class FileProcessing
 {
@@ -15,6 +15,7 @@ class FileProcessing
 	public function layuiUpload(){
 		// 获取表单上传文件 例如上传了001.jpg
 		$file = request()->file('file');
+		dd($file);
 		//文件存目录
 		$puth = DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.'attachments';
 		$info = $file->move($_SERVER["DOCUMENT_ROOT"].DIRECTORY_SEPARATOR.$puth);
@@ -48,8 +49,8 @@ class FileProcessing
 				];
 				
 				//新增字段属性设置记录，如果已存在，则修改 ,返回值为新增或修改记录的id
-				$id = ToolsAttachmentModel::createOrUpdate($conditions, $param);
-				//echo ToolsAttachmentModel::getLastSql();
+				$id = AttachmentRepository::createOrUpdate($conditions, $param);
+				//echo AttachmentRepository::getLastSql();
 				if($id){
 					//获得当前已上传的文件列表并返回
 // 					$conditions = [
@@ -58,8 +59,8 @@ class FileProcessing
 // 						['create_time', '=', input('get.time')]
 // 					];
 					
-					$file_arr = ToolsAttachmentModel::getDataById($id);
-					//echo ToolsAttachmentModel::getLastSql();
+					$file_arr = AttachmentRepository::getDataById($id);
+					//echo AttachmentRepository::getLastSql();
 					$file_arr['src'] = $file_arr['path'];
 					unset($file_arr['path']);
 					//print_r($file_arr);

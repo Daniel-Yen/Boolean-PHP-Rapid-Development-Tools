@@ -175,7 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 		App\Providers\HelperServiceProvider::class,				//自定义助手函数服务
-
+		Jacobcyl\AliOSS\AliOssServiceProvider::class,			//阿里云OSS
     ],
 
     /*
