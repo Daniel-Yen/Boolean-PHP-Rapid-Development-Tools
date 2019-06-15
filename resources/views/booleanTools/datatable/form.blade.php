@@ -44,23 +44,29 @@
 		index: 'index',
 		formSelects: 'modules/formSelects-v4'
 	}).use(['jquery', 'form', 'layer', 'layedit', 'laydate', 'element', 'slider', 'table','colorpicker', 'upload', 'formSelects'], function() {
-			var $ = layui.$,
-				form = layui.form,
-				layer = layui.layer,
-				layedit = layui.layedit,
-				laydate = layui.laydate,
-				element = layui.element,
-				slider = layui.slider,
-				table = layui.table,
-				upload = layui.upload,
-				colorpicker = layui.colorpicker,
-				formSelects = layui.formSelects;
-				
-			{{-- 表单控件初始化 --}}
-			@foreach ($dom as $key=>$vo)
-			@include ('booleanTools.datatable.form_js.'.$vo['data_input_form'])
-			@endforeach
-			
+		var $ = layui.$,
+			form = layui.form,
+			layer = layui.layer,
+			layedit = layui.layedit,
+			laydate = layui.laydate,
+			element = layui.element,
+			slider = layui.slider,
+			table = layui.table,
+			upload = layui.upload,
+			colorpicker = layui.colorpicker,
+			formSelects = layui.formSelects;
+		
+		
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
 		});
+		
+		{{-- 表单控件初始化 --}}
+		@foreach ($dom as $key=>$vo)
+		@include ('booleanTools.datatable.form_js.'.$vo['data_input_form'])
+		@endforeach
+	});
 </script>
 @endpush

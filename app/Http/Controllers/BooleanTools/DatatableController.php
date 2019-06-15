@@ -229,7 +229,8 @@ class DatatableController extends Controller
 			}
 		}elseif( $request->do == "layui_upload") {
 			//处理layui文件上传,返回值为被上传文件在数据库中的记录的json结构
-			FileProcessing::layuiUpload();
+			$file_processing = new FileProcessing;
+			$file_processing->layuiUpload();
 		}elseif( $request->do == "import") {
 			if(isset($request->ac)){
 				switch($request->ac){

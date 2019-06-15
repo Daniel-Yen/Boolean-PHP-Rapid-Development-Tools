@@ -35,6 +35,8 @@ class Permission
 		//dd($rules);
 		//判断在当前用户所属用户组的$rules权限集合中是否有当前页面的授权,如果有则赋值给$boolean_rules,如果没有则给$boolean_rules赋值一个空数组
 		$boolean_rules = isset($rules[$request->path()])?$rules[$request->path()]:[];
+		//默认对上传授权
+		$boolean_rules['button']['value'][] = 'layui_upload';
 		//dd($boolean_rules);
 		
 		//$status == 0代表无操作权限
