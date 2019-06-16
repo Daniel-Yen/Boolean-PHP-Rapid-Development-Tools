@@ -12,9 +12,8 @@
 					{{-- 读取本地文件 --}}
 					obj.preview(function(index, file, result) {
 						var tr = $(['<tr id="upload-' + index + '">', '<td>' + file.name + '</td>', '<td>' + (file.size / 1014).toFixed(
-								1) + 'kb</td>', '<td>等待上传</td>', '<td>',
-							'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>',
-							'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>', '</td>', '</tr>'
+								1) + 'kb</td>', '<td>等待上传</td>', 
+							'<td><span class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</span> <span class="layui-btn layui-btn-xs demo-reload layui-hide">重传</span>', '</td>', '</tr>'
 						].join(''));
 					
 						{{-- 单个重传 --}}
@@ -36,7 +35,7 @@
 					if (res.code == 0) { {{-- 上传成功 --}}
 						var tr = {{$vo['field']}}View.find('tr#upload-' + index),
 							tds = tr.children();
-						tds.eq(0).html('<a href="'+res.data.src+'">'+res.data.name+'</a>');
+						tds.eq(0).html('<a href="{{$filedomain}}'+res.data.src+'">'+res.data.name+'</a>');
 						tds.eq(2).html('<span style="color: #5FB878;">上传成功</span><textarea class="layui-hide" name="{{$vo['field']}}['+res.data.id+']">'+JSON.stringify(res.data)+'</textarea>');
 						tds.eq(3).html(''); {{-- 清空操作 --}}
 						return delete this.files[index]; {{-- 删除文件队列已经上传成功的文件 --}}

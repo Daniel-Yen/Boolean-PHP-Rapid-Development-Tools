@@ -7,9 +7,10 @@
 	.layui-table-tool {background-color: #FFFFFF;}
 	.layui-table-view {margin: 0;}
 	.layui-form-label { overflow: hidden; height: 10px; line-height: 20px;}
-	.layui-upload-img {width: 150px; margin: 0 10px 15px 0;}
+	.layui-upload-img-main {margin: 0 10px 15px 0;}
+	.layui-upload-img-main .layui-upload-img {margin-bottom: 10px; max-height: 200px; max-width: 100%;}
 </style>
-<script charset="utf-8" src="{{file_path('/include/booleanTools/kindeditor/kindeditor-all-min.js')}}"></script>
+<script charset="utf-8" src="{{file_path('/include/booleanTools/kindeditor/kindeditor-all.js')}}"></script>
 <script charset="utf-8" src="{{file_path('/include/booleanTools/kindeditor/lang/zh-CN.js')}}"></script>
 @endpush
 

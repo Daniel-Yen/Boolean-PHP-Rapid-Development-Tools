@@ -4,11 +4,14 @@
 						<div class="layui-upload">
 							<button type="button" class="layui-btn" id="single_photo_upload_{{$vo['field']}}">上传图片</button>
 							<div class="layui-upload-list" id="main{{$vo['field']}}">
-								@if (empty($data_arr))
-								@foreach ($data_arr[$vo['field']] as $vo)
-								<img class="layui-upload-img" src="{{$vo['src']}}" id="pic{{$vo['field']}}">
-								<p id="text{{$vo['field']}}"></p>
-								<textarea class="layui-hide" name="{{$vo['field']}}[{{$vo['id']}}]"> @json($vo) </textarea>
+								@if (!empty($data_arr))
+								@foreach ($data_arr[$vo['field']] as $eo)
+								<div class="layui-upload-img-main">
+								<img class="layui-upload-img" src="{{$filedomain}}{{$eo['src']}}" id="pic{{$vo['field']}}{{$eo['id']}}">
+								<p></p>
+								<textarea class="layui-hide" name="{{$vo['field']}}[{{$eo['id']}}]"> @json($eo) </textarea>
+								<span onclick="this.parentNode.remove();" class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</span> &nbsp;
+								</div>
 								@endforeach
 								@endif
 							</div>

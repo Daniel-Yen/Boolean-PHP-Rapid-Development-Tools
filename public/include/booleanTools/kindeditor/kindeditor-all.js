@@ -4178,8 +4178,9 @@ function _colorpicker(options) {
 }
 K.ColorPickerClass = KColorPicker;
 K.colorpicker = _colorpicker;
-
-
+var csrftoken = document.getElementsByName("csrf-token");
+var csrf = csrftoken[0].getAttribute("content");　　//getAttribute() 能获取到元素的所有属性
+//alert(csrf);
 function KUploadButton(options) {
 	this.init(options);
 }
@@ -4204,7 +4205,7 @@ _extend(KUploadButton, {
 			'<div class="ke-inline-block ' + cls + '">',
 			(options.target ? '' : '<iframe name="' + target + '" style="display:none;"></iframe>'),
 			(options.form ? '<div class="ke-upload-area">' : '<form class="ke-upload-area ke-form" method="post" enctype="multipart/form-data" target="' + target + '" action="' + url + '">'),
-			'<span class="ke-button-common">',
+			'<span class="ke-button-common"><input type="hidden" name="_token" value="'+csrf+'">',
 			hiddenElements.join(''),
 			'<input type="button" class="ke-button-common ke-button" value="' + title + '" />',
 			'</span>',
@@ -4252,6 +4253,10 @@ _extend(KUploadButton, {
 				self.options.afterUpload.call(self, data);
 			}
 		});
+		
+		//alert(oA[0].getAttribute("content"));　　//getAttribute() 能获取到元素的所有属性
+		//xhr.setRequestHeader('X-CSRF-TOKEN', oA[0].getAttribute("content"));
+		
 		self.form[0].submit();
 		return self;
 	},
@@ -7572,7 +7577,10 @@ KindEditor.plugin('insertfile', function(K) {
 	self.clickToolbar(name, function() {
 		self.plugin.fileDialog({
 			clickFn : function(url, title) {
-				var html = '<a class="ke-insertfile" href="' + url + '" data-ke-src="' + url + '" target="_blank">' + title + '</a>';
+				var urlArr = title.split('?');
+				var a = urlArr[0], appU = a.split('/');
+				var filename = appU[appU.length - 1];
+				var html = '<a class="ke-insertfile" href="' + url + '" data-ke-src="' + url + '" target="_blank">' + filename + '</a>';
 				self.insertHtml(html).hideDialog().focus();
 			}
 		});
@@ -9270,28 +9278,8 @@ KindEditor.plugin('table', function(K) {
 						if (bgColor !== '') {
 							style += 'background-color:' + bgColor + ';';
 						}
-						var html = '<table';
-						if (style !== '') {
-							html += ' style="' + style + '"';
-						}
-						if (padding !== '') {
-							html += ' cellpadding="' + padding + '"';
-						}
-						if (spacing !== '') {
-							html += ' cellspacing="' + spacing + '"';
-						}
-						if (align !== '') {
-							html += ' align="' + align + '"';
-						}
-						if (border !== '') {
-							html += ' border="' + border + '"';
-						}
-						if (border === '' || border === '0') {
-							html += ' class="' + zeroborder + '"';
-						}
-						if (borderColor !== '') {
-							html += ' bordercolor="' + borderColor + '"';
-						}
+						var html = '<table class="layui-table"';
+						
 						html += '>';
 						for (var i = 0; i < rows; i++) {
 							html += '<tr>';

@@ -85,6 +85,11 @@
 	</div>
 </form>
 
+<script>
+var picdomain = '{{$filedomain}}/';
+//var filedomain = '{{$datatable_config['route_name']}}/?do=download&md5=';
+filedomain = '{{$filedomain}}';
+</script>
 @foreach ($read as $vo)
 @if (!empty($vo['cell_style_template']))
 <script type="text/html" id="{{$vo['field']}}Tpl">
@@ -110,7 +115,6 @@ layui.config({
 		layer = layui.layer,
 		laydate = layui.laydate,
 		formSelects = layui.formSelects;
-	
 	
 	var rand = Math.floor(Math.random()*10000+1);
 	@if ($do == "recycle")

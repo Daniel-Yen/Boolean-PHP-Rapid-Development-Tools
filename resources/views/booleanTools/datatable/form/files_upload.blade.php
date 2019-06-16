@@ -14,14 +14,17 @@
 										</tr>
 									</thead>
 									<tbody id="{{$vo['field']}}">
-										@if (empty($data_arr))
-										@foreach ($data_arr[$vo['field']] as $vo)
+										@if (!empty($data_arr))
+										@foreach ($data_arr[$vo['field']] as $eo)
 										<tr>
-											<td><a href="{{$vo['src']}}">{{$vo['name']}}</a></td>
-											<td>{{$vo['size']}}</td>
+											<td>
+												<a target="_blank" href="{{$filedomain}}{{$eo['src']}}">{{$eo['name']}}</a>
+												<textarea class="layui-hide" name="{{$vo['field']}}[{{$eo['id']}}]"> @json($eo) </textarea>
+											</td>
+											<td>{{$eo['size']}}</td>
 											<td>已上传文件</td>
 											<td>
-												<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>
+												<span onclick="this.parentNode.parentNode.remove();" class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</span>
 											</td>
 										</tr>
 										@endforeach
@@ -29,7 +32,7 @@
 									</tbody>
 								</table>
 							</div>
-							<button type="button" class="layui-btn" id="files_upload_{{$vo['field']}}Action">开始上传</button>
+							<button type="button" class="layui-btn" id="files_upload_{{$vo['field']}}Action">开始上传</button> &nbsp; <span style="color:red">多文件上传在选择文件后点击开始上传才真正完成上传</span>
 						</div>
 					</div>
 				</div>

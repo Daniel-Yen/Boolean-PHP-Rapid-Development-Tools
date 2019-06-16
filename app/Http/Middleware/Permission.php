@@ -37,6 +37,8 @@ class Permission
 		$boolean_rules = isset($rules[$request->path()])?$rules[$request->path()]:[];
 		//默认对上传授权
 		$boolean_rules['button']['value'][] = 'layui_upload';
+		$boolean_rules['button']['value'][] = 'kindediter_upload';
+		$boolean_rules['button']['value'][] = 'download';
 		//dd($boolean_rules);
 		
 		//$status == 0代表无操作权限

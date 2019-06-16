@@ -71,6 +71,10 @@ class DatatableController extends Controller
 			}
 		}
 		
+		view()->share([
+			'filedomain' => config('booleantools.filedomain'),
+		]);
+		
 		if( $request->do == "create") {
 			$dom = $this->getDataFieldSet($datatable_config, 'create', $additional_config);
 			//dd($dom);
@@ -140,7 +144,7 @@ class DatatableController extends Controller
 			if($request->isMethod('post')){
 				$request->validate([]);
 				
-				//dd($request->post());
+				//dump($request->post()); die();
 				$param = $this->getAllowField($dom, $request->post());
 				//dump($param); die();
 				//6、附加的修改数据
@@ -181,7 +185,7 @@ class DatatableController extends Controller
 					}
 				}
 			}
-			//dd($dom);
+			//dd($dom,$data_arr);
 			view()->share([
 				'dom' => $dom,
 				'data_arr' => $data_arr,
@@ -231,6 +235,14 @@ class DatatableController extends Controller
 			//处理layui文件上传,返回值为被上传文件在数据库中的记录的json结构
 			$file_processing = new FileProcessing;
 			$file_processing->layuiUpload();
+		}elseif( $request->do == "kindediter_upload") {
+			//处理layui文件上传,返回值为被上传文件在数据库中的记录的json结构
+			$file_processing = new FileProcessing;
+			$file_processing->kindediterUpload();
+		}elseif( $request->do == "download") {
+			//处理layui文件上传,返回值为被上传文件在数据库中的记录的json结构
+			$file_processing = new FileProcessing;
+			$file_processing->download($request);
 		}elseif( $request->do == "import") {
 			if(isset($request->ac)){
 				switch($request->ac){
@@ -757,7 +769,7 @@ class DatatableController extends Controller
 				if(in_array($vo['data_input_form'], $file_input)){
 					if($post[$key]){
 						foreach($post[$key] as $k=>$v){
-							$post[$key][$k] = json_decode($v);
+							$post[$key][$k] = json_decode($v, true);
 						}
 						$param[$key] = json_encode($post[$key]);
 					}

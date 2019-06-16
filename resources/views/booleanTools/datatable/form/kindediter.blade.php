@@ -7,11 +7,15 @@
 					</div>
 				</div>
 				<script>
-				    KindEditor.ready(function(K) {
+					KindEditor.ready(function(K) {
 						var options = {
 							cssPath : '{{file_path('/include/booleanTools/layui/css/layui.css')}}',
 							cssData : 'body {padding:10px;}',
-							filterMode : true
+							uploadJson : '{{$datatable_config['route_name']}}?do=kindediter_upload&time={{time()}}',
+							//fileManagerJson : '../php/file_manager_json.php',
+							allowFileManager : false,
+							filterMode : true,
+							filePostName : 'file'
 						};
 						var editor = K.create('textarea[name="{{$vo['field']}}"]', options);
 				    });   
