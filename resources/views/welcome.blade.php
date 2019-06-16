@@ -75,18 +75,15 @@
 			<div class="layui-card">
 				<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 				  <ul class="layui-tab-title">
-					<li class="layui-this">产品讨论</li>
-					<li>使用手册</li>
+					<li class="layui-this">讨论区</li>
 					<li>工单</li>
 					<li>版本更新</li>
-					<li>VIP入口</li>
+					<li>使用手册</li>
 				  </ul>
 				  <div class="layui-tab-content" style="height: 100px;">
 					<div class="layui-tab-item layui-show">内容不一样是要有，因为你可以监听tab事件（阅读下文档就是了）</div>
 					<div class="layui-tab-item">内容2</div>
 					<div class="layui-tab-item">内容3</div>
-					<div class="layui-tab-item">内容4</div>
-					<div class="layui-tab-item">内容5</div>
 				  </div>
 				</div> 
 			</div>
