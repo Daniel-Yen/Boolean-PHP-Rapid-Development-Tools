@@ -23,6 +23,7 @@
 		.search-type input{text-align:center; padding-left:0;}
 		.padding-left-0{padding-left:0;}
 		.search-block{width:555px}
+		.layui-table-tips-main img{margin-bottom:10px;}
 		@endif
 	</style>
 	
