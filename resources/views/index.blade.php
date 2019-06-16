@@ -33,21 +33,26 @@
 				</li> -->
 			</ul>
 			<ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+				<li class="layui-nav-item layui-hide-xs" lay-unselect>
+					<a href="javascript:;" id="clear">
+						<i style="font-size:24px;" class="layui-icon layui-icon-delete"></i>
+					</a>
+				</li>
 				<li class="layui-nav-item" lay-unselect>
 					<a lay-href="https://www.layui.com/demo/tab.html" layadmin-event="message" lay-text="消息中心">
-						<i class="layui-icon layui-icon-notice"></i>
+						<i style="font-size:18px;" class="layui-icon layui-icon-notice"></i>
 						<!-- 如果有新消息，则显示小圆点 -->
 						<span class="layui-badge-dot"></span>
 					</a>
 				</li>
 				<li class="layui-nav-item layui-hide-xs" lay-unselect>
 					<a href="javascript:;" layadmin-event="theme">
-						<i class="layui-icon layui-icon-theme"></i>
+						<i style="font-size:18px;" class="layui-icon layui-icon-theme"></i>
 					</a>
 				</li>
 				<li class="layui-nav-item layui-hide-xs" lay-unselect>
 					<a href="javascript:;" layadmin-event="fullscreen">
-						<i class="layui-icon layui-icon-screen-full"></i>
+						<i style="font-size:18px;" class="layui-icon layui-icon-screen-full"></i>
 					</a>
 				</li>
 				<li class="layui-nav-item" lay-unselect>
@@ -150,6 +155,37 @@ layui.config({
     base: '{{file_path('/include/booleanTools/lib/')}}',
 }).extend({
     index: 'index',
-}).use('index');
+}).use(['index', 'jquery'], function(){
+	$ = layui.jquery,
+	index = layui.index,
+	layer = layui.layer;
+	
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+	
+	$(document).on('click','#clear',function(){
+		layer.confirm("确认要清除缓存吗?", {icon:3, title:'温馨提示'}, function() {
+			$.ajax({
+				url: "{{config('app.url')}}/clear",
+				type: "post",
+				dataType: 'json',
+				success: function(res) {
+					if (res.code == 0) {
+						//alert(res.refresh);
+						layer.msg(res.msg);
+						if (res.refresh == 'yes'){
+							tools.reload();
+						}
+					} else {
+						layer.msg(res.msg);
+					}
+				}
+			});
+		});
+	});
+});
 </script>
 @endpush

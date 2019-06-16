@@ -4,27 +4,21 @@
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
+| 默认路由文件
 */
-// Authentication Routes...
-// $this->get('login', 'Auth\LoginController@showLoginForm')->name('login');
-// $this->post('login', 'Auth\LoginController@login');
-//  $this->post('logout', 'Auth\LoginController@logout')->name('logout');
-// 
-// // Registration Routes...
-// $this->get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-// $this->post('register', 'Auth\RegisterController@register');
-// 
-// // Password Reset Routes...
-// $this->get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-// $this->post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-// $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-// $this->post('password/reset', 'Auth\ResetPasswordController@reset');           
 
+//用户认证相关路由
 Auth::routes();
-//Route::any('/login', 			'Auth\LoginController@login');		//用户登录
-//Route::any('/logout', 			'Auth\LoginController@logout');		//用户登录
+
+//只需要用户登录认证的页面
+Route::group(['middleware' => ['auth']], function(){
+	Route::get('/', 										'IndexController@index');    					//首页
+	Route::get('/welcome',									'IndexController@welcome');						//欢迎页
+	Route::get('/no_permission',							'IndexController@noPermission');				//没有权限提示页
+	Route::post('/clear', 									'BooleanTools\CacheController@clear');    					//首页
+	//Route::any('/lazykit/functionpage/add_model',			'lazykit\FunctionPageController@addModel');				//数据表格模型设置
+	//Route::any('/lazykit/functionpage/set',					'lazykit\FunctionPageController@set');					//数据表格配置生成
+	//Route::any('/lazykit/functionpage/attribute_set',		'lazykit\FunctionPageController@attributeSet');			//字段属性设置
+	//Route::any('/lazykit/functionpage/chart_attribute_set',	'lazykit\FunctionPageController@ChartAttributeSet');			//字段属性设置
+	//Route::any('/lazykit/functionpage/config_attribute_set','lazykit\FunctionPageController@configAttributeSet');			//配置文件字段附加属性设置
+});

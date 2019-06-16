@@ -123,7 +123,7 @@ layui.config({
 	var ac = '';
 	@endif
 	
-	var base_url = '{{env('APP_URL').$datatable_config['route_name']}}?{!!$parse_url_query!!}';
+	var base_url = '{{config('app.url').$datatable_config['route_name']}}?{!!$parse_url_query!!}';
 	
 	$.ajaxSetup({
 		headers: {
@@ -406,7 +406,7 @@ layui.config({
 					,maxmin: false
 					,offset: 'auto'
 					@if (isset($vo['route'])?$vo['route']:false)
-					,content: "{{env('APP_URL').$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id']
+					,content: "{{config('app.url').$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id']
 					@else
 					,content: base_url+"do={{$key}}&from=line&{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
 					@endif
@@ -415,7 +415,7 @@ layui.config({
 				layer.confirm("请确认当前操作?", {icon:3, title:'温馨提示'}, function() {
 					$.ajax({
 						@if (isset($vo['route'])?$vo['route']:false)
-						url: "{{env('APP_URL').$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
+						url: "{{config('app.url').$vo['route']}}?{!!$parse_url_query!!}{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
 						@else
 						url: base_url+"do={{$key}}&from=line&{{isset($datatable_config['id_prefix'])?$datatable_config['id_prefix']:''}}id="+data['id'],
 						@endif
